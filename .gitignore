@@ -1,0 +1,42 @@
+# Logs
+logs/
+*.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+lerna-debug.log*
+
+# Dépendances et fichiers générés
+node_modules/
+dist/
+dist-ssr/
+build/  # Ajout pour React
+.cache/
+
+# Fichiers d'environnement (ne jamais les committer !)
+.env
+.env.local
+.env.development
+.env.development.local
+.env.production
+.env.production.local
+.env.test
+.env.test.local
+
+# Fichiers système
+.DS_Store
+Thumbs.db
+
+# Dossiers spécifiques aux éditeurs
+.vscode/
+!.vscode/extensions.json  # Permet de garder les extensions utiles pour le projet
+.idea/
+*.suo
+*.ntvs*
+*.njsproj
+*.sln
+*.sw?
+
+# Autres fichiers à ignorer
+*.local
