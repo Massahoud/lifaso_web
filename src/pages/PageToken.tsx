@@ -1,31 +1,35 @@
 import { useState } from "react";
+import { useNavigate } from "react-router-dom";
 
-const PageToken = () => {
+const EnterToken = () => {
   const [token, setToken] = useState("");
+  const navigate = useNavigate();
 
-  const handleCopy = () => {
-    navigator.clipboard.writeText(token);
-    alert("Token copié !");
+  const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+    if (token) {
+      localStorage.setItem("token", token); // Stocker le token
+      navigate("/acceuil"); // Rediriger vers la liste après saisie
+    }
   };
 
   return (
-    <div className="p-4 bg-white rounded-lg shadow-md">
-      <h1 className="text-xl font-bold mb-4">Saisir un Token</h1>
-      <input
-        type="text"
-        value={token}
-        onChange={(e) => setToken(e.target.value)}
-        placeholder="Entrer un token"
-        className="border rounded p-2 w-full mb-2"
-      />
-      <button
-        onClick={handleCopy}
-        className="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-700"
-      >
-        Copier le Token
-      </button>
+    <div className="p-4 bg-white rounded-lg shadow-md max-w-md mx-auto mt-20">
+      <h1 className="text-xl font-bold mb-4">Entrer votre Token</h1>
+      <form onSubmit={handleSubmit} className="space-y-4">
+        <input
+          type="text"
+          placeholder="Votre token ici"
+          value={token}
+          onChange={(e) => setToken(e.target.value)}
+          className="w-full p-2 border rounded"
+        />
+        <button type="submit" className="w-full bg-blue-500 text-white p-2 rounded">
+          Valider
+        </button>
+      </form>
     </div>
   );
 };
 
-export default PageToken;
+export default EnterToken;
