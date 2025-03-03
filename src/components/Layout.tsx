@@ -1,8 +1,8 @@
 import { Outlet, Link } from "react-router-dom";
 import { FaChartLine, FaFileAlt, FaUsers, FaUsersCog } from "react-icons/fa";
-import imageName from '../assets/logo.png';
-import ChildList from "../pages/PageChilds";
 
+import ChildList from "../pages/PageChilds";
+import imageName from "../assets/logo.png";
 
 const Layout = () => {
   return (
@@ -21,23 +21,23 @@ const Layout = () => {
             </Link>
           </li>
           <li>
-            <Link to="/nuage" className="flex items-center hover:text-orange-500">
-              <FaChartLine className="mr-2" /> Nuage de points
+            <Link to="/child-detail" className="flex items-center hover:text-orange-500">
+              <FaChartLine className="mr-2" /> detail
             </Link>
           </li>
           <li>
-            <Link to="/formulaires" className="flex items-center hover:text-orange-500">
-              <FaFileAlt className="mr-2" /> Formulaires
+            <Link to="/radar" className="flex items-center hover:text-orange-500">
+              <FaFileAlt className="mr-2" /> radar
             </Link>
           </li>
           <li>
-            <Link to="/utilisateurs" className="flex items-center hover:text-orange-500">
-              <FaUsers className="mr-2" /> Utilisateurs
+            <Link to="/chat" className="flex items-center hover:text-orange-500">
+              <FaUsers className="mr-2" /> avis
             </Link>
           </li>
           <li>
-            <Link to="/groupes" className="flex items-center hover:text-orange-500">
-              <FaUsersCog className="mr-2" /> Groupes d’utilisateurs
+            <Link to="/reponse" className="flex items-center hover:text-orange-500">
+              <FaUsersCog className="mr-2" /> indices
             </Link>
           </li>
         </ul>
