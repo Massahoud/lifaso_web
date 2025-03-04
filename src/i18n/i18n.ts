@@ -1,19 +1,17 @@
-import i18n from "i18next";
-import { initReactI18next } from "react-i18next";
+import i18n from 'i18next';
+import { initReactI18next } from 'react-i18next';
+import Backend from 'i18next-http-backend';
 
-const resources = {
-  fr: {
-    translation: {
-      "welcome": "Bienvenue",
-      "token_placeholder": "Collez votre token ici...",
+i18n
+  .use(Backend)
+  .use(initReactI18next)
+  .init({
+    lng: 'fr', // Langue par défaut
+    fallbackLng: 'fr', // Langue de secours
+    debug: true,
+    interpolation: {
+      escapeValue: false,
     },
-  },
-};
-
-i18n.use(initReactI18next).init({
-  resources,
-  lng: "fr",
-  interpolation: { escapeValue: false },
-});
+  });
 
 export default i18n;

@@ -1,12 +1,11 @@
 import { useEffect, useState } from "react";
-import axios from "axios";
 import { useNavigate } from "react-router-dom";
+
 import SearchBar from "../components/childlist/SearchBar";
 import ChildCard from "../components/childlist/ChildCard";
 import Pagination from "../components/childlist/Pagination";
 import EnquetesPage from "../components/childlist/filterChild";
-
-const API_URL = "http://192.168.1.70:3000/api/enquete";
+import api from "../services/api";
 const ITEMS_PER_PAGE = 10;
 
 interface Child {
@@ -28,25 +27,20 @@ const ChildList = () => {
   const [filteredChildren, setFilteredChildren] = useState<Child[]>([]);
   const [searchQuery, setSearchQuery] = useState("");
   const [currentPage, setCurrentPage] = useState(1);
+  const [loading, setLoading] = useState(true);
   const navigate = useNavigate();
 
   useEffect(() => {
-    const token = localStorage.getItem("token");
-    if (!token) {
-      navigate("/");
-      return;
-    }
-
-    axios
-      .get(API_URL, { headers: { Authorization: `Bearer ${token}` } })
+    setLoading(true);
+    api.get("/enquete") // Utilisation d'api au lieu d'axios
       .then((response) => {
         setChildren(response.data);
         setFilteredChildren(response.data);
       })
-      .catch((error) => console.error("Erreur API :", error));
-  }, [navigate]);
+      .catch((error) => console.error("Erreur API :", error))
+      .finally(() => setLoading(false));
+  }, []);
 
-  // Fonction de filtrage des enfants
   useEffect(() => {
     if (!searchQuery) {
       setFilteredChildren(children);
@@ -54,7 +48,6 @@ const ChildList = () => {
     }
 
     const lowercasedQuery = searchQuery.toLowerCase();
-
     const filtered = children.filter((child) =>
       child.numero.toLowerCase().includes(lowercasedQuery) ||
       child.nom_enfant.toLowerCase().includes(lowercasedQuery) ||
@@ -65,7 +58,7 @@ const ChildList = () => {
     );
 
     setFilteredChildren(filtered);
-    setCurrentPage(1); // Réinitialise la pagination après une recherche
+    setCurrentPage(1);
   }, [searchQuery, children]);
 
   const totalPages = Math.ceil(filteredChildren.length / ITEMS_PER_PAGE);
@@ -78,13 +71,20 @@ const ChildList = () => {
     <div className=" ">
       <SearchBar onSearch={setSearchQuery} />
       <EnquetesPage />
-      <div className="space-y-4 p-4">
-        {currentChildren.map((child) => (
-          <div key={child.id} onClick={() => navigate(`/page-childs/${child.id}`)}>
-            <ChildCard {...child} id={child.id} />
-          </div>
-        ))}
-      </div>
+
+      {loading ? (
+        <div className="flex justify-center items-center h-32">
+          <div className="loader border-t-4 border-blue-500 rounded-full w-12 h-12 animate-spin"></div>
+        </div>
+      ) : (
+        <div className="space-y-4 p-4">
+          {currentChildren.map((child) => (
+            <div key={child.id} onClick={() => navigate(`/child-detail/${child.id}`)}>
+              <ChildCard {...child} id={child.id} />
+            </div>
+          ))}
+        </div>
+      )}
 
       <Pagination
         currentPage={currentPage}

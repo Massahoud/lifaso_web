@@ -28,7 +28,7 @@ const ChildCard: React.FC<ChildCardProps> = ({
   lieuenquete,
   photo_url,
 }) => {
-  console.log("Valeur brute de date_heure_debut:", date_heure_debut);
+  
 
   let dateObj: Date | null = null;
 
@@ -61,7 +61,7 @@ const ChildCard: React.FC<ChildCardProps> = ({
     minute: "2-digit",
   });
 
-  console.log("Date affichée après conversion:", formattedDate);
+ 
 
   return (
     <div className="w-[100%] flex items-center p-4 rounded-2xl shadow-lg bg-white min-h-[100px] gap-x-6">

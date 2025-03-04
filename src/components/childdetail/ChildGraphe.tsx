@@ -9,18 +9,19 @@ import {
 } from "recharts";
 import { Card, CardContent } from "../../../components/ui/card";
 
-const data = [
-  { subject: "CADRE DE VIE", value: 4 },
-  { subject: "PAUVRETÉ", value: 2.9 },
-  { subject: "VIOLENCE", value: 3.9 },
-  { subject: "SANTÉ PHYSIQUE", value: 3.9 },
-  { subject: "ÉDUCATION", value: 2.9 },
-  { subject: "ALIMENTATION", value: 1.9 },
-];
+// Définition du type pour les données du graphique
+interface RadarChartData {
+  subject: string;
+  value: number;
+}
 
-const RadarChartComponent = () => {
+interface RadarChartProps {
+  data: RadarChartData[];
+}
+
+const RadarChartComponent: React.FC<RadarChartProps> = ({ data }) => {
   return (
-    <Card className="w-full max-w-lg p-2 ">
+    <Card className="w-full max-w-lg p-2">
       <CardContent className="flex justify-center">
         <RadarChart cx={200} cy={130} outerRadius={100} width={400} height={240} data={data}>
           <PolarGrid />

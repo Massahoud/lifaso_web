@@ -1,46 +1,67 @@
-import React from "react";
+import React, { useState, useEffect } from "react";
 import { Pencil } from "lucide-react";
+import InvestigatorNoteModal from "./EditInterviewerReview";
 
-const UserCard = () => {
+interface Child {
+  id: string;
+  avis_enqueteur: string;
+  prenom_enqueteur: string;
+  nom_enqueteur: string;
+}
+
+const UserCard: React.FC<{ child: Child }> = ({ child }) => {
+  if (!child) return <p>Aucune donnée disponible</p>;
+
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [note, setNote] = useState({
+    avis_enqueteur: "",
+    nom_enqueteur: "",
+    prenom_enqueteur: "",
+  });
+
+  useEffect(() => {
+    setNote({
+      nom_enqueteur: child.nom_enqueteur,
+      prenom_enqueteur: child.prenom_enqueteur,
+      avis_enqueteur: child.avis_enqueteur,
+    });
+  }, [child]);
+
+  const handleSave = (updatedNote: any) => {
+    setNote(updatedNote);
+    child.avis_enqueteur = updatedNote.avis_enqueteur; 
+  };
+
   return (
-    <div className="  max-w-lg  p-1">
-      {/* Ligne supérieure : Image, Nom, Rôle, et Icône d'édition */}
+    <div className="max-w-lg p-1">
       <div className="flex items-center justify-between">
         <div className="flex items-center space-x-4">
           <img
             src="https://via.placeholder.com/50"
-            alt="David Demange"
+            alt="Avatar"
             className="w-12 h-12 rounded-full"
           />
           <div>
             <h2 className="text-lg font-semibold text-gray-800">
-              David Demange
+              {child.prenom_enqueteur} {child.nom_enqueteur}
             </h2>
-            <p className="text-sm text-gray-500">
-              Admin, Consultant, Enquêteur
-            </p>
+            <p className="text-sm text-gray-500">Admin, Consultant, Enquêteur</p>
           </div>
         </div>
-
-        {/* Icône d'édition */}
-        <button className="p-2 rounded-full hover:bg-gray-200">
+        <button className="p-2 rounded-full hover:bg-gray-200" onClick={() => setIsModalOpen(true)}>
           <Pencil size={20} className="text-gray-500" />
         </button>
       </div>
-
-      {/* Ligne de séparation */}
       <div className="border-t border-gray-200 mt-2 pt-2">
-        <p className="text-gray-600 text-sm leading-relaxed">
-          Kwame vit avec ses parents dans une habitation louée, située dans les
-          zones non aménagées du secteur 05. Sa mère travaille comme
-          couturière, tandis que son père, sans emploi stable, effectue
-          occasionnellement des travaux de déchargement de camions à l’autogare.
-          En plus de la distance qui le sépare de l'école, Kwame doit souvent
-          aider ses parents pour subvenir aux besoins de la famille. Chaque
-          matin, il se lève avant l'aube pour aller chercher de l'eau au puits
-          communal, une tâche essentielle dans leur quartier...
-        </p>
+        <p className="text-gray-600 text-sm leading-relaxed">{note.avis_enqueteur}</p>
       </div>
+
+      <InvestigatorNoteModal
+        isOpen={isModalOpen}
+        onClose={() => setIsModalOpen(false)}
+        note={note}
+        onSave={handleSave}
+      />
     </div>
   );
 };
