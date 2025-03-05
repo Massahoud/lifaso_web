@@ -58,7 +58,7 @@ const ChildEditModal: React.FC<ModalProps> = ({ isOpen, onClose, child, onSave }
     e.preventDefault();
 
     try {
-      const response = await api.put(`/surveys/${child.id}`, formData);
+      await api.put(`/surveys/${child.id}`, formData);
 
       onSave(formData); // Mise à jour des données affichées
       onClose(); // Fermer la modal

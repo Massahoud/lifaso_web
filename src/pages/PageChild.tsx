@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import  { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 import api from "../services/api"; // Import de l'instance axios avec vérification du token
 import RadarChartComponent from "../components/childdetail/ChildGraphe";
@@ -9,10 +9,10 @@ import ResponsesCard from "../components/childdetail/ChildReponse";
 import ChatBox from "../components/childdetail/ChildChat";
 import AppBar from "../components/childdetail/AppBar";
 
-const API_URL = "http://192.168.1.79:3000/api/enquete";
-const CHOIX_REPONSE_URL = "http://192.168.1.79:3000/api/choixreponse";
-const SCORE_URL = "http://192.168.1.79:3000/api/enquete/score";
-const INDICES_URL = "http://192.168.1.79:3000/api/choixreponse/indices";
+const API_URL = "https://soleilmainapi.vercel.app/api/enquete";
+const CHOIX_REPONSE_URL = "https://soleilmainapi.vercel.app/api/choixreponse";
+const SCORE_URL = "https://soleilmainapi.vercel.app/api/enquete/score";
+const INDICES_URL = "hhttps://soleilmainapi.vercel.app/api/choixreponse/indices";
 
 const ChildDetailPage = () => {
   const { id } = useParams();
