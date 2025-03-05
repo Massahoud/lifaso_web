@@ -16,7 +16,7 @@ interface ChildCardProps {
 }
 
 const ChildCard: React.FC<ChildCardProps> = ({
-  
+
   numero,
   date_heure_debut,
   nom_enqueteur,

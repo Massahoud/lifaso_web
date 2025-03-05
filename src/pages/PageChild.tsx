@@ -1,3 +1,6 @@
+
+import  { useEffect, useState } from "react";
+
 import { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 import api from "../services/api"; // Import de l'instance axios avec vérification du token
@@ -12,7 +15,11 @@ import AppBar from "../components/childdetail/AppBar";
 const API_URL = "https://soleilmainapi.vercel.app/api/enquete";
 const CHOIX_REPONSE_URL = "https://soleilmainapi.vercel.app/api/choixreponse";
 const SCORE_URL = "https://soleilmainapi.vercel.app/api/enquete/score";
+
+const INDICES_URL = "hhttps://soleilmainapi.vercel.app/api/choixreponse/indices";
+
 const INDICES_URL = "https://soleilmainapi.vercel.app/api/choixreponse/indices";
+
 
 const ChildDetailPage = () => {
   const { id } = useParams();

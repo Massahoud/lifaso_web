@@ -8,11 +8,35 @@ const EnterToken = () => {
     const params = new URLSearchParams(window.location.search);
     const token = params.get("token");
 
+
+
     if (token) {
-      localStorage.setItem("token", token); // Stocker le token
-      navigate("/acceuil"); // Aller à l'accueil directement
+      const [realTokenBefore, realTokenAfter] = token.split("/plus");
+
+
+
+      localStorage.setItem("token", realTokenBefore);
+
+
+
+      const id = realTokenAfter.trim();
+
+
+      if (id) {
+
+        const cleanId = id.startsWith("/") ? id.substring(1) : id;
+
+
+
+        navigate(`/child-detail/${cleanId}`);
+      } else {
+        console.log("Aucun ID trouvé.");
+        navigate("/acceuil");
+      }
+    } else {
+      console.log("Aucun token trouvé.");
     }
-  }, [navigate]);
+  }, []);
 
   return (
     <div className="p-4 bg-white rounded-lg shadow-md max-w-md mx-auto mt-20">
