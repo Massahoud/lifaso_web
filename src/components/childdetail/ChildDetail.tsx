@@ -8,9 +8,10 @@ import ChildEditModal from "./EditChildDetail";
 interface Child {
   id: string;
   nom_enfant: string;
-  age_enfant: number;
+  age_enfant: string;
   sexe_enfant: string;
   lieuenquete: string;
+  prenom_enfant: string;
   numero: string;
   date_heure_debut: any;
   prenom_enqueteur: string;
@@ -23,24 +24,26 @@ interface Child {
 
 const ChildDetail: React.FC<{ child: Child }> = ({ child }) => {
   const [childData, setChildData] = useState({
-    nom: "",
-    prenom: "",
-    age: 0,
-    sexe: "",
+    id:"",
+    nom_enfant: "",
+    prenom_enfant: "",
+    age_enfant: "",
+    sexe_enfant: "",
     
-    contactNom: "",
-    contact: "",
+    nomcontact_enfant: "",
+    contact_enfant: "",
   });
 
   useEffect(() => {
     setChildData({
-      nom: child.nom_enfant,
-      prenom: child.prenom_enqueteur,
-      age: child.age_enfant,
-      sexe: child.sexe_enfant,
+      id: child.id,
+      nom_enfant: child.nom_enfant,
+      prenom_enfant: child.prenom_enfant,
+      age_enfant: child.age_enfant,
+      sexe_enfant: child.sexe_enfant,
       
-      contactNom: child.nomcontact_enfant,
-      contact: child.contact_enfant,
+      nomcontact_enfant: child.nomcontact_enfant,
+      contact_enfant: child.contact_enfant,
     });
   }, [child]);
 

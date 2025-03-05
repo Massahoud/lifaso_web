@@ -14,6 +14,7 @@ const UserCard: React.FC<{ child: Child }> = ({ child }) => {
 
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [note, setNote] = useState({
+    id: "",
     avis_enqueteur: "",
     nom_enqueteur: "",
     prenom_enqueteur: "",
@@ -21,6 +22,7 @@ const UserCard: React.FC<{ child: Child }> = ({ child }) => {
 
   useEffect(() => {
     setNote({
+      id: child.id,
       nom_enqueteur: child.nom_enqueteur,
       prenom_enqueteur: child.prenom_enqueteur,
       avis_enqueteur: child.avis_enqueteur,
