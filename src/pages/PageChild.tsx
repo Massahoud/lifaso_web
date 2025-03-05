@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 import api from "../services/api"; // Import de l'instance axios avec vérification du token
 import RadarChartComponent from "../components/childdetail/ChildGraphe";
