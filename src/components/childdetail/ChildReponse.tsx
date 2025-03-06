@@ -1,6 +1,6 @@
-import React from "react";
+import React,{useState, useEffect } from "react";
 import { Pencil } from "lucide-react"; 
-
+import { getUserRole } from "../../services/role";
 
 interface ResponseItem {
   numero: string;
@@ -13,14 +13,21 @@ interface ResponsesCardProps {
 }
 
 const ResponsesCard: React.FC<ResponsesCardProps> = ({ responses }) => {
+   const [userStatus, setUserStatus] = useState<string | null>(null);
+    useEffect(() => {
+      // Récupération du rôle utilisateur via la fonction utils
+      getUserRole().then(setUserStatus);
+    }, []);
   return (
     <div className="p-4">
       {/* En-tête avec le titre et l'icône d'édition */}
       <div className="flex justify-between items-center mb-3">
         <h2 className="text-lg font-semibold text-gray-800">Réponses aux questions</h2>
+        {userStatus !== "enqueteur" && (
         <button className="p-2 rounded-full hover:bg-gray-100">
           <Pencil className="h-5 w-5 text-gray-600" />
         </button>
+         )}
       </div>
 
       {/* Liste des réponses avec scroll */}

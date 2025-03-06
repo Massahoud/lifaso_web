@@ -1,7 +1,8 @@
 import React, { useState, useEffect } from "react";
 import { Pencil } from "lucide-react";
 import InvestigatorNoteModal from "./EditInterviewerReview";
-
+import imageName from "../../assets/logo.png";
+import { getUserRole } from "../../services/role";
 interface Child {
   id: string;
   avis_enqueteur: string;
@@ -19,7 +20,11 @@ const UserCard: React.FC<{ child: Child }> = ({ child }) => {
     nom_enqueteur: "",
     prenom_enqueteur: "",
   });
-
+ const [userStatus, setUserStatus] = useState<string | null>(null);
+  useEffect(() => {
+    // Récupération du rôle utilisateur via la fonction utils
+    getUserRole().then(setUserStatus);
+  }, []);
   useEffect(() => {
     setNote({
       id: child.id,
@@ -39,7 +44,7 @@ const UserCard: React.FC<{ child: Child }> = ({ child }) => {
       <div className="flex items-center justify-between">
         <div className="flex items-center space-x-4">
           <img
-            src="https://via.placeholder.com/50"
+            src={imageName} 
             alt="Avatar"
             className="w-12 h-12 rounded-full"
           />
@@ -50,9 +55,11 @@ const UserCard: React.FC<{ child: Child }> = ({ child }) => {
             <p className="text-sm text-gray-500">Admin, Consultant, Enquêteur</p>
           </div>
         </div>
+        {userStatus !== "enqueteur" && (
         <button className="p-2 rounded-full hover:bg-gray-200" onClick={() => setIsModalOpen(true)}>
           <Pencil size={20} className="text-gray-500" />
         </button>
+      )}
       </div>
       <div className="border-t border-gray-200 mt-2 pt-2">
         <p className="text-gray-600 text-sm leading-relaxed">{note.avis_enqueteur}</p>

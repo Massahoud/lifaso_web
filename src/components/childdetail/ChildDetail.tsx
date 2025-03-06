@@ -4,7 +4,7 @@ import { Badge } from "../../../components/ui/badge";
 import { Calendar, MapPin, Phone, User, Pencil } from "lucide-react";
 import { Timestamp } from "firebase/firestore";
 import ChildEditModal from "./EditChildDetail";
-
+import { getUserRole } from "../../services/role";
 interface Child {
   id: string;
   nom_enfant: string;
@@ -33,7 +33,11 @@ const ChildDetail: React.FC<{ child: Child }> = ({ child }) => {
     nomcontact_enfant: "",
     contact_enfant: "",
   });
-
+  const [userStatus, setUserStatus] = useState<string | null>(null);
+  useEffect(() => {
+    // Récupération du rôle utilisateur via la fonction utils
+    getUserRole().then(setUserStatus);
+  }, []);
   useEffect(() => {
     setChildData({
       id: child.id,
@@ -102,12 +106,14 @@ const ChildDetail: React.FC<{ child: Child }> = ({ child }) => {
       <Card className="mt-4 rounded-2xl shadow-lg bg-white p-4">
         <p className="text-gray-500 flex items-center">
           Réalisée le {formattedDate}
+          {userStatus !== "enqueteur" && (
           <button
             className="ml-2 text-blue-500 hover:text-blue-700"
             onClick={() => setIsModalOpen(true)}
           >
             <Pencil className="w-12 h-4 text-gray-600" />
           </button>
+            )}
         </p>
         <p className="flex items-center mt-2">
           <Calendar className="w-5 h-4 mr-2" /> {child.age_enfant} ans
