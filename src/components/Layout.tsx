@@ -22,22 +22,22 @@ const Layout = () => {
           </li>
           <li>
             <Link to="/child-detail" className="flex items-center hover:text-orange-500">
-              <FaChartLine className="mr-2" /> detail
+              <FaChartLine className="mr-2" /> Nuage de point
             </Link>
           </li>
           <li>
             <Link to="/radar" className="flex items-center hover:text-orange-500">
-              <FaFileAlt className="mr-2" /> radar
+              <FaFileAlt className="mr-2" /> Formulaires
             </Link>
           </li>
           <li>
             <Link to="/chat" className="flex items-center hover:text-orange-500">
-              <FaUsers className="mr-2" /> avis
+              <FaUsers className="mr-2" /> Utilisateurs
             </Link>
           </li>
           <li>
             <Link to="/reponse" className="flex items-center hover:text-orange-500">
-              <FaUsersCog className="mr-2" /> indices
+              <FaUsersCog className="mr-2" /> Groupes d'utilisateurs
             </Link>
           </li>
         </ul>

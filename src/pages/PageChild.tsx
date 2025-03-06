@@ -1,6 +1,4 @@
 
-import  { useEffect, useState } from "react";
-
 import { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 import api from "../services/api"; // Import de l'instance axios avec vérification du token
@@ -16,7 +14,6 @@ const API_URL = "https://soleilmainapi.vercel.app/api/enquete";
 const CHOIX_REPONSE_URL = "https://soleilmainapi.vercel.app/api/choixreponse";
 const SCORE_URL = "https://soleilmainapi.vercel.app/api/enquete/score";
 
-const INDICES_URL = "hhttps://soleilmainapi.vercel.app/api/choixreponse/indices";
 
 const INDICES_URL = "https://soleilmainapi.vercel.app/api/choixreponse/indices";
 
@@ -123,13 +120,23 @@ const ChildDetailPage = () => {
           <div className="bg-white rounded-2xl shadow-lg p-4 h-3/5">
             <ResponsesCard responses={responses} />
           </div>
-          <div className="bg-white rounded-2xl shadow-lg p-4 h-2/5">
-            <ChatBox />
+
+          <div className="bg-gray-700 text-white rounded-t-2xl p-3 font-bold">
+            BOITE DE DIALOGUE
           </div>
+          <div className="border border-gray-400 border-t-0 rounded-b-2xl p-4">
+            <ChatBox enqueteId={id} />
+          </div>
+
         </div>
+
+
       </div>
     </div>
+
   );
 };
 
 export default ChildDetailPage;
+
+
