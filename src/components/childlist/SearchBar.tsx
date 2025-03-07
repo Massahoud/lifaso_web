@@ -34,7 +34,8 @@ const SearchBarWithProfile: React.FC<SearchBarWithProfileProps> = ({ onSearch })
   }, [userId]);
 
   return (
-    <div className="flex items-center justify-between px-8 py-6 bg-white shadow-md">
+    <div className="flex items-center justify-between px-8 py-6 shadow-md bg-white">
+
       {/* Barre de recherche */}
       <div className="relative w-[50%]">
         <FaSearch className="absolute left-4 top-1/2 transform -translate-y-1/2 text-gray-400" />

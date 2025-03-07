@@ -6,7 +6,8 @@ import ChildCard from "../components/childlist/ChildCard";
 import Pagination from "../components/childlist/Pagination";
 import EnquetesPage from "../components/childlist/filterChild";
 import api from "../services/api";
-const ITEMS_PER_PAGE = 10;
+
+const ITEMS_PER_PAGE = 30;
 
 interface Child {
   id: string;
@@ -32,7 +33,7 @@ const ChildList = () => {
 
   useEffect(() => {
     setLoading(true);
-    api.get("/enquete") // Utilisation d'api au lieu d'axios
+    api.get("/enquete") 
       .then((response) => {
         setChildren(response.data);
         setFilteredChildren(response.data);
@@ -68,29 +69,54 @@ const ChildList = () => {
   );
 
   return (
-    <div className=" ">
-      <SearchBar onSearch={setSearchQuery} />
-      <EnquetesPage />
+    <div className="h-screen flex flex-col bg-gray-100">
+      {/* Barre de recherche et filtres fixes */}
+      
+        <SearchBar onSearch={setSearchQuery} />
+        <EnquetesPage />
+         {/* Tableau des enquêtes */}
+      <div className="">
+        <table className="min-w-full ">
+          <thead>
+            <tr className=" border-gray-200 text-gray-600">
+              <th className="py-3 px-6 text-left">Enquête +</th>
+              <th className="py-3 px-12 text-left">Enfant</th>
+              <th className="py-3 px-6 text-left">Sexe / Âge</th>
+              <th className="py-3 px-15 text-left">État</th>
+              <th className="py-3 px-6 text-left">Dernière intervention</th>
+            </tr>
+          </thead>
+         
+        </table>
+      </div>
+     
 
-      {loading ? (
-        <div className="flex justify-center items-center h-32">
-          <div className="loader border-t-4 border-blue-500 rounded-full w-12 h-12 animate-spin"></div>
-        </div>
-      ) : (
-        <div className="space-y-4 p-4">
-          {currentChildren.map((child) => (
-            <div key={child.id} onClick={() => navigate(`/child-detail/${child.id}`)}>
-              <ChildCard {...child} id={child.id} />
-            </div>
-          ))}
-        </div>
-      )}
+      {/* Liste avec défilement */}
+      <div className="flex-1 overflow-auto p-4 ">
+        {loading ? (
+          <div className="flex justify-center items-center h-32">
+            <div className="loader border-t-4 border-blue-500 rounded-full w-12 h-12 animate-spin"></div>
+          </div>
+        ) : (
+          <div className="space-y-4 cursor-pointer">
+            {currentChildren.map((child) => (
+              <div key={child.id} onClick={() => navigate(`/child-detail/${child.id}`)}>
+                <ChildCard {...child} id={child.id} />
+              </div>
+            ))}
+          </div>
+        )}
+      
 
-      <Pagination
-        currentPage={currentPage}
-        totalPages={totalPages}
-        onPageChange={setCurrentPage}
-      />
+      {/* Pagination fixe en bas */}
+      
+        <Pagination
+          currentPage={currentPage}
+          totalPages={totalPages}
+          onPageChange={setCurrentPage}
+        />
+     
+    </div>
     </div>
   );
 };

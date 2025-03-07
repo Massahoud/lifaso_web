@@ -45,7 +45,7 @@ const EnterToken = () => {
         navigate(`/child-detail/${cleanId}`);
       } else {
        
-        navigate("/acceuil");
+        navigate("/childs");
       }
     } else {
       console.log("Aucun token trouvé.");

@@ -64,9 +64,9 @@ const ChildCard: React.FC<ChildCardProps> = ({
  
 
   return (
-    <div className="w-[100%] flex items-center p-4 rounded-2xl shadow-lg bg-white min-h-[100px] gap-x-6">
+    <div className="w-[100%] flex items-center p-4 rounded-2xl shadow-lg bg-white min-h-[88px] gap-x-6">
       <div className="w-[15%] flex flex-col">
-        <span className="font-bold text-gray-800 text-sm">{numero}</span>
+        <span className="font-semibold text-gray-600 text-base">{numero}</span>
         <span className="text-xs text-gray-500">{formattedDate}</span>
       </div>
 
@@ -77,7 +77,7 @@ const ChildCard: React.FC<ChildCardProps> = ({
           className="w-14 h-14 rounded-full object-cover"
         />
         <div>
-          <p className="font-semibold text-gray-900 text-base">{nom_enfant}, {prenom_enfant}</p>
+          <p className="font-semibold text-gray-600 text-base">{nom_enfant} {prenom_enfant}</p>
           <p className="text-xs text-gray-500">{lieuenquete}</p>
         </div>
       </div>
@@ -99,7 +99,7 @@ const ChildCard: React.FC<ChildCardProps> = ({
         </span>
       </div>
 
-      <div className="w-[30%] text-gray-500 text-xs text-center">
+      <div className="w-[30%] text-gray-600 font-semibold text-xs text-center">
         {formattedDate} • {nom_enqueteur}, {prenom_enqueteur}
       </div>
 
