@@ -1,7 +1,7 @@
 
 import { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
-import api from "../services/api"; // Import de l'instance axios avec vérification du token
+import api from "../services/api";
 import RadarChartComponent from "../components/childdetail/ChildGraphe";
 import IndicatorsCard from "../components/childdetail/ChildIndices";
 import ChildDetail from "../components/childdetail/ChildDetail";
@@ -95,9 +95,10 @@ const ChildDetailPage = () => {
 
   return (
     <div className="h-screen flex flex-col">
-      <AppBar child={child} />
 
-      <div className="grid grid-cols-12 gap-4 p-4 bg-gray-100 flex-grow">
+      <AppBar child={child} />
+    
+      <div className="grid grid-cols-12 gap-4 p-4 bg-gray-100 flex-grow overflow-auto">
         <div className="col-span-3 flex flex-col gap-4">
           <div className="bg-white rounded-2xl shadow-lg p-4 h-full">
             <ChildDetail child={child} />
