@@ -3,7 +3,6 @@ import EnterToken from "./pages/PageToken";
 import ChildList from "./pages/PageChilds";
 import Layout from "./components/Layout";
 
-import ChatBox from "./components/childdetail/ChildChat";
 import ChildDetailPage from "./pages/PageChild";
 
 function App() {
@@ -15,11 +14,6 @@ function App() {
         <Route path="/child-detail/:id" element={<ChildDetailPage />} />
 
         <Route path="/childs" element={<Layout/>} />
-       
-       
-        
-       
-        <Route path="/chat" element={<ChatBox />} />
       </Routes>
     </Router>
   );
