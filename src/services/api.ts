@@ -33,7 +33,9 @@ api.interceptors.request.use(
 
     if (!token || isTokenExpired()) {
       localStorage.removeItem("token");
-      window.location.href = "https://fir-f3d3d.web.app/login"; // Redirection vers la connexion
+      const currentPath = window.location.pathname;
+window.location.href = `https://fir-f3d3d.web.app/login?redirect=${encodeURIComponent(currentPath)}`;
+// Redirection vers la connexion
       return Promise.reject("Token expiré");
     }
 
