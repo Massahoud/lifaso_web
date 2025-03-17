@@ -56,7 +56,7 @@ const EnterToken = () => {
         }
 
         if (pointId) {
-          navigate(`/child-detail/${pointId}`); // Redirection vers /child-detail/$pointId
+          navigate(`/child-detail${pointId}`); // Redirection vers /child-detail/$pointId
         } else {
           navigate("/childs"); // Redirection vers /childs si pas de pointId
         }

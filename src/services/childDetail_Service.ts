@@ -47,16 +47,9 @@ export const fetchScore = async (id: string) => {
 export const fetchIndicators = async (id: string) => {
   try {
     const response = await api.get(`${INDICES_URL}/${id}`);
-    
-    if (!Array.isArray(response.data)) {
-      console.error("Données des indices non valides :", response.data);
-      return [];
-    }
-
     return response.data.map((item: { indice_sortir: string }) => item.indice_sortir);
   } catch (error) {
     console.error("Erreur lors de la récupération des indices :", error);
     throw error;
   }
 };
-
