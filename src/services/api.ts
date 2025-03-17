@@ -1,7 +1,6 @@
 import axios from "axios";
 
-const API_URL = import.meta.env.VITE_API_URL; // URL de l'API
-const FLUTTER_LOGIN_URL = import.meta.env.VITE_REDIRECT_URL; // URL de l'app Flutter
+const API_URL = "https://soleilmainapi.vercel.app/api";
 
 const api = axios.create({
   baseURL: API_URL,
@@ -34,13 +33,9 @@ api.interceptors.request.use(
 
     if (!token || isTokenExpired()) {
       localStorage.removeItem("token");
-
-      // URL complète de l'application React avant redirection
-      const currentUrl = window.location.href;
-
-      // Rediriger vers l'app Flutter avec l'URL complète en paramètre
-      window.location.href = `${FLUTTER_LOGIN_URL}?redirect=${(currentUrl)}`;
-
+      const currentPath = window.location.pathname;
+window.location.href = `https://fir-f3d3d.web.app/login?redirect=${encodeURIComponent(currentPath)}`;
+// Redirection vers la connexion
       return Promise.reject("Token expiré");
     }
 
