@@ -13,7 +13,7 @@ function App() {
         <Route path="/child-list" element={<ChildList />} />
         <Route path="/child-detail/:id" element={<ChildDetailPage />} />
 
-        <Route path="/childs" element={<Layout/>} />
+        <Route path="/childs/" element={<Layout/>} />
       </Routes>
     </Router>
   );
