@@ -3,7 +3,7 @@ import { useNavigate } from "react-router-dom";
 import { jwtDecode, JwtPayload } from "jwt-decode";
 
 interface MyJwtPayload extends JwtPayload {
-  userId?: string; // Assurez-vous que l'ID est bien défini comme optionnel
+  userId?: string; 
 }
 
 const EnterToken = () => {
@@ -12,40 +12,54 @@ const EnterToken = () => {
   useEffect(() => {
     const params = new URLSearchParams(window.location.search);
     const token = params.get("token");
-    
 
     if (token) {
-      const parts = token.split("/plus");
-      const realTokenBefore = parts[0];
-      const realTokenAfter = parts.length > 1 ? parts[1] : null;
-
-    
-
-      localStorage.setItem("token", realTokenBefore);
-    
-
-      try {
-        // Décodage du token avec un typage explicite
-        const decodedToken = jwtDecode<MyJwtPayload>(realTokenBefore);
-        const userId = decodedToken.userId;
-
-        if (userId) {
-          localStorage.setItem("userId", userId);
-         
-        } else {
-          console.error("Aucun ID utilisateur trouvé dans le token.");
-        }
-      } catch (error) {
-        console.error("Erreur lors du décodage du token :", error);
-      }
-
-      if (realTokenAfter) {
-        const cleanId = realTokenAfter.trim().startsWith("/") ? realTokenAfter.trim().substring(1) : realTokenAfter.trim();
+      
+      if (!token.includes("/plus")) {
+        localStorage.setItem("token", token);
         
-        navigate(`/child-detail/${cleanId}`);
+        try {
+        
+          const decodedToken = jwtDecode<MyJwtPayload>(token);
+          const userId = decodedToken.userId;
+
+          if (userId) {
+            localStorage.setItem("userId", userId);
+          } else {
+            console.error("Aucun ID utilisateur trouvé dans le token.");
+          }
+        } catch (error) {
+          console.error("Erreur lors du décodage du token :", error);
+        }
+        
+        navigate("/childs/"); 
       } else {
        
-        navigate("/childs");
+        const parts = token.split("/plus");
+        const realTokenBefore = parts[0];
+        const pointId = parts.length > 1 ? parts[1] : null;
+
+        localStorage.setItem("token", realTokenBefore);
+        
+        try {
+        
+          const decodedToken = jwtDecode<MyJwtPayload>(realTokenBefore);
+          const userId = decodedToken.userId;
+
+          if (userId) {
+            localStorage.setItem("userId", userId);
+          } else {
+            console.error("Aucun ID utilisateur trouvé dans le token.");
+          }
+        } catch (error) {
+          console.error("Erreur lors du décodage du token :", error);
+        }
+
+        if (pointId) {
+          navigate(`/child-detail/${pointId}`); // Redirection vers /child-detail/$pointId
+        } else {
+          navigate("/childs/"); // Redirection vers /childs si pas de pointId
+        }
       }
     } else {
       console.log("Aucun token trouvé.");
