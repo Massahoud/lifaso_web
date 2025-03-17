@@ -68,13 +68,13 @@ const ChildList = () => {
         currentPage * ITEMS_PER_PAGE
       );
 
-      return (
-        <div className="h-screen flex flex-col bg-gray-100">
-          {/* Barre de recherche et filtres fixes */}
-          
-            <SearchBar onSearch={setSearchQuery} />
-            <EnquetesPage />
-             {/* Tableau des enquêtes  */}
+  return (
+    <div className="h-screen flex flex-col bg-gray-100">
+      {/* Barre de recherche et filtres fixes */}
+      <SearchBar onSearch={setSearchQuery} />
+      <EnquetesPage />
+
+      {/* Tableau des enquêtes */}
       <div className="">
         <table className="min-w-full ">
           <thead>

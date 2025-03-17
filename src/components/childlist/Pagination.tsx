@@ -12,7 +12,7 @@ const Pagination: React.FC<PaginationProps> = ({
   return (
     <div className="flex justify-center mt-4 space-x-2">
       <button
-        className="px-3 py-1 bg-gray-200 rounded-md hover:bg-gray-300 cursor-pointer"
+        className="px-3 py-1 bg-gray-200 rounded-md"
         disabled={currentPage === 1}
         onClick={() => onPageChange(currentPage - 1)}
       >
@@ -20,7 +20,7 @@ const Pagination: React.FC<PaginationProps> = ({
       </button>
       <span className="px-3 py-1 bg-gray-100 rounded-md">{currentPage} / {totalPages}</span>
       <button
-        className="px-3 py-1 bg-gray-200 rounded-md hover:bg-gray-300 cursor-pointer"
+        className="px-3 py-1 bg-gray-200 rounded-md"
         disabled={currentPage === totalPages}
         onClick={() => onPageChange(currentPage + 1)}
       >
