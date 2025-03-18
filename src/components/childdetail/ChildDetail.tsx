@@ -1,10 +1,14 @@
 import React, { useState, useEffect } from "react";
 import { Card } from "../../../components/ui/card";
 import { Badge } from "../../../components/ui/badge";
-import { Calendar, MapPin, Phone, User, Pencil } from "lucide-react";
+import { Calendar, MapPin, Phone, User, Pencil, ChevronDown, Check } from "lucide-react";
 import { Timestamp } from "firebase/firestore";
 import ChildEditModal from "./EditChildDetail";
 import { getUserRole } from "../../services/role";
+import { Dialog, DialogContent, DialogFooter, DialogHeader } from "../../../components/ui/dialog";
+import { updateEtat } from "../../services/childService";
+
+const stateOptions = ["Nouveau", "En cours", "Clôturé"];
 interface Child {
   id: string;
   nom_enfant: string;
@@ -19,6 +23,7 @@ interface Child {
   contactPhone?: string;
   photo_url?: string;
   contact_enfant: string;
+  etat: string;
   nomcontact_enfant: string;
 }
 
@@ -29,15 +34,21 @@ const ChildDetail: React.FC<{ child: Child }> = ({ child }) => {
     prenom_enfant: "",
     age_enfant: "",
     sexe_enfant: "",
-    
+    etat: "",
     nomcontact_enfant: "",
     contact_enfant: "",
   });
   const [userStatus, setUserStatus] = useState<string | null>(null);
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [isDropdownOpen, setIsDropdownOpen] = useState(false);
+  const [selectedEtat, setSelectedEtat] = useState(child.etat);
+  const [isConfirmDialogOpen, setIsConfirmDialogOpen] = useState(false);
+  const [pendingEtat, setPendingEtat] = useState("");
   useEffect(() => {
-    // Récupération du rôle utilisateur via la fonction utils
+   
     getUserRole().then(setUserStatus);
   }, []);
+
   useEffect(() => {
     setChildData({
       id: child.id,
@@ -45,7 +56,7 @@ const ChildDetail: React.FC<{ child: Child }> = ({ child }) => {
       prenom_enfant: child.prenom_enfant,
       age_enfant: child.age_enfant,
       sexe_enfant: child.sexe_enfant,
-      
+      etat: child.etat,
       nomcontact_enfant: child.nomcontact_enfant,
       contact_enfant: child.contact_enfant,
     });
@@ -55,7 +66,13 @@ const ChildDetail: React.FC<{ child: Child }> = ({ child }) => {
     setChildData(updatedData);
   };
 
-  const [isModalOpen, setIsModalOpen] = useState(false);
+  const handleEtatChange = (newEtat: string) => {
+    if (newEtat !== selectedEtat) {
+      setPendingEtat(newEtat);
+      setIsConfirmDialogOpen(true);
+    }
+    setIsDropdownOpen(false);
+  };
 
   let dateObj: Date | null = null;
 
@@ -99,9 +116,39 @@ const ChildDetail: React.FC<{ child: Child }> = ({ child }) => {
           alt={child.nom_enfant}
           className="w-full h-130 object-cover rounded-xl"
         />
-        <Badge className="absolute top-2 right-2 bg-yellow-500 text-white">
-          {child.sexe_enfant}
-        </Badge>
+        <div className="absolute top-2 right-2 flex items-center gap-1">
+          <Badge className={
+            `text-white ${
+              selectedEtat === "Nouveau" ? "bg-yellow-500" :
+              selectedEtat === "En cours" ? "bg-orange-500" : 
+              "bg-green-500"
+            }`
+          }>
+            {selectedEtat}
+          </Badge>
+          {userStatus !== "enqueteur" && (
+            <button
+              onClick={() => setIsDropdownOpen(!isDropdownOpen)}
+              className="text-white bg-black/20 rounded-full p-1 hover:bg-black/30 transition-colors"
+            >
+              <ChevronDown className={`w-4 h-4 transition-transform ${isDropdownOpen ? "rotate-180" : ""}`} />
+            </button>
+          )}
+          </div>
+          {isDropdownOpen && (
+          <div className="absolute top-10 right-2 w-40 bg-white rounded-lg shadow-lg z-50 border">
+            {stateOptions.map((option) => (
+              <div
+                key={option}
+                onClick={() => handleEtatChange(option)}
+                className="flex items-center justify-between px-4 py-2 hover:bg-gray-100 cursor-pointer"
+              >
+                <span>{option}</span>
+                {option === selectedEtat && <Check className="w-4 h-4 text-green-500" />}
+              </div>
+            ))}
+          </div>
+        )}
       </div>
       <Card className="mt-4 rounded-2xl shadow-lg bg-white p-4">
         <p className="text-gray-500 flex items-center">
@@ -132,7 +179,32 @@ const ChildDetail: React.FC<{ child: Child }> = ({ child }) => {
           </p>
         </div>
       </Card>
+  {/* Dialogue de confirmation */}
+  <Dialog open={isConfirmDialogOpen} onOpenChange={setIsConfirmDialogOpen}>
+        <DialogContent>
+          <DialogHeader>Confirmation requise</DialogHeader>
+          <p>
+            Voulez-vous vraiment changer l'état de "{selectedEtat}" à "{pendingEtat}" ?
+          </p>
+          <DialogFooter className="mt-4">
+          <button
+  onClick={async () => {
+    try {
+      await updateEtat(child.id, { id: child.id, etat: pendingEtat });
+      setSelectedEtat(pendingEtat);
+      setIsConfirmDialogOpen(false);
+    } catch (error) {
+      console.error("Erreur de mise à jour de l'état :", error);
+    }
+  }}
+  className="px-4 py-2 bg-orange-500 text-white rounded-md hover:bg-orange-600"
+>
+  Confirmer
+</button>
 
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
       <ChildEditModal
         isOpen={isModalOpen}
         onClose={() => setIsModalOpen(false)}

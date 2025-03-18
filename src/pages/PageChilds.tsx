@@ -18,6 +18,7 @@ interface Child {
   age_enfant: string;
   sexe_enfant: string;
   prenom_enfant: string;
+  etat: string;
   nom_enqueteur: string;
   prenom_enqueteur: string;
   photo_url: string;
@@ -27,6 +28,7 @@ const ChildList = () => {
   const [children, setChildren] = useState<Child[]>([]);
   const [filteredChildren, setFilteredChildren] = useState<Child[]>([]);
   const [searchQuery, setSearchQuery] = useState("");
+  const [selectedState, setSelectedState] = useState<string | null>(null);
   const [currentPage, setCurrentPage] = useState(1);
   const [loading, setLoading] = useState(true);
   const navigate = useNavigate();
@@ -44,27 +46,30 @@ const ChildList = () => {
   }, []);
 
   useEffect(() => {
-    if (!searchQuery) {
-      setFilteredChildren(children);
-      return;
+    let filtered = children;
+
+    if (searchQuery) {
+      const lowercasedQuery = searchQuery.toLowerCase();
+      filtered = filtered.filter(
+        (child) =>
+          child.numero.toLowerCase().includes(lowercasedQuery) ||
+          child.nom_enfant.toLowerCase().includes(lowercasedQuery) ||
+          child.prenom_enfant.toLowerCase().includes(lowercasedQuery) ||
+          child.lieuenquete.toLowerCase().includes(lowercasedQuery) ||
+          child.nom_enqueteur.toLowerCase().includes(lowercasedQuery) ||
+          child.prenom_enqueteur.toLowerCase().includes(lowercasedQuery)
+      );
     }
 
-    const lowercasedQuery = searchQuery.toLowerCase();
-    const filtered = children.filter((child) =>
-      child.numero.toLowerCase().includes(lowercasedQuery) ||
-      child.nom_enfant.toLowerCase().includes(lowercasedQuery) ||
-      child.prenom_enfant.toLowerCase().includes(lowercasedQuery) ||
-      child.lieuenquete.toLowerCase().includes(lowercasedQuery) ||
-      child.nom_enqueteur.toLowerCase().includes(lowercasedQuery) ||
-      child.prenom_enqueteur.toLowerCase().includes(lowercasedQuery)
-    );
+    if (selectedState) {
+      filtered = filtered.filter((child) => child.etat === selectedState);
+    }
 
     setFilteredChildren(filtered);
-    setCurrentPage(1);
-  }, [searchQuery, children]);
+  }, [searchQuery, children, selectedState]);
 
   const totalPages = Math.ceil(filteredChildren.length / ITEMS_PER_PAGE);
-  const currentChildren = filteredChildren.slice(
+  filteredChildren.slice(
     (currentPage - 1) * ITEMS_PER_PAGE,
     currentPage * ITEMS_PER_PAGE
   );
@@ -73,7 +78,7 @@ const ChildList = () => {
     <div className="h-screen flex flex-col bg-gray-100">
       {/* Barre de recherche et filtres fixes */}
       <SearchBar onSearch={setSearchQuery} />
-      <EnquetesPage />
+      <EnquetesPage onFilterByState={setSelectedState} />
 
       {/* Tableau des enquêtes */}
       <div className="">
@@ -95,10 +100,10 @@ const ChildList = () => {
         {loading ? (
           <div className="flex justify-center items-center h-32">
             <div className="loader border-t-4 border-blue-500 rounded-full w-12 h-12 animate-spin"></div>
-          </div>
-        ) : (
+            </div>
+          ) : (
           <div className="space-y-4 cursor-pointer">
-            {currentChildren.map((child) => (
+            {filteredChildren.map((child) => (
               <div key={child.id} onClick={() => navigate(`/child-detail/${child.id}`)}>
                 <ChildCard {...child} id={child.id} />
               </div>
