@@ -1,6 +1,6 @@
 import { useEffect, useState, useRef } from "react";
 import api from "../../services/api"; // Import de l'instance axios avec le token
-
+import { Timestamp } from "firebase/firestore";
 interface ChatBoxProps {
   enqueteId?: string;
 }
@@ -27,7 +27,38 @@ const ChatBox: React.FC<ChatBoxProps> = ({ enqueteId }) => {
 
   const userId = localStorage.getItem("userId"); // ID de l'utilisateur connecté
   const [currentUser, setCurrentUser] = useState<User | null>(null);
-
+  const formatDate = (date_heure_debut: any): string => {
+    let dateObj: Date | null = null;
+  
+    if (date_heure_debut instanceof Timestamp) {
+      dateObj = date_heure_debut.toDate();
+    } else if (
+      typeof date_heure_debut === "object" &&
+      "_seconds" in date_heure_debut &&
+      "_nanoseconds" in date_heure_debut
+    ) {
+      dateObj = new Timestamp(
+        date_heure_debut._seconds,
+        date_heure_debut._nanoseconds
+      ).toDate();
+    } else if (typeof date_heure_debut === "string" || typeof date_heure_debut === "number") {
+      const parsedDate = new Date(date_heure_debut);
+      dateObj = isNaN(parsedDate.getTime()) ? null : parsedDate;
+    }
+  
+    if (!dateObj) {
+      console.error("Date invalide détectée:", date_heure_debut);
+      dateObj = new Date();
+    }
+  
+    return dateObj.toLocaleString("fr-FR", {
+      day: "numeric",
+      month: "long",
+      year: "numeric",
+      hour: "2-digit",
+      minute: "2-digit",
+    });
+  };
   // Récupération de l'utilisateur connecté
   useEffect(() => {
     if (!userId) return;
@@ -47,7 +78,7 @@ const ChatBox: React.FC<ChatBoxProps> = ({ enqueteId }) => {
           id: msg.id, // Récupération de l'ID Firestore
           userId: msg.userId,
           text: msg.text,
-          date: msg.date,
+          date: formatDate(msg.date),
         }));
         setMessages(formattedMessages);
         fetchUserDetails(formattedMessages);
@@ -134,7 +165,7 @@ const ChatBox: React.FC<ChatBoxProps> = ({ enqueteId }) => {
                 
                 <div className="flex items-center text-xs text-gray-500 space-x-2 mt-1">
                   <span>
-                    {user ? `${user.prenom} ${user.nom}` : "Utilisateur inconnu"}, {new Date(msg.date).toLocaleTimeString()}
+                  {user ? `${user.prenom} ${user.nom}` : "Utilisateur inconnu"}, {msg.date}
                   </span>
 
                   {/* Bouton de suppression sur la même ligne */}
