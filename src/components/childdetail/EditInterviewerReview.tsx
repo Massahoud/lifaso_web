@@ -44,14 +44,14 @@ const InvestigatorNoteModal: React.FC<InvestigatorNoteProps> = ({ isOpen, onClos
     try {
       await api.put(`/surveys/${note.id}`, currentNote);
       onSave(currentNote);
-      setMessage({ type: "success", text: "Mise à jour réussie " });
+      setMessage({ type: "success", text: "Mise à jour réussie ✅" });
       setTimeout(() => {
         setMessage(null);
         onClose();
       }, 3000);
     } catch (error) {
       console.error("Erreur lors de la mise à jour :", error);
-      setMessage({ type: "error", text: "Erreur lors de la mise à jour " });
+      setMessage({ type: "error", text: "Erreur lors de la mise à jour ❌" });
       setTimeout(() => setMessage(null), 3000);
     }
   };
