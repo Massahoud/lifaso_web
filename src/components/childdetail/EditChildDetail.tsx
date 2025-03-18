@@ -1,8 +1,10 @@
+
+// components/ChildEditModal.tsx
 import React, { useState, useEffect } from "react";
 import { X } from "lucide-react";
-import api from "../../services/api"; // Importation de l'instance API avec le token
+import { updateChild } from "../../services/childService";
 
-interface Child {
+export interface Child {
   id: string;
   nom_enfant: string;
   prenom_enfant: string;
@@ -32,15 +34,7 @@ const ChildEditModal: React.FC<ModalProps> = ({ isOpen, onClose, child, onSave }
 
   useEffect(() => {
     if (child) {
-      setFormData({
-        id: child.id || "",
-        nom_enfant: child.nom_enfant || "",
-        prenom_enfant: child.prenom_enfant || "",
-        age_enfant: child.age_enfant || "",
-        sexe_enfant: child.sexe_enfant || "",
-        nomcontact_enfant: child.nomcontact_enfant || "",
-        contact_enfant: child.contact_enfant || "",
-      });
+      setFormData({ ...child });
     }
   }, [child]);
 
@@ -56,16 +50,12 @@ const ChildEditModal: React.FC<ModalProps> = ({ isOpen, onClose, child, onSave }
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-
     try {
-
-       await api.put(`/surveys/${child.id}`, formData);
-
-
-      onSave(formData); // Mise à jour des données affichées
-      onClose(); // Fermer la modal
+      await updateChild(child.id, formData);
+      onSave(formData);
+      onClose();
     } catch (error) {
-      console.error("Erreur lors de la mise à jour :", error);
+      console.error(error);
     }
   };
 
@@ -80,90 +70,22 @@ const ChildEditModal: React.FC<ModalProps> = ({ isOpen, onClose, child, onSave }
         </div>
 
         <h3 className="mt-4 text-lg font-semibold">Enfant</h3>
-
         <form onSubmit={handleSubmit} className="mt-4 space-y-4">
-          <div>
-            <label className="block text-gray-600">Nom(s)</label>
-            <input
-              type="text"
-              name="nom_enfant"
-              value={formData.nom_enfant}
-              onChange={handleChange}
-              className="w-full border rounded-2xl p-2"
-            />
-          </div>
-          <div>
-            <label className="block text-gray-600">Prénom(s)</label>
-            <input
-              type="text"
-              name="prenom_enfant"
-              value={formData.prenom_enfant}
-              onChange={handleChange}
-              className="w-full border rounded-2xl p-2"
-            />
-          </div>
-          <div>
-            <label className="block text-gray-600">Âge</label>
-            <input
-              type="text"
-              name="age_enfant"
-              value={formData.age_enfant}
-              onChange={handleChange}
-              className="w-full border rounded-2xl p-2"
-            />
-          </div>
-          <div>
-            <label className="block text-gray-600">Sexe</label>
-            <div className="flex space-x-4">
-              <label className="flex items-center space-x-2">
+          {Object.keys(formData).map((key) => (
+            key !== "id" && (
+              <div key={key}>
+                <label className="block text-gray-600">{key.replace("_enfant", "")}</label>
                 <input
-                  type="radio"
-                  name="sexe_enfant"
-                  value="M"
-                  checked={formData.sexe_enfant === "M"}
+                  type="text"
+                  name={key}
+                  value={formData[key as keyof Child] as string}
                   onChange={handleChange}
+                  className="w-full border rounded-2xl p-2"
                 />
-                <span>Garçon</span>
-              </label>
-              <label className="flex items-center space-x-2">
-                <input
-                  type="radio"
-                  name="sexe_enfant"
-                  value="F"
-                  checked={formData.sexe_enfant === "F"}
-                  onChange={handleChange}
-                />
-                <span>Fille</span>
-              </label>
-            </div>
-          </div>
-
-          <h3 className="mt-4 text-lg font-semibold">Contact de l'enfant</h3>
-          <div>
-            <label className="block text-gray-600">Nom(s) du contact</label>
-            <input
-              type="text"
-              name="nomcontact_enfant"
-              value={formData.nomcontact_enfant}
-              onChange={handleChange}
-              className="w-full border rounded-2xl p-2"
-            />
-          </div>
-          <div>
-            <label className="block text-gray-600">Téléphone</label>
-            <input
-              type="text"
-              name="contact_enfant"
-              value={formData.contact_enfant}
-              onChange={handleChange}
-              className="w-full border rounded-2xl p-2"
-            />
-          </div>
-
-          <button
-            type="submit"
-            className="w-full bg-orange-500 text-white py-2 mt-6 rounded-2xl hover:bg-orange-600"
-          >
+              </div>
+            )
+          ))}
+          <button type="submit" className="w-full bg-orange-500 text-white py-2 mt-6 rounded-2xl hover:bg-orange-600">
             Enregistrer
           </button>
         </form>

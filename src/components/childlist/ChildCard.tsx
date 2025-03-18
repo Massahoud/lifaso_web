@@ -12,8 +12,21 @@ interface ChildCardProps {
   age_enfant: string;
   sexe_enfant: string;
   nom_enqueteur: string;
+  etat: string;
   photo_url: string;
 }
+const getEtatColor = (etat: string) => {
+  switch (etat.toLowerCase()) {
+    case "clôturé":
+      return "bg-green-500"; // Vert
+    case "nouveau":
+      return "bg-yellow-400"; // Jaune
+    case "en cours":
+      return "bg-orange-500"; // Orange
+    default:
+      return "bg-gray-400"; // Gris par défaut
+  }
+};
 
 const ChildCard: React.FC<ChildCardProps> = ({
 
@@ -24,6 +37,7 @@ const ChildCard: React.FC<ChildCardProps> = ({
   prenom_enqueteur,
   nom_enfant,
   sexe_enfant,
+  etat,
   age_enfant,
   lieuenquete,
   photo_url,
@@ -93,11 +107,12 @@ const ChildCard: React.FC<ChildCardProps> = ({
         </p>
       </div>
 
-      <div className="w-[15%] flex justify-center">
-        <span className="bg-yellow-400 text-white px-3 py-1 rounded-full text-xs">
-          {"Nouveau"}
-        </span>
-      </div>
+      <div className={`w-[15%] flex justify-center`}>
+  <span className={`${getEtatColor(etat)} text-white px-3 py-1 rounded-full text-xs`}>
+    {etat}
+  </span>
+</div>
+
 
       <div className="w-[30%] text-gray-600 font-semibold text-xs text-center">
         {formattedDate} • {nom_enqueteur}, {prenom_enqueteur}

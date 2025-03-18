@@ -33,7 +33,7 @@ const EnterToken = () => {
           console.error("Erreur lors du décodage du token :", error);
         }
         
-        navigate("/childs/"); 
+        navigate("/childs"); 
       } else {
        
         const parts = token.split("/plus");
@@ -61,7 +61,7 @@ const EnterToken = () => {
         if (pointId) {
           navigate(`/child-detail/${pointId}`); // Redirection vers /child-detail/$pointId
         } else {
-          navigate("/childs/"); // Redirection vers /childs si pas de pointId
+          navigate("/childs"); // Redirection vers /childs si pas de pointId
         }
       }
     } else {
