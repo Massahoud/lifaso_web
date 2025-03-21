@@ -9,7 +9,7 @@ interface MyJwtPayload {
 }
 
 const PageToken = () => {
-  const navigate = useNavigate();
+  useNavigate();
 
   useEffect(() => {
     try {
