@@ -4,6 +4,7 @@ import api from "./api";
  const CHOIX_REPONSE_URL = import.meta.env.VITE_CHOIX_REPONSE_URL;
  const SCORE_URL = import.meta.env.VITE_SCORE_URL;
  const INDICES_URL = import.meta.env.VITE_INDICES_URL;
+ const DELETE_SURVEY_URL= import.meta.env.VITE_DELETE_SURVEY_URL;
  
  export const fetchChildDetails = async (id: string) => {
    try {
@@ -53,3 +54,13 @@ import api from "./api";
      throw error;
    }
  };
+
+ export const deleteSurvey = async (id: string) => {
+  try {
+    const response = await api.delete(`${DELETE_SURVEY_URL}/${id}`);
+    return response.data;
+  } catch (error) {
+    console.error("Erreur lors de la suppression de l'enquête :", error);
+    throw error;
+  }
+};

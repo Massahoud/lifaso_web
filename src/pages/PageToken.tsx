@@ -1,71 +1,55 @@
 import { useEffect } from "react";
 import { useNavigate } from "react-router-dom";
-import { jwtDecode, JwtPayload } from "jwt-decode";
+import { jwtDecode } from "jwt-decode";
 
-interface MyJwtPayload extends JwtPayload {
-  userId?: string; // Assurez-vous que l'ID est bien défini comme optionnel
+interface MyJwtPayload {
+  userId?: string;
+  role?: string;
+  exp?: number;
 }
 
-const EnterToken = () => {
-  const navigate = useNavigate();
+const PageToken = () => {
+  useNavigate();
 
   useEffect(() => {
-    const params = new URLSearchParams(window.location.search);
-    const token = params.get("token");
-    
+    try {
+      // Récupération du token dans l'URL
+      const params = new URLSearchParams(window.location.search);
+      const rawTokenParam = params.get("token");
 
-    if (token) {
-      
-      if (!token.includes("/plus")) {
-        localStorage.setItem("token", token);
-        
-        try {
-        
-          const decodedToken = jwtDecode<MyJwtPayload>(token);
-          const userId = decodedToken.userId;
+      if (!rawTokenParam) {
+        throw new Error("Aucun paramètre 'token' trouvé dans l'URL");
+      }
 
-          if (userId) {
-            localStorage.setItem("userId", userId);
-          } else {
-            console.error("Aucun ID utilisateur trouvé dans le token.");
-          }
-        } catch (error) {
-          console.error("Erreur lors du décodage du token :", error);
-        }
-        
-        navigate("/childs"); 
+      // Décodage du token et extraction de l'ID utilisateur
+      const decodedTokenParam = decodeURIComponent(rawTokenParam);
+      const separator = "|plus|";
+      const [token, pointId] = decodedTokenParam.includes(separator)
+        ? decodedTokenParam.split(separator)
+        : [decodedTokenParam, null];
+
+      if (!/^[A-Za-z0-9-_]+\.[A-Za-z0-9-_]+\.[A-Za-z0-9-_+/=]*$/.test(token)) {
+        throw new Error("Format du token JWT invalide");
+      }
+
+      localStorage.setItem("token", token);
+
+      const decoded = jwtDecode<MyJwtPayload>(token);
+      if (!decoded.userId) {
+        throw new Error("Le champ userId est manquant dans le token");
+      }
+
+      localStorage.setItem("userId", decoded.userId);
+
+      // Redirection définitive
+      if (pointId) {
+        window.location.href = `/child-detail/${encodeURIComponent(pointId)}`;
       } else {
-       
-        const parts = token.split("/plus");
-        const realTokenBefore = parts[0];
-        const pointId = parts.length > 1 ? parts[1] : null;
-
-      localStorage.setItem("token", realTokenBefore);
-    
-
-      try {
-        // Décodage du token avec un typage explicite
-        const decodedToken = jwtDecode<MyJwtPayload>(realTokenBefore);
-        const userId = decodedToken.userId;
-
-        if (userId) {
-          localStorage.setItem("userId", userId);
-         
-        } else {
-          console.error("Aucun ID utilisateur trouvé dans le token.");
-        }
-      } catch (error) {
-        console.error("Erreur lors du décodage du token :", error);
+        window.location.href = "/childs";
       }
-
-        if (pointId) {
-          navigate(`/child-detail/${pointId}`); // Redirection vers /child-detail/$pointId
-        } else {
-          navigate("/childs"); // Redirection vers /childs si pas de pointId
-        }
-      }
-    } else {
-      console.log("Aucun token trouvé.");
+    } catch (error) {
+      console.error("Erreur détaillée :", error);
+      window.location.href = "/auth";
     }
   }, []);
 
@@ -76,4 +60,4 @@ const EnterToken = () => {
   );
 };
 
-export default EnterToken;
+export default PageToken;

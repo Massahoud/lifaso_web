@@ -3,7 +3,7 @@ import { useNavigate } from "react-router-dom";
 import { FaTrash, FaDownload } from "react-icons/fa";
 import { IoChevronBack } from "react-icons/io5";
 import { getUserRole } from "../../services/role";
-
+import { deleteSurvey } from "../../services/childDetail_Service";
 interface Child {
   id: string;
   nom_enfant: string;
@@ -24,9 +24,15 @@ const AppBar: React.FC<{ child: Child }> = ({ child }) => {
     getUserRole().then(setUserStatus);
   }, []);
 
-  const handleDelete = () => {
+  const handleDelete = async () => {
     if (window.confirm("Voulez-vous vraiment supprimer cette enquête ?")) {
-      console.log("Suppression de l'enquête");
+      try {
+        await deleteSurvey(child.id);
+        alert("Enquête supprimée avec succès !");
+        navigate(-1); // Redirige l'utilisateur après suppression
+      } catch (error) {
+        alert("Erreur lors de la suppression de l'enquête.");
+      }
     }
   };
 
