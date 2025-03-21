@@ -1,4 +1,3 @@
-
 import { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 import {
@@ -14,7 +13,6 @@ import UserCard from "../components/childdetail/childCardAvis";
 import ResponsesCard from "../components/childdetail/ChildReponse";
 import ChatBox from "../components/childdetail/ChildChat";
 import AppBar from "../components/childdetail/AppBar";
-
 import { motion } from "framer-motion";
 
 const ChildDetailPage = () => {
@@ -29,20 +27,40 @@ const ChildDetailPage = () => {
     if (!id) return;
 
     setLoading(true);
-    
-    Promise.all([
+
+    Promise.allSettled([
       fetchChildDetails(id),
       fetchResponses(id),
       fetchScore(id),
       fetchIndicators(id)
     ])
-      .then(([childData, responsesData, scoreData, indicatorsData]) => {
-        setChild(childData);
-        setResponses(responsesData);
-        setIndices(scoreData);
-        setIndicators(indicatorsData);
+      .then((results) => {
+        const [childResult, responsesResult, scoreResult, indicatorsResult] = results;
+
+        if (childResult.status === "fulfilled") {
+          setChild(childResult.value);
+        } else {
+          console.error("Erreur chargement enfant:", childResult.reason);
+        }
+
+        if (responsesResult.status === "fulfilled") {
+          setResponses(responsesResult.value);
+        } else {
+          console.error("Erreur chargement réponses:", responsesResult.reason);
+        }
+
+        if (scoreResult.status === "fulfilled") {
+          setIndices(scoreResult.value);
+        } else {
+          console.error("Erreur chargement scores:", scoreResult.reason);
+        }
+
+        if (indicatorsResult.status === "fulfilled") {
+          setIndicators(indicatorsResult.value);
+        } else {
+          console.error("Erreur chargement indicateurs:", indicatorsResult.reason);
+        }
       })
-      .catch(error => console.error("Erreur lors du chargement des données :", error))
       .finally(() => setLoading(false));
   }, [id]);
 
@@ -79,9 +97,6 @@ const ChildDetailPage = () => {
       </motion.div>
     );
   }
-  
-
-  if (!child) return <p>Aucune donnée trouvée.</p>;
 
   return (
     <motion.div
@@ -90,30 +105,38 @@ const ChildDetailPage = () => {
       transition={{ duration: 0.5 }}
       className="h-screen flex flex-col"
     >
-      <AppBar child={child} />
+      {child && <AppBar child={child} />}
     
       <div className="grid grid-cols-12 gap-4 p-4 bg-gray-100 flex-grow overflow-auto">
         <div className="col-span-3 flex flex-col gap-4">
           <div className="bg-white rounded-2xl shadow-lg p-4 h-full">
-            <ChildDetail child={child} />
+            {child ? <ChildDetail child={child} /> : <p>Pas d'information sur l'enfant.</p>}
           </div>
         </div>
 
         <div className="col-span-4 flex flex-col gap-4">
           <div className="bg-white rounded-2xl shadow-lg p-4 h-2/5">
-            <RadarChartComponent data={indices} />
+            {indices.length > 0 ? (
+              <RadarChartComponent data={indices} />
+            ) : (
+              <p>Aucune donnée pour le graphique.</p>
+            )}
           </div>
           <div className="bg-white rounded-2xl shadow-lg p-4 h-1/5">
             <IndicatorsCard indicators={indicators} />
           </div>
           <div className="bg-white rounded-2xl shadow-lg p-4 h-2/5">
-            <UserCard child={child} />
+            {child ? <UserCard child={child} /> : <p>Avis non disponible.</p>}
           </div>
         </div>
 
         <div className="col-span-5 flex flex-col gap-4 mr-4">
           <div className="bg-white rounded-2xl shadow-lg p-4 h-3/5">
-            <ResponsesCard responses={responses} />
+            {responses.length > 0 ? (
+              <ResponsesCard responses={responses} />
+            ) : (
+              <p>Aucune réponse disponible.</p>
+            )}
           </div>
 
           <div className="bg-gray-700 text-white rounded-t-2xl p-3 font-bold">
@@ -129,4 +152,3 @@ const ChildDetailPage = () => {
 };
 
 export default ChildDetailPage;
-
