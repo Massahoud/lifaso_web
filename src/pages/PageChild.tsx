@@ -14,7 +14,7 @@ import ResponsesCard from "../components/childdetail/ChildReponse";
 import ChatBox from "../components/childdetail/ChildChat";
 import AppBar from "../components/childdetail/AppBar";
 import { motion } from "framer-motion";
-
+import html2canvas from "html2canvas";
 const ChildDetailPage = () => {
   const { id } = useParams();
   const [child, setChild] = useState(null);
@@ -22,7 +22,25 @@ const ChildDetailPage = () => {
   const [indicators, setIndicators] = useState<string[]>([]);
   const [loading, setLoading] = useState(true);
   const [indices, setIndices] = useState<{ subject: string; value: number }[]>([]);
-
+  useEffect(() => {
+    if (id && !loading) {
+      const captureElement = document.getElementById("capture");
+      if (captureElement) {
+        // Assure-toi que le DOM est prêt
+        html2canvas(captureElement, {
+          backgroundColor: "#ffffff",
+          useCORS: true,
+          allowTaint: false
+        }).then((canvas) => {
+          const image = canvas.toDataURL("image/png");
+          console.log("Capture réussie", image);
+        }).catch((error) => {
+          console.error("Erreur lors de la capture:", error);
+        });
+      }
+    }
+  }, [id, loading]);  // Déclenche après que l'ID et le contenu aient été chargés
+  
   useEffect(() => {
     if (!id) return;
 
@@ -71,6 +89,7 @@ const ChildDetailPage = () => {
         animate={{ opacity: 1 }}
         transition={{ duration: 0.5 }}
         className="h-screen flex flex-col"
+       
       >
         <div className="bg-gray-200 h-16 w-full animate-pulse"></div>
   
@@ -106,7 +125,7 @@ const ChildDetailPage = () => {
       className="h-screen flex flex-col"
     >
       {child && <AppBar child={child} />}
-    
+      <div id="capture">
       <div className="grid grid-cols-12 gap-4 p-4 bg-gray-100 flex-grow overflow-auto">
         <div className="col-span-3 flex flex-col gap-4">
           <div className="bg-white rounded-2xl shadow-lg p-4 h-full">
@@ -146,6 +165,7 @@ const ChildDetailPage = () => {
             <ChatBox enqueteId={id} />
           </div>
         </div>
+      </div>
       </div>
     </motion.div>
   );

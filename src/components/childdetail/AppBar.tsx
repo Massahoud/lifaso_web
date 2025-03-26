@@ -1,9 +1,12 @@
 import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
-import { FaTrash, FaDownload } from "react-icons/fa";
+import { FaTrash, FaDownload, FaFilePdf } from "react-icons/fa";
 import { IoChevronBack } from "react-icons/io5";
+import html2canvas from "html2canvas";
+import jsPDF from "jspdf";
 import { getUserRole } from "../../services/role";
 import { deleteSurvey } from "../../services/childDetail_Service";
+
 interface Child {
   id: string;
   nom_enfant: string;
@@ -36,6 +39,38 @@ const AppBar: React.FC<{ child: Child }> = ({ child }) => {
     }
   };
 
+  const handleExport = async () => {
+    const element = document.getElementById("capture"); // ID de l'élément à capturer
+  
+    if (!element) {
+      console.error("Élément non trouvé");
+      return;
+    }
+  
+    try {
+      // Capturer l'élément sous forme d'image
+      const canvas = await html2canvas(element, {
+        backgroundColor: "#ffffff", // Corrige l'erreur en forçant un fond blanc
+        useCORS: true, // Pour les images externes
+      });
+  
+      const imgData = canvas.toDataURL("image/png");
+      
+      // Créer un PDF
+      const pdf = new jsPDF("p", "mm", "a4");
+      const imgWidth = 210; // Largeur A4 en mm
+      const imgHeight = (canvas.height * imgWidth) / canvas.width; // Garde le ratio
+  
+      pdf.addImage(imgData, "PNG", 0, 0, imgWidth, imgHeight);
+      pdf.save(`enquete_${child.numero}.pdf`);
+    } catch (error) {
+      console.error("Erreur lors de la capture :", error);
+      alert("Impossible de capturer la page.");
+    }
+  };
+  
+  
+
   return (
     <div className="flex items-center justify-between bg-white shadow-md p-4">
       {/* Bouton de retour circulaire avec icône */}
@@ -59,8 +94,11 @@ const AppBar: React.FC<{ child: Child }> = ({ child }) => {
       {/* Boutons d'actions */}
       <div className="flex items-center gap-4">
         {userStatus !== "enqueteur" && (
-          <button className="flex items-center gap-2 bg-gray-200 text-gray-700 px-4 py-2 rounded-lg hover:bg-gray-300 transition">
-            <FaDownload /> Exporter
+          <button
+            onClick={handleExport}
+            className="flex items-center gap-2 bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700 transition"
+          >
+            <FaFilePdf /> Exporter PDF
           </button>
         )}
         {userStatus !== "enqueteur" && (

@@ -85,11 +85,12 @@ const ChildCard: React.FC<ChildCardProps> = ({
       </div>
 
       <div className="w-[25%] flex items-center gap-x-4">
-        <img
-          src={photo_url}
-          alt={nom_enfant}
-          className="w-14 h-14 rounded-full object-cover"
-        />
+      <div
+  className="w-14 h-14 rounded-full bg-cover bg-[top_10%]"
+  style={{ backgroundImage: `url(${photo_url})` }}
+></div>
+
+
         <div>
           <p className="font-semibold text-gray-600 text-base">{nom_enfant} {prenom_enfant}</p>
           <p className="text-xs text-gray-500">{lieuenquete}</p>
