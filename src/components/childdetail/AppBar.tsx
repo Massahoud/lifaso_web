@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
-import { FaTrash, FaDownload, FaFilePdf } from "react-icons/fa";
+import { FaTrash,  FaFilePdf } from "react-icons/fa";
 import { IoChevronBack } from "react-icons/io5";
 import html2canvas from "html2canvas";
 import jsPDF from "jspdf";
