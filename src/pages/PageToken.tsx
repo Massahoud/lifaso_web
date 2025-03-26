@@ -1,5 +1,5 @@
 import { useEffect } from "react";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useLocation } from "react-router-dom";
 import { jwtDecode } from "jwt-decode";
 
 interface MyJwtPayload {
@@ -9,31 +9,34 @@ interface MyJwtPayload {
 }
 
 const PageToken = () => {
-  useNavigate();
+  const navigate = useNavigate();
+  const location = useLocation();
 
   useEffect(() => {
     try {
       // Récupération du token dans l'URL
-      const params = new URLSearchParams(window.location.search);
-      const rawTokenParam = params.get("token");
+      const params = new URLSearchParams(location.search);
+      const token = params.get("token");
 
-      if (!rawTokenParam) {
+      // Extraire `pointId` du chemin de l'URL
+      const pathParts = location.pathname.split("/");
+      const pointId = pathParts.length > 2 ? pathParts[2] : null;
+
+      console.log("pointId:", pointId);
+
+      if (!token) {
         throw new Error("Aucun paramètre 'token' trouvé dans l'URL");
       }
 
-      // Décodage du token et extraction de l'ID utilisateur
-      const decodedTokenParam = decodeURIComponent(rawTokenParam);
-      const separator = "|plus|";
-      const [token, pointId] = decodedTokenParam.includes(separator)
-        ? decodedTokenParam.split(separator)
-        : [decodedTokenParam, null];
-
+      // Vérification du format du token JWT
       if (!/^[A-Za-z0-9-_]+\.[A-Za-z0-9-_]+\.[A-Za-z0-9-_+/=]*$/.test(token)) {
         throw new Error("Format du token JWT invalide");
       }
 
+      // Stockage du token dans le localStorage
       localStorage.setItem("token", token);
 
+      // Décodage du token
       const decoded = jwtDecode<MyJwtPayload>(token);
       if (!decoded.userId) {
         throw new Error("Le champ userId est manquant dans le token");
@@ -41,17 +44,17 @@ const PageToken = () => {
 
       localStorage.setItem("userId", decoded.userId);
 
-      // Redirection définitive
+      // Redirection avec `navigate`
       if (pointId) {
-        window.location.href = `/child-detail/${encodeURIComponent(pointId)}`;
+        navigate(`/child-detail/${encodeURIComponent(pointId)}`);
       } else {
-        window.location.href = "/childs";
+        navigate("/childs");
       }
     } catch (error) {
       console.error("Erreur détaillée :", error);
-      window.location.href = "/auth";
+      navigate("/auth");
     }
-  }, []);
+  }, [navigate, location]);
 
   return (
     <div className="p-4 bg-white rounded-lg shadow-md max-w-md mx-auto mt-20">

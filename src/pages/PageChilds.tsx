@@ -69,11 +69,11 @@ const ChildList = () => {
   }, [searchQuery, children, selectedState]);
 
   const totalPages = Math.ceil(filteredChildren.length / ITEMS_PER_PAGE);
-  filteredChildren.slice(
+
+  const paginatedChildren = filteredChildren.slice(
     (currentPage - 1) * ITEMS_PER_PAGE,
     currentPage * ITEMS_PER_PAGE
   );
-
   return (
     <div className="h-screen flex flex-col bg-gray-100">
       {/* Barre de recherche et filtres fixes */}
@@ -96,30 +96,31 @@ const ChildList = () => {
       </div>
 
       {/* Liste avec défilement */}
-      <div className="flex-1 overflow-auto p-4">
-        {loading ? (
-          <div className="flex justify-center items-center h-32">
-            <div className="loader border-t-4 border-blue-500 rounded-full w-12 h-12 animate-spin"></div>
-            </div>
-          ) : (
-          <div className="space-y-4 cursor-pointer">
-            {filteredChildren.map((child) => (
-              <div key={child.id} onClick={() => navigate(`/child-detail/${child.id}`)}>
-                <ChildCard {...child} id={child.id} />
-              </div>
-            ))}
-          </div>
-        )}
-
-        {/* Pagination fixe en bas */}
-        <Pagination
-          currentPage={currentPage}
-          totalPages={totalPages}
-          onPageChange={setCurrentPage}
-        />
+  <div className="flex-1 overflow-auto p-4">
+    {loading ? (
+      <div className="flex justify-center items-center h-32">
+        <div className="loader border-t-4 border-blue-500 rounded-full w-12 h-12 animate-spin"></div>
       </div>
-    </div>
-  );
+    ) : (
+      <div className="space-y-4 cursor-pointer">
+        {paginatedChildren.map((child) => (
+          <div key={child.id} onClick={() => navigate(`/child-detail/${child.id}`)}>
+            <ChildCard {...child} id={child.id} />
+          </div>
+        ))}
+      </div>
+    )}
+
+    {/* Pagination fixe en bas */}
+    <Pagination
+      currentPage={currentPage}
+      totalPages={totalPages}
+      onPageChange={setCurrentPage}
+    />
+  </div>
+  </div>
+);
+
 };
 
 export default ChildList;
