@@ -52,7 +52,7 @@ const PageToken = () => {
       }
     } catch (error) {
       console.error("Erreur détaillée :", error);
-      navigate("/auth");
+      window.location.href = "https://v0.enquetesoleil.com/login?redirect=https://app.enquetesoleil.com/childs";
     }
   }, [navigate, location]);
 
