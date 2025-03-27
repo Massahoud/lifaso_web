@@ -45,7 +45,7 @@ const SearchBarWithProfile: React.FC<SearchBarWithProfileProps> = ({ onSearch })
   const handleLogout = () => {
     localStorage.removeItem("userId");
     localStorage.removeItem("authToken"); // Supprime aussi le token
-    navigate("/login"); // Redirige vers la page de connexion
+    window.location.href = "https://v0.enquetesoleil.com";
   };
 
   useEffect(() => {
