@@ -69,13 +69,13 @@ const ChatBox: React.FC<ChatBoxProps> = ({ enqueteId }) => {
 
   // Chargement des messages
   useEffect(() => {
-    if (!enqueteId) return;
+    if (!enqueteId || !userId) return; // Vérification des IDs
 
-    api.get(`/chat/${enqueteId}`)
+    api.get(`/chat/${enqueteId}/${userId}`) // Ajout de receiverId
       .then((response) => {
-        const messagesData = Array.isArray(response.data.data) ? response.data.data : [];
+        const messagesData = Array.isArray(response.data) ? response.data : [];
         const formattedMessages = messagesData.map((msg: any) => ({
-          id: msg.id, // Récupération de l'ID Firestore
+          id: msg.id,
           userId: msg.userId,
           text: msg.text,
           date: formatDate(msg.date),
@@ -84,7 +84,7 @@ const ChatBox: React.FC<ChatBoxProps> = ({ enqueteId }) => {
         fetchUserDetails(formattedMessages);
       })
       .catch((error) => console.error("Erreur chargement messages :", error));
-  }, [enqueteId]);
+  }, [enqueteId, userId]); // Ajout de userId comme dépendance
 
   // Auto-scroll à chaque mise à jour des messages
   useEffect(() => {

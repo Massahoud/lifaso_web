@@ -86,8 +86,12 @@ const ChildCard: React.FC<ChildCardProps> = ({
 
       <div className="w-[25%] flex items-center gap-x-4">
       <div
-  className="w-14 h-14 rounded-full bg-cover bg-[top_10%]"
-  style={{ backgroundImage: `url(${photo_url})` }}
+  className="w-14 h-14 rounded-full bg-cover bg-center"
+  style={{
+    backgroundImage: `url(${photo_url})`,
+   
+    backgroundPosition: "top 30%", // Ajuste la zone visible
+  }}
 ></div>
 
 
