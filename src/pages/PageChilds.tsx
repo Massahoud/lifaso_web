@@ -7,7 +7,7 @@ import Pagination from "../components/childlist/Pagination";
 import EnquetesPage from "../components/childlist/filterChild";
 import { fetchChildren } from "../services/childService";
 
-const ITEMS_PER_PAGE = 30;
+const ITEMS_PER_PAGE = 50;
 
 interface Child {
   id: string;

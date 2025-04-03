@@ -16,12 +16,12 @@ const EnquetesPage: React.FC<EnquetesPageProps> = ({ onFilterByState }) => {
 
   return (
     <div className="p-6 relative">
-      {/* En-tête */}
+      
       <div className="flex items-center justify-between mb-1">
-        {/* Titre */}
+     
         <h1 className="text-3xl font-bold text-gray-800">816 ENQUÊTES</h1>
 
-        {/* Boutons */}
+        
         <div className="flex items-center space-x-2 relative">
           {/* Bouton Par période */}
           <button
@@ -93,7 +93,7 @@ const EnquetesPage: React.FC<EnquetesPageProps> = ({ onFilterByState }) => {
           {/* Bouton Nouvelle enquête */}
           <button
             className="px-4 py-2 rounded-full bg-orange-500 text-white hover:bg-orange-600 focus:outline-none flex items-center cursor-pointer"
-            onClick={() => (window.location.href = "https://fir-f3d3d.web.app/createSurvey")}
+            onClick={() => (window.location.href = "https://v0.enquetesoleil.com/createSurvey")}
           >
             <FaPlus className="mr-2" />
             Nouvelle enquête

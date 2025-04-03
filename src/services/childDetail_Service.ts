@@ -1,14 +1,10 @@
 import api from "./api";
  
- const API_URL = import.meta.env.VITE_ENQUETE_URL;
- const CHOIX_REPONSE_URL = import.meta.env.VITE_CHOIX_REPONSE_URL;
- const SCORE_URL = import.meta.env.VITE_SCORE_URL;
- const INDICES_URL = import.meta.env.VITE_INDICES_URL;
- const DELETE_SURVEY_URL= import.meta.env.VITE_DELETE_SURVEY_URL;
- 
+ import.meta.env.VITE_ENQUETE_URL;
+
  export const fetchChildDetails = async (id: string) => {
    try {
-     const response = await api.get(`${API_URL}/${id}`);
+     const response = await api.get(`/enquete/${id}`);
      return response.data;
    } catch (error) {
      console.error("Erreur lors de la récupération des détails :", error);
@@ -18,7 +14,7 @@ import api from "./api";
  
  export const fetchResponses = async (id: string) => {
    try {
-     const response = await api.get(`${CHOIX_REPONSE_URL}/${id}`);
+     const response = await api.get(`/choixreponse/${id}`);
      return response.data;
    } catch (error) {
      console.error("Erreur lors de la récupération des réponses :", error);
@@ -28,7 +24,7 @@ import api from "./api";
  
  export const fetchScore = async (id: string) => {
    try {
-     const response = await api.get(`${SCORE_URL}/${id}`);
+     const response = await api.get(`/enquete/score/${id}`);
      const childData = response.data[0];
  
      return [
@@ -47,7 +43,7 @@ import api from "./api";
  
  export const fetchIndicators = async (id: string) => {
    try {
-     const response = await api.get(`${INDICES_URL}/${id}`);
+     const response = await api.get(`/choixreponse/indices/${id}`);
      return response.data.map((item: { indice_sortir: string }) => item.indice_sortir);
    } catch (error) {
      console.error("Erreur lors de la récupération des indices :", error);
@@ -57,7 +53,7 @@ import api from "./api";
 
  export const deleteSurvey = async (id: string) => {
   try {
-    const response = await api.delete(`${DELETE_SURVEY_URL}/${id}`);
+    const response = await api.delete(`/surveys/${id}`);
     return response.data;
   } catch (error) {
     console.error("Erreur lors de la suppression de l'enquête :", error);

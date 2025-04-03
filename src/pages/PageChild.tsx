@@ -10,7 +10,7 @@ import RadarChartComponent from "../components/childdetail/ChildGraphe";
 import IndicatorsCard from "../components/childdetail/ChildIndices";
 import ChildDetail from "../components/childdetail/ChildDetail";
 import UserCard from "../components/childdetail/childCardAvis";
-import ResponsesCard from "../components/childdetail/ChildReponse";
+import { ResponsesCard } from "../components/childdetail/ChildReponse";
 import ChatBox from "../components/childdetail/ChildChat";
 import AppBar from "../components/childdetail/AppBar";
 import { motion } from "framer-motion";
@@ -20,6 +20,7 @@ const ChildDetailPage = () => {
   const [child, setChild] = useState(null);
   const [responses, setResponses] = useState([]);
   const [indicators, setIndicators] = useState<string[]>([]);
+  
   const [loading, setLoading] = useState(true);
   const [indices, setIndices] = useState<{ subject: string; value: number }[]>([]);
   useEffect(() => {
@@ -119,20 +120,28 @@ const ChildDetailPage = () => {
 
   return (
     <motion.div
-      initial={{ opacity: 0 }}
-      animate={{ opacity: 1 }}
-      transition={{ duration: 0.5 }}
-      className="h-screen flex flex-col"
-    >
-      {child && <AppBar child={child} />}
-      <div id="capture">
+    initial={{ opacity: 0 }}
+    animate={{ opacity: 1 }}
+    transition={{ duration: 0.5 }}
+    className="h-screen flex flex-col"
+  >
+   
+  
+    {/* Ajout de padding-top pour éviter que le contenu soit caché derrière l'AppBar */}
+    <div id="capture" className="pt-20">
+       {/* AppBar fixé en haut */}
+    {child && (
+      <div className="fixed top-0 left-0 w-full z-50">
+        <AppBar child={child} responses={responses} />
+      </div>
+    )}
       <div className="grid grid-cols-12 gap-4 p-4 bg-gray-100 flex-grow overflow-auto">
         <div className="col-span-3 flex flex-col gap-4">
           <div className="bg-white rounded-2xl shadow-lg p-4 h-full">
             {child ? <ChildDetail child={child} /> : <p>Pas d'information sur l'enfant.</p>}
           </div>
         </div>
-
+  
         <div className="col-span-4 flex flex-col gap-4">
           <div className="bg-white rounded-2xl shadow-lg p-4 h-2/5">
             {indices.length > 0 ? (
@@ -148,7 +157,7 @@ const ChildDetailPage = () => {
             {child ? <UserCard child={child} /> : <p>Avis non disponible.</p>}
           </div>
         </div>
-
+  
         <div className="col-span-5 flex flex-col gap-4 mr-4">
           <div className="bg-white rounded-2xl shadow-lg p-4 h-3/5">
             {responses.length > 0 ? (
@@ -157,7 +166,7 @@ const ChildDetailPage = () => {
               <p>Aucune réponse disponible.</p>
             )}
           </div>
-
+  
           <div className="bg-gray-700 text-white rounded-t-2xl p-3 font-bold">
             BOITE DE DIALOGUE
           </div>
@@ -166,8 +175,9 @@ const ChildDetailPage = () => {
           </div>
         </div>
       </div>
-      </div>
-    </motion.div>
+    </div>
+  </motion.div>
+  
   );
 };
 

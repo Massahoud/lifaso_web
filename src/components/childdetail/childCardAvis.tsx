@@ -57,7 +57,7 @@ const UserCard: React.FC<{ child: Child }> = ({ child }) => {
         </div>
         {userStatus !== "enqueteur" && (
         <button className="p-2 rounded-full hover:bg-gray-200" onClick={() => setIsModalOpen(true)}>
-          <Pencil size={20} className="text-gray-500" />
+          <Pencil size={20} className="text-gray-500 cursor-pointer" />
         </button>
       )}
       </div>

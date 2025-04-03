@@ -50,12 +50,12 @@ const Layout = () => {
             </Link>
           </li>
           <li>
-            <Link to={generateLink("https://fir-f3d3d.web.app/nuageDePoint")} className="flex items-center hover:text-orange-500">
+            <Link to={generateLink("https://v0.enquetesoleil.com/nuageDePoint")} className="flex items-center hover:text-orange-500">
               <FaChartLine className="mr-2" /> Nuage de point
             </Link>
           </li>
           <li>
-            <Link to={generateLink("https://fir-f3d3d.web.app/question")} className="flex items-center hover:text-orange-500">
+            <Link to={generateLink("https://v0.enquetesoleil.com/question")} className="flex items-center hover:text-orange-500">
               <FaFileAlt className="mr-2" /> Formulaires
             </Link>
           </li>
@@ -63,12 +63,12 @@ const Layout = () => {
           {(currentUser?.statut === "admin" || currentUser?.statut === "superadmin") && (
             <>
               <li>
-                <Link to={generateLink("https://fir-f3d3d.web.app/users")} className="flex items-center hover:text-orange-500">
+                <Link to={generateLink("https://v0.enquetesoleil.com/users")} className="flex items-center hover:text-orange-500">
                   <FaUsers className="mr-2" /> Utilisateurs
                 </Link>
               </li>
               <li>
-                <Link to={generateLink("https://fir-f3d3d.web.app/groups")} className="flex items-center hover:text-orange-500">
+                <Link to={generateLink("https://v0.enquetesoleil.com/groups")} className="flex items-center hover:text-orange-500">
                   <FaUsersCog className="mr-2" /> Groupes d'utilisateurs
                 </Link>
               </li>
