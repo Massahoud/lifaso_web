@@ -158,7 +158,7 @@ const ChildDetail: React.FC<{ child: Child }> = ({ child }) => {
             className="ml-2 text-blue-500 hover:text-blue-700"
             onClick={() => setIsModalOpen(true)}
           >
-            <Pencil className="w-12 h-4 text-gray-600" />
+            <Pencil className="w-12 h-4 text-gray-600 cursor-pointer" />
           </button>
             )}
         </p>

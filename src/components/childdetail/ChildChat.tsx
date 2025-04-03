@@ -201,7 +201,7 @@ const ChatBox: React.FC<ChatBoxProps> = ({ enqueteId }) => {
           onChange={(e) => setNewMessage(e.target.value)}
           placeholder="Écrire un message..."
         />
-        <button onClick={sendMessage} className="bg-orange-500 text-white px-4 py-2 rounded-lg ml-2">
+        <button onClick={sendMessage} className="bg-orange-500 text-white px-4 py-2 rounded-lg ml-2 cursor-pointer">
           Envoyer
         </button>
       </div>

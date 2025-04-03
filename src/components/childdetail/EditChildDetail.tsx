@@ -60,7 +60,7 @@ const ChildEditModal: React.FC<ModalProps> = ({ isOpen, onClose, child, onSave }
   };
 
   return (
-    <div className="fixed inset-0 bg-gray-900 bg-opacity-50 flex justify-end z-50">
+    <div className="fixed inset-0 bg-gray-40 bg-opacity-50 backdrop-blur flex justify-end z-50">
       <div className="bg-white w-1/3 h-full p-6 shadow-lg overflow-y-auto">
         <div className="flex justify-between items-center border-b pb-3">
           <h2 className="text-xl font-semibold">Informations</h2>
