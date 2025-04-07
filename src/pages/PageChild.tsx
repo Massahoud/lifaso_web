@@ -143,7 +143,7 @@ const ChildDetailPage = () => {
         </div>
   
         <div className="col-span-4 flex flex-col gap-4">
-          <div className="bg-white rounded-2xl shadow-lg p-4 h-2/5">
+          <div className="bg-white rounded-2xl shadow-lg  h-2/5">
             {indices.length > 0 ? (
               <RadarChartComponent data={indices} />
             ) : (
