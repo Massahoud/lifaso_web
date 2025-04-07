@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
-
+import { useRef } from "react";
 import SearchBar from "../components/childlist/SearchBar";
 import ChildCard from "../components/childlist/ChildCard";
 import Pagination from "../components/childlist/Pagination";
@@ -32,11 +32,77 @@ const ChildList = () => {
   const [currentPage, setCurrentPage] = useState(1);
   const [loading, setLoading] = useState(true);
   const navigate = useNavigate();
+  const [startDate, setStartDate] = useState<string | null>(null);
+  const [endDate, setEndDate] = useState<string | null>(null);
+  const scrollContainerRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    let filtered = children;
+
+    if (searchQuery) {
+      const lowercasedQuery = searchQuery.toLowerCase();
+      filtered = filtered.filter((child) => {
+        if (child.numero === searchQuery) {
+          return true;
+        }
+
+        return (
+          child.nom_enfant.toLowerCase().includes(lowercasedQuery) ||
+          child.prenom_enfant.toLowerCase().includes(lowercasedQuery) ||
+          child.lieuenquete.toLowerCase().includes(lowercasedQuery) ||
+          child.nom_enqueteur.toLowerCase().includes(lowercasedQuery) ||
+          child.prenom_enqueteur.toLowerCase().includes(lowercasedQuery)
+        );
+      });
+    }
+
+    if (selectedState) {
+      filtered = filtered.filter((child) => child.etat === selectedState);
+    }
+
+    if (startDate && endDate) {
+      const start = new Date(startDate);
+      const end = new Date(endDate);
+
+      filtered = filtered.filter((child) => {
+        let childDate: Date | null = null;
+
+        if (
+          typeof child.date_heure_debut === "object" &&
+          "_seconds" in child.date_heure_debut &&
+          "_nanoseconds" in child.date_heure_debut
+        ) {
+          childDate = new Date(child.date_heure_debut._seconds * 1000);
+        } else {
+          childDate = new Date(child.date_heure_debut);
+        }
+
+        if (!childDate || isNaN(childDate.getTime())) {
+          console.error("Invalid date for child:", child);
+          return false;
+        }
+
+        return childDate >= start && childDate <= end;
+      });
+    }
+
+    setFilteredChildren(filtered);
+  }, [searchQuery, children, selectedState, startDate, endDate]);
+
+  const handleFilterByDate = (start: string | null, end: string | null) => {
+    setStartDate(start);
+    setEndDate(end);
+
+    if (!start && !end) {
+      setFilteredChildren(children);
+    }
+  };
 
   useEffect(() => {
     const loadChildren = async () => {
       setLoading(true);
       const data = await fetchChildren();
+      console.log("Fetched Children:", data);
       setChildren(data);
       setFilteredChildren(data);
       setLoading(false);
@@ -45,42 +111,27 @@ const ChildList = () => {
     loadChildren();
   }, []);
 
-  useEffect(() => {
-    let filtered = children;
-
-    if (searchQuery) {
-      const lowercasedQuery = searchQuery.toLowerCase();
-      filtered = filtered.filter(
-        (child) =>
-          child.numero.toLowerCase().includes(lowercasedQuery) ||
-          child.nom_enfant.toLowerCase().includes(lowercasedQuery) ||
-          child.prenom_enfant.toLowerCase().includes(lowercasedQuery) ||
-          child.lieuenquete.toLowerCase().includes(lowercasedQuery) ||
-          child.nom_enqueteur.toLowerCase().includes(lowercasedQuery) ||
-          child.prenom_enqueteur.toLowerCase().includes(lowercasedQuery)
-      );
+  const handlePageChange = (page: number) => {
+    setCurrentPage(page);
+    if (scrollContainerRef.current) {
+      scrollContainerRef.current.scrollTo({ top: 0, behavior: "smooth" });
     }
-
-    if (selectedState) {
-      filtered = filtered.filter((child) => child.etat === selectedState);
-    }
-
-    setFilteredChildren(filtered);
-  }, [searchQuery, children, selectedState]);
-
+  };
   const totalPages = Math.ceil(filteredChildren.length / ITEMS_PER_PAGE);
 
   const paginatedChildren = filteredChildren.slice(
     (currentPage - 1) * ITEMS_PER_PAGE,
     currentPage * ITEMS_PER_PAGE
   );
+
   return (
     <div className="h-screen flex flex-col bg-gray-100">
-      {/* Barre de recherche et filtres fixes */}
       <SearchBar onSearch={setSearchQuery} />
-      <EnquetesPage onFilterByState={setSelectedState} />
+      <EnquetesPage
+        onFilterByState={setSelectedState}
+        onFilterByDate={handleFilterByDate}
+      />
 
-      {/* Tableau des enquêtes */}
       <div className="">
         <table className="min-w-full">
           <thead>
@@ -94,33 +145,29 @@ const ChildList = () => {
           </thead>
         </table>
       </div>
-
-      {/* Liste avec défilement */}
-  <div className="flex-1 overflow-auto p-4">
-    {loading ? (
-      <div className="flex justify-center items-center h-32">
-        <div className="loader border-t-4 border-blue-500 rounded-full w-12 h-12 animate-spin"></div>
-      </div>
-    ) : (
-      <div className="space-y-4 cursor-pointer">
-        {paginatedChildren.map((child) => (
-          <div key={child.id} onClick={() => navigate(`/child-detail/${child.id}`)}>
-            <ChildCard {...child} id={child.id} />
+      <div ref={scrollContainerRef} className="flex-1 overflow-auto p-4">
+        {loading ? (
+          <div className="flex justify-center items-center h-32">
+            <div className="loader border-t-4 border-blue-500 rounded-full w-12 h-12 animate-spin"></div>
           </div>
-        ))}
+        ) : (
+          <div className="space-y-4 cursor-pointer">
+            {paginatedChildren.map((child) => (
+              <div key={child.id} onClick={() => navigate(`/child-detail/${child.id}`)}>
+                <ChildCard {...child} id={child.id} />
+              </div>
+            ))}
+          </div>
+        )}
+
+        <Pagination
+          currentPage={currentPage}
+          totalPages={totalPages}
+          onPageChange={handlePageChange}
+        />
       </div>
-    )}
-
-    {/* Pagination fixe en bas */}
-    <Pagination
-      currentPage={currentPage}
-      totalPages={totalPages}
-      onPageChange={setCurrentPage}
-    />
-  </div>
-  </div>
-);
-
+    </div>
+  );
 };
 
 export default ChildList;

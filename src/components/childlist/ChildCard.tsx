@@ -78,30 +78,29 @@ const ChildCard: React.FC<ChildCardProps> = ({
  
 
   return (
-    <div className="w-[100%] flex items-center p-4 rounded-2xl shadow-lg bg-white min-h-[88px] gap-x-6">
-      <div className="w-[15%] flex flex-col">
+    <div className="w-full flex flex-wrap md:flex-nowrap items-center p-4 rounded-2xl shadow-lg bg-white min-h-[88px] gap-y-4 md:gap-x-6">
+      <div className="w-full md:w-[15%] flex flex-col items-start md:items-center">
         <span className="font-semibold text-gray-600 text-base">{numero}</span>
         <span className="text-xs text-gray-500">{formattedDate}</span>
       </div>
-
-      <div className="w-[25%] flex items-center gap-x-4">
-      <div
-  className="w-14 h-14 rounded-full bg-cover bg-center"
-  style={{
-    backgroundImage: `url(${photo_url})`,
-   
-    backgroundPosition: "top 30%", // Ajuste la zone visible
-  }}
-></div>
-
-
+  
+      <div className="w-full md:w-[25%] flex items-center gap-x-4">
+        <div
+          className="w-14 h-14 rounded-full bg-cover bg-center"
+          style={{
+            backgroundImage: `url(${photo_url})`,
+            backgroundPosition: "top 30%",
+          }}
+        ></div>
         <div>
-          <p className="font-semibold text-gray-600 text-base">{nom_enfant} {prenom_enfant}</p>
+          <p className="font-semibold text-gray-600 text-base">
+            {nom_enfant} {prenom_enfant}
+          </p>
           <p className="text-xs text-gray-500">{lieuenquete}</p>
         </div>
       </div>
-
-      <div className="w-[15%] flex items-center gap-x-2">
+  
+      <div className="w-full md:w-[15%] flex items-center gap-x-2">
         {sexe_enfant === "M" ? (
           <FaMale className="text-blue-600 text-xl" />
         ) : (
@@ -111,19 +110,20 @@ const ChildCard: React.FC<ChildCardProps> = ({
           {sexe_enfant}, {age_enfant} ans
         </p>
       </div>
-
-      <div className={`w-[15%] flex justify-center`}>
-  <span className={`${getEtatColor(etat)} text-white px-3 py-1 rounded-full text-xs`}>
-    {etat}
-  </span>
-</div>
-
-
-      <div className="w-[30%] text-gray-600 font-semibold text-xs text-center">
+  
+      <div className="w-full md:w-[15%] flex justify-start md:justify-center">
+        <span
+          className={`${getEtatColor(etat)} text-white px-3 py-1 rounded-full text-xs`}
+        >
+          {etat}
+        </span>
+      </div>
+  
+      <div className="w-full md:w-[30%] text-gray-600 font-semibold text-xs text-left md:text-center">
         {formattedDate} • {nom_enqueteur}, {prenom_enqueteur}
       </div>
-
-      <div className="w-[5%] flex justify-center items-center">
+  
+      <div className="w-full md:w-[5%] flex justify-end md:justify-center items-center">
         <FaChevronRight className="text-gray-500 text-2xl" />
       </div>
     </div>

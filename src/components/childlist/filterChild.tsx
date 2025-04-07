@@ -1,13 +1,15 @@
 import { useState } from "react";
 import { FaPlus } from "react-icons/fa";
-
 interface EnquetesPageProps {
-  onFilterByState: (etat: string) => void;
+  onFilterByState: (etat: string | null) => void; // Accepte maintenant null
+  onFilterByDate: (startDate: string | null, endDate: string | null) => void;
 }
 
-const EnquetesPage: React.FC<EnquetesPageProps> = ({ onFilterByState }) => {
+const EnquetesPage: React.FC<EnquetesPageProps> = ({ onFilterByState, onFilterByDate }) => {
   const [showDatePicker, setShowDatePicker] = useState(false);
   const [showStatePicker, setShowStatePicker] = useState(false);
+  const [startDate, setStartDate] = useState<string | null>(null);
+  const [endDate, setEndDate] = useState<string | null>(null);
 
   const handleStateSelection = (etat: string) => {
     onFilterByState(etat);
@@ -16,16 +18,17 @@ const EnquetesPage: React.FC<EnquetesPageProps> = ({ onFilterByState }) => {
 
   return (
     <div className="p-6 relative">
-      
-      <div className="flex items-center justify-between mb-1">
-     
-        <h1 className="text-3xl font-bold text-gray-800">816 ENQUÊTES</h1>
-
-        
-        <div className="flex items-center space-x-2 relative">
+      <div className="flex flex-wrap items-center justify-between mb-4 gap-y-4">
+        {/* Titre */}
+        <h1 className="text-2xl md:text-3xl font-bold text-gray-800">
+          816 ENQUÊTES
+        </h1>
+  
+        {/* Boutons */}
+        <div className="flex items-center gap-x-2 gap-y-0 flex-wrap">
           {/* Bouton Par période */}
           <button
-            className="px-4 py-2 rounded-full border border-gray-300 text-gray-600 hover:bg-gray-100 focus:outline-none cursor-pointer"
+            className="px-3 py-2 rounded-full border border-gray-300 text-gray-600 hover:bg-gray-100 focus:outline-none cursor-pointer"
             onClick={() => {
               setShowDatePicker(!showDatePicker);
               setShowStatePicker(false);
@@ -33,37 +36,58 @@ const EnquetesPage: React.FC<EnquetesPageProps> = ({ onFilterByState }) => {
           >
             Par période
           </button>
-
+  
           {/* Carte de sélection de période */}
           {showDatePicker && (
-            <div className="absolute top-12 left-0 bg-white shadow-lg rounded-lg p-4 border flex flex-col space-y-2">
-              <div className="flex space-x-2">
+            <div className="absolute top-12 left-0 bg-white shadow-lg rounded-lg p-4 border flex flex-col space-y-2 w-full md:w-auto">
+              <div className="flex flex-wrap gap-2">
                 <div className="flex flex-col">
                   <label className="text-gray-500 text-sm">Du</label>
-                  <input type="date" className="border rounded px-2 py-1 text-gray-700" />
+                  <input
+                    type="date"
+                    value={startDate || ""}
+                    onChange={(e) => setStartDate(e.target.value)}
+                    className="border rounded px-2 py-1 text-gray-700"
+                  />
                 </div>
                 <div className="flex flex-col">
                   <label className="text-gray-500 text-sm">Au</label>
-                  <input type="date" className="border rounded px-2 py-1 text-gray-700" />
+                  <input
+                    type="date"
+                    value={endDate || ""}
+                    onChange={(e) => setEndDate(e.target.value)}
+                    className="border rounded px-2 py-1 text-gray-700"
+                  />
                 </div>
               </div>
               <div className="flex justify-between mt-2">
                 <button
                   className="text-gray-600 hover:text-black text-sm"
-                  onClick={() => setShowDatePicker(false)}
+                  onClick={() => {
+                    setStartDate(null);
+                    setEndDate(null);
+                    setShowDatePicker(false);
+                    onFilterByDate(null, null);
+                  }}
                 >
                   Annuler
                 </button>
-                <button className="bg-orange-500 text-white px-4 py-2 rounded">
+                <button
+                  className="bg-orange-500 text-white px-4 py-2 rounded"
+                  onClick={() => {
+                    setShowDatePicker(false);
+                    onFilterByDate(startDate, endDate);
+                  }}
+                >
                   Valider
                 </button>
               </div>
             </div>
           )}
-
-          {/* Bouton Par Etat */}
+  
+          {/* Bouton Par État */}
           <button
-            className="px-4 py-2 rounded-full border border-gray-300 text-gray-600 hover:bg-gray-100 focus:outline-none cursor-pointer"
+            className="px-3 py-2 rounded-full border border-gray-300 text-gray-600 hover:bg-gray-100 focus:outline-none cursor-pointer"
             onClick={() => {
               setShowStatePicker(!showStatePicker);
               setShowDatePicker(false);
@@ -71,10 +95,10 @@ const EnquetesPage: React.FC<EnquetesPageProps> = ({ onFilterByState }) => {
           >
             Par État
           </button>
-
+  
           {/* Carte de sélection d'état */}
           {showStatePicker && (
-            <div className="absolute top-12 left-0 bg-white shadow-lg rounded-lg p-4 border flex flex-col space-y-2 w-40">
+            <div className="absolute top-12 left-0 bg-white shadow-lg rounded-lg p-4 border flex flex-col space-y-2 w-full md:w-40">
               {["Nouveau", "En cours", "Clôturé"].map((etat) => (
                 <button
                   key={etat}
@@ -84,16 +108,24 @@ const EnquetesPage: React.FC<EnquetesPageProps> = ({ onFilterByState }) => {
                   {etat}
                 </button>
               ))}
-              <button className="text-gray-600 hover:text-black text-sm" onClick={() => setShowStatePicker(false)}>
+              <button
+                className="text-gray-600 hover:text-black text-sm"
+                onClick={() => {
+                  setShowStatePicker(false);
+                  onFilterByState(null);
+                }}
+              >
                 Annuler
               </button>
             </div>
           )}
-
+  
           {/* Bouton Nouvelle enquête */}
           <button
-            className="px-4 py-2 rounded-full bg-orange-500 text-white hover:bg-orange-600 focus:outline-none flex items-center cursor-pointer"
-            onClick={() => (window.location.href = "https://v0.enquetesoleil.com/createSurvey")}
+            className="px-3 py-2 rounded-full bg-orange-500 text-white hover:bg-orange-600 focus:outline-none flex items-center cursor-pointer"
+            onClick={() =>
+              (window.location.href = "https://v0.enquetesoleil.com/createSurvey")
+            }
           >
             <FaPlus className="mr-2" />
             Nouvelle enquête

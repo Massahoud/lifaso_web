@@ -60,3 +60,47 @@ import api from "./api";
     throw error;
   }
 };
+
+export const fetchQuartiles = async () => {
+  try {
+    const response = await api.get(`/data/quartiles`); 
+    const data = response.data;
+
+    console.log("Données brutes des quartiles :", data);
+
+    if (data && typeof data === "object") {
+      const formattedQuartiles: Record<string, Record<string, number>> = {};
+
+      Object.entries(data).forEach(([categorie, valeurs]) => {
+        console.log(`Catégorie : ${categorie}, Valeurs :`, valeurs); 
+
+        const valeursArray = valeurs as string[];
+        const quartileData: Record<string, number> = {};
+
+        valeursArray.forEach((valeur, index) => {
+          quartileData[`quartile${index}`] = parseFloat(valeur); 
+        });
+
+        formattedQuartiles[categorie] = quartileData;
+      });
+
+      return formattedQuartiles;
+    } else {
+      console.error("Les données des quartiles sont invalides :", data);
+      return {};
+    }
+  } catch (error) {
+    console.error("Erreur lors de la récupération des quartiles :", error);
+    throw error;
+  }
+};
+
+export const fetchScores = async () => {
+  try {
+    const response = await api.get(`/data/scores`);
+    return response.data;
+  } catch (error) {
+    console.error("Erreur lors de la récupération des scores :", error);
+    throw error;
+  }
+};
