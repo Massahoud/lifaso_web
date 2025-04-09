@@ -25,7 +25,7 @@ const EnquetesPage: React.FC<EnquetesPageProps> = ({ onFilterByState, onFilterBy
         </h1>
   
         {/* Boutons */}
-        <div className="flex items-center gap-x-2 gap-y-0 flex-wrap">
+        <div className="flex items-center gap-x-2 gap-y-0 flex-wrap relative">
           {/* Bouton Par période */}
           <button
             className="px-3 py-2 rounded-full border border-gray-300 text-gray-600 hover:bg-gray-100 focus:outline-none cursor-pointer"
