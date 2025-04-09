@@ -28,12 +28,12 @@ import api from "./api";
      const childData = response.data[0];
  
      return [
-       { subject: "CADRE DE VIE", value: isNaN(Number(childData.cadre_vie)) ? 0 : Number(childData.cadre_vie) },
-       { subject: "PAUVRETÉ", value: isNaN(Number(childData.pauvrete)) ? 0 : Number(childData.pauvrete) },
-       { subject: "VIOLENCE", value: isNaN(Number(childData.violence)) ? 0 : Number(childData.violence) },
-       { subject: "SANTÉ PHYSIQUE", value: isNaN(Number(childData.sante_physique)) ? 0 : Number(childData.sante_physique) },
-       { subject: "ÉDUCATION", value: isNaN(Number(childData.education)) ? 0 : Number(childData.education) },
-       { subject: "ALIMENTATION", value: isNaN(Number(childData.alimentation)) ? 0 : Number(childData.alimentation) },
+       { subject: "cadre_vie", value: isNaN(Number(childData.cadre_vie)) ? 0 : Number(childData.cadre_vie) },
+       { subject: "pauvrete", value: isNaN(Number(childData.pauvrete)) ? 0 : Number(childData.pauvrete) },
+       { subject: "violence", value: isNaN(Number(childData.violence)) ? 0 : Number(childData.violence) },
+       { subject: "sante_physique", value: isNaN(Number(childData.sante_physique)) ? 0 : Number(childData.sante_physique) },
+       { subject: "education", value: isNaN(Number(childData.education)) ? 0 : Number(childData.education) },
+       { subject: "alimentation", value: isNaN(Number(childData.alimentation)) ? 0 : Number(childData.alimentation) },
      ];
    } catch (error) {
      console.error("Erreur lors de la récupération des scores :", error);
@@ -61,24 +61,30 @@ import api from "./api";
   }
 };
 
+
 export const fetchQuartiles = async () => {
   try {
-    const response = await api.get(`/data/quartiles`); 
+    // Appel à l'API pour récupérer les quartiles
+    const response = await api.get(`/quartile_score/quartiles`);
     const data = response.data;
 
     console.log("Données brutes des quartiles :", data);
 
+    // Vérification que les données sont valides
     if (data && typeof data === "object") {
       const formattedQuartiles: Record<string, Record<string, number>> = {};
 
+      // Parcours des catégories et formatage des données
       Object.entries(data).forEach(([categorie, valeurs]) => {
-        console.log(`Catégorie : ${categorie}, Valeurs :`, valeurs); 
+        console.log(`Catégorie : ${categorie}, Valeurs :`, valeurs);
 
-        const valeursArray = valeurs as string[];
+        // Vérification que les valeurs sont un tableau
+        const valeursArray = Array.isArray(valeurs) ? valeurs : [];
         const quartileData: Record<string, number> = {};
 
+        // Conversion des valeurs en nombres et ajout au formatage
         valeursArray.forEach((valeur, index) => {
-          quartileData[`quartile${index}`] = parseFloat(valeur); 
+          quartileData[`quartile${index + 1}`] = parseFloat(valeur); // `index + 1` pour correspondre à quartile1, quartile2, etc.
         });
 
         formattedQuartiles[categorie] = quartileData;
@@ -94,7 +100,6 @@ export const fetchQuartiles = async () => {
     throw error;
   }
 };
-
 export const fetchScores = async () => {
   try {
     const response = await api.get(`/data/scores`);

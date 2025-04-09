@@ -14,7 +14,7 @@ import { ResponsesCard } from "../components/childdetail/ChildReponse";
 import ChatBox from "../components/childdetail/ChildChat";
 import AppBar from "../components/childdetail/AppBar";
 import { motion } from "framer-motion";
-import html2canvas from "html2canvas";
+
 const ChildDetailPage = () => {
   const { id } = useParams();
   const [child, setChild] = useState(null);
@@ -23,24 +23,7 @@ const ChildDetailPage = () => {
   
   const [loading, setLoading] = useState(true);
   const [indices, setIndices] = useState<{ subject: string; value: number }[]>([]);
-  useEffect(() => {
-    if (id && !loading) {
-      const captureElement = document.getElementById("capture");
-      if (captureElement) {
-        // Assure-toi que le DOM est prêt
-        html2canvas(captureElement, {
-          backgroundColor: "#ffffff",
-          useCORS: true,
-          allowTaint: false
-        }).then((canvas) => {
-          const image = canvas.toDataURL("image/png");
-          console.log("Capture réussie", image);
-        }).catch((error) => {
-          console.error("Erreur lors de la capture:", error);
-        });
-      }
-    }
-  }, [id, loading]);  // Déclenche après que l'ID et le contenu aient été chargés
+
   
   useEffect(() => {
     if (!id) return;
