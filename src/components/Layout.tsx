@@ -2,7 +2,7 @@ import { Outlet, Link } from "react-router-dom";
 import { FaChartLine, FaClipboardList, FaFileAlt, FaUsers, FaUsersCog, FaBars, FaTimes } from "react-icons/fa";
 import api from "../services/api";
 import { useEffect, useState } from "react";
-import ChildList from "../pages/PageChilds";
+
 import imageName from "../assets/asdm.png";
 
 interface User {
