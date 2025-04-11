@@ -81,7 +81,7 @@ const Layout = () => {
                   </Link>
                 </li>
                 <li>
-                  <Link to={generateLink("https://v0.enquetesoleil.com/groups")} className="flex items-center hover:text-orange-500">
+                  <Link to="/groups" className="flex items-center hover:text-orange-500">
                     <FaUsersCog className="mr-2" /> Groupes d'utilisateurs
                   </Link>
                 </li>
@@ -92,7 +92,7 @@ const Layout = () => {
   
         {/* Contenu principal */}
         <div className="flex-grow h-screen overflow-auto p-0 bg-gray-100">
-          <ChildList />
+         
           <Outlet />
         </div>
       </div>
