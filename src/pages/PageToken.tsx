@@ -48,7 +48,13 @@ const PageToken = () => {
       if (pointId) {
         navigate(`/child-detail/${encodeURIComponent(pointId)}`);
       } else {
-        navigate("/childs");
+        // Vérifiez si l'utilisateur souhaite accéder à /groups
+        const redirectToGroups = params.get("redirectTo") === "groups";
+        if (redirectToGroups) {
+          navigate("/groups");
+        } else {
+          navigate("/childs");
+        }
       }
     } catch (error) {
       console.error("Erreur détaillée :", error);

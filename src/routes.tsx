@@ -5,6 +5,9 @@ import ChildList from "./pages/PageChilds";
 import Layout from "./components/Layout";
 import ChildDetailPage from "./pages/PageChild";
 
+import GroupsListPage from "./pages/Pagegroups";
+import GroupMembersPage from "./components/groups/group_members";
+
 const TokenHandler = () => {
   const location = useLocation();
   const params = new URLSearchParams(location.search);
@@ -21,7 +24,13 @@ const AppRoutes = () => {
         <Route path="/" element={<EnterToken />} />
         <Route path="/child-list" element={<ChildList />} />
         <Route path="/child-detail/:id" element={<ChildDetailPage />} />
-        <Route path="/childs" element={<Layout />} />
+        
+        <Route path="/" element={<Layout />}>
+          <Route path="childs" element={<ChildList />} />
+          <Route path="groups" element={<GroupsListPage/>} />
+          
+          <Route path="/group_membres" element={<GroupMembersPage />} />
+        </Route>
       </Routes>
     </Router>
   );

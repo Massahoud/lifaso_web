@@ -19,7 +19,7 @@ const EnquetesPage: React.FC<EnquetesPageProps> = ({ onFilterByState, onFilterBy
   return (
     <div className="p-6 relative">
       <div className="flex flex-wrap items-center justify-between mb-4 gap-y-4">
-        {/* Titre */}
+       
         <h1 className="text-2xl md:text-3xl font-bold text-gray-800">
           816 ENQUÊTES
         </h1>

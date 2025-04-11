@@ -1,0 +1,70 @@
+import {  FaTrash } from "react-icons/fa";
+
+
+interface GroupCardProps {
+  id: string;
+  numero: string;
+  nom: string;
+  prenom: string;
+  email: string;
+  photo: string;
+  statut: string;
+  groupe: string;
+  date_creation: string;
+  children?: React.ReactNode; // Ajoutez cette ligne
+}
+
+const GroupCard: React.FC<GroupCardProps> = ({
+  
+  numero,
+  nom,
+  prenom,
+  email,
+  photo,
+  statut,
+  groupe,
+  date_creation,
+  
+}) => {
+  return (
+    <div className="w-full flex flex-wrap md:flex-nowrap items-center p-4 rounded-2xl shadow-lg bg-white min-h-[88px] gap-y-4 md:gap-x-6">
+      <div className="w-full md:w-[15%] flex flex-col items-start md:items-center">
+        <span className="font-semibold text-gray-600 text-base">{numero}</span>
+        <span className="text-xs text-gray-500">{date_creation}</span>
+      </div>
+
+      <div className="w-full md:w-[25%] flex items-center gap-x-4">
+        <div
+          className="w-14 h-14 rounded-full bg-cover bg-center"
+          style={{
+            backgroundImage: `url(${photo})`,
+            backgroundPosition: "top 30%",
+          }}
+        ></div>
+        <div>
+          <p className="font-semibold text-gray-600 text-base">
+            {nom} {prenom}
+          </p>
+          <p className="text-xs text-gray-500">{email}</p>
+        </div>
+      </div>
+
+      <div className="w-full md:w-[15%] flex justify-start md:justify-center">
+        {statut}
+      </div>
+
+      <div className="w-full md:w-[30%] text-gray-600 font-semibold text-xs text-left md:text-center">
+        {groupe}
+      </div>
+
+      <div className="w-full md:w-[5%] flex justify-end md:justify-center items-center">
+        <FaTrash
+          className="text-red-500 text-2xl cursor-pointer hover:text-red-700"
+          onClick={() => console.log(`Delete member: ${nom} ${prenom}`)}
+        />
+      </div>
+    </div>
+  );
+};
+
+export default GroupCard;

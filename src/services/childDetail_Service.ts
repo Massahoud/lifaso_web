@@ -68,15 +68,14 @@ export const fetchQuartiles = async () => {
     const response = await api.get(`/quartile_score/quartiles`);
     const data = response.data;
 
-    console.log("Données brutes des quartiles :", data);
-
+   
     // Vérification que les données sont valides
     if (data && typeof data === "object") {
       const formattedQuartiles: Record<string, Record<string, number>> = {};
 
       // Parcours des catégories et formatage des données
       Object.entries(data).forEach(([categorie, valeurs]) => {
-        console.log(`Catégorie : ${categorie}, Valeurs :`, valeurs);
+       
 
         // Vérification que les valeurs sont un tableau
         const valeursArray = Array.isArray(valeurs) ? valeurs : [];
