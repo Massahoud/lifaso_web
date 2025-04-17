@@ -1,11 +1,10 @@
-import { useEffect, useState } from "react";
+import { useEffect, useState, useRef } from "react";
 import { useNavigate } from "react-router-dom";
-import { useRef } from "react";
 import SearchBar from "../components/childlist/SearchBar";
 import ChildCard from "../components/childlist/ChildCard";
 import Pagination from "../components/childlist/Pagination";
 import EnquetesPage from "../components/childlist/filterChild";
-import { fetchChildren } from "../services/childService";
+import { fetchEnquetesByUserRole } from "../services/childService";
 
 const ITEMS_PER_PAGE = 50;
 
@@ -35,6 +34,35 @@ const ChildList = () => {
   const [startDate, setStartDate] = useState<string | null>(null);
   const [endDate, setEndDate] = useState<string | null>(null);
   const scrollContainerRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    const loadChildren = async () => {
+      setLoading(true);
+    
+      // Récupérer l'ID utilisateur depuis le localStorage
+      const userId = localStorage.getItem("userId");
+      if (!userId) {
+        console.error("Aucun ID utilisateur trouvé dans le localStorage.");
+        setLoading(false);
+        return;
+      }
+    
+      try {
+        // Vérifiez que l'ID utilisateur est valide
+        console.log("ID utilisateur récupéré :", userId);
+    
+        // Appeler fetchEnquetesByUserRole avec l'ID utilisateur
+        const data = await fetchEnquetesByUserRole(userId);
+        setChildren(data);
+        setFilteredChildren(data);
+      } catch (error) {
+        console.error("Erreur lors de la récupération des enquêtes :", error);
+      } finally {
+        setLoading(false);
+      }
+    };
+    loadChildren();
+  }, []);
 
   useEffect(() => {
     let filtered = children;
@@ -98,25 +126,13 @@ const ChildList = () => {
     }
   };
 
-  useEffect(() => {
-    const loadChildren = async () => {
-      setLoading(true);
-      const data = await fetchChildren();
-      console.log("Fetched Children:", data);
-      setChildren(data);
-      setFilteredChildren(data);
-      setLoading(false);
-    };
-
-    loadChildren();
-  }, []);
-
   const handlePageChange = (page: number) => {
     setCurrentPage(page);
     if (scrollContainerRef.current) {
       scrollContainerRef.current.scrollTo({ top: 0, behavior: "smooth" });
     }
   };
+
   const totalPages = Math.ceil(filteredChildren.length / ITEMS_PER_PAGE);
 
   const paginatedChildren = filteredChildren.slice(
@@ -130,6 +146,7 @@ const ChildList = () => {
       <EnquetesPage
         onFilterByState={setSelectedState}
         onFilterByDate={handleFilterByDate}
+        totalEnquetes={children.length}
       />
 
       <div className="">

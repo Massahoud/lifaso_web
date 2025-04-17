@@ -83,7 +83,7 @@ const GroupsListPage = () => {
   console.log("Filtered groups:", filteredGroups);
 
   return (
-    <div className="h-screen flex flex-col bg-gray-100">
+    <div className="h-full flex flex-col bg-gray-100">
       {/* Barre de recherche */}
       <GroupeSeachbar onSearch={handleSearch} />
   
@@ -123,7 +123,7 @@ const GroupsListPage = () => {
             Aucun groupe disponible.
           </Typography>
         ) : (
-          <Grid container spacing={3}>
+          <Grid container spacing={2}>
             {filteredGroups.map((group) => (
               <Grid item xs={12} sm={6} md={4} lg={3} key={group.id}>
                 <Card

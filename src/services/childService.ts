@@ -11,6 +11,16 @@ export const fetchChildren = async () => {
   }
 };
 
+export const fetchEnquetesByUserRole = async (userId: string) => {
+  try {
+    // Appeler l'API avec le userId
+    const response = await api.get(`/enquete/user/${userId}`);
+    return response.data;
+  } catch (error) {
+    console.error("Erreur lors de la récupération des enquêtes par rôle :", error);
+    return [];
+  }
+};
 // services/childService.ts
 
 export interface Child {

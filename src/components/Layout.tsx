@@ -22,7 +22,7 @@ const Layout = () => {
       setToken(storedToken);
     }
 
-    if (!userId) return; // ✅ Ne fait rien si userId est null
+    if (!userId) return; 
 
     api.get(`/users/${userId}`)
       .then((response) => {
@@ -91,7 +91,7 @@ const Layout = () => {
         </nav>
   
         {/* Contenu principal */}
-        <div className="flex-grow h-screen overflow-auto p-0 bg-gray-100">
+        <div className=" w-4/5 flex-grow h-screen overflow-auto p-0 bg-gray-100">
          
           <Outlet />
         </div>

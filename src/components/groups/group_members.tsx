@@ -1,12 +1,12 @@
 import  { useEffect, useState } from "react";
 import { useLocation } from "react-router-dom";
-import { getGroupById, fetchGroupMembers, fetchGroupAdmins } from "../../services/groups_service";
+import { getGroupById, fetchGroupMembers, fetchGroupAdmins ,removeMemberFromGroup, removeAdminFromGroup} from "../../services/groups_service";
 import GroupCard from "../groups/card_members";
 import { CircularProgress, Typography } from "@mui/material";
 import { FaPlus } from "react-icons/fa";
 import GroupMemberSeach from "./search_members";
 import { useNavigate } from "react-router-dom";
-
+import { Snackbar, Alert } from "@mui/material"; // Import des composants Snackbar et Alert
 import { IoChevronBack } from "react-icons/io5";
 interface User {
   id: string;
@@ -38,6 +38,8 @@ const GroupMembersPage = () => {
   const [searchQuery, setSearchQuery] = useState("");
   const navigate = useNavigate();
   const [filteredMembers, setFilteredMembers] = useState<User[]>([]);
+  const [successMessage, setSuccessMessage] = useState<string | null>(null); // État pour le message de succès
+  const [isSnackbarOpen, setIsSnackbarOpen] = useState<boolean>(false); // État pour contrôler l'ouverture du Snackbar
 
   useEffect(() => {
     const filterUsers = () => {
@@ -67,6 +69,34 @@ const GroupMembersPage = () => {
   
     filterUsers();
   }, [searchQuery, members, administrateurs]);
+
+  //fonction pour gerer la suppression d'un membre
+  const handleDelete = async (id: string, statut: string) => {
+    try {
+      if (!group) {
+        throw new Error("Group data is missing");
+      }
+
+      if (statut === "Membre") {
+        await removeMemberFromGroup(group.id, id); // Suppression d'un membre
+        setMembers((prev) => prev.filter((member) => member.id !== id)); // Mise à jour de l'état
+        setSuccessMessage("Le membre a été supprimé avec succès."); // Message de succès
+      } else if (statut === "Administrateur") {
+        await removeAdminFromGroup(group.id, id); // Suppression d'un administrateur
+        setAdmins((prev) => prev.filter((admin) => admin.id !== id)); // Mise à jour de l'état
+        setSuccessMessage("L'administrateur a été supprimé avec succès."); // Message de succès
+      }
+
+      // Efface le message après 3 secondes
+      setIsSnackbarOpen(true); 
+    } catch (error: any) {
+      console.error("Error deleting user:", error.message);
+      setError(`Erreur : ${error.message}`);
+    }
+  };
+  const handleSnackbarClose = () => {
+    setIsSnackbarOpen(false); // Ferme le Snackbar
+  };
   // Récupération des détails du groupe et des membres
   useEffect(() => {
     const fetchGroupDetails = async () => {
@@ -105,7 +135,17 @@ const GroupMembersPage = () => {
 
   return (
     <div className="h-full flex flex-col bg-gray-100">
-    
+    {/* Affichage du message de succès */}
+    <Snackbar
+        open={isSnackbarOpen}
+        autoHideDuration={3000} // Durée d'affichage (3 secondes)
+        onClose={handleSnackbarClose}
+        anchorOrigin={{ vertical: "top", horizontal: "center" }} // Position du Snackbar
+      >
+        <Alert onClose={handleSnackbarClose} severity="success" sx={{ width: "100%" }}>
+          {successMessage}
+        </Alert>
+      </Snackbar>
         <GroupMemberSeach onSearch={setSearchQuery} />
 
         {group && (
@@ -164,30 +204,34 @@ const GroupMembersPage = () => {
     </div>
   ) : [...administrateurs, ...filteredMembers].length > 0 ? (
     <div className="grid grid-cols-1 gap-4">
-    {[...administrateurs, ...filteredMembers].map((user) => (
-      <GroupCard
-        key={user.id}
-        id={user.id}
-        numero={user.numero}
-        nom={user.nom}
-        prenom={user.prenom}
-        email={user.email}
-        photo={user.photo || "/default_avatar.png"}
-        statut={
-          administrateurs.some((admin) => admin.id === user.id)
-            ? "Administrateur"
-            : "Membre"
-        }
-        groupe={group?.nom || ""}
-        date_creation={group?.date_creation || ""}
-      >
-        {administrateurs.some((admin) => admin.id === user.id) && (
-          <span className="text-sm text-white bg-blue-500 px-2 py-1 rounded-full ml-2">
-            Admin
-          </span>
-        )}
-      </GroupCard>
-    ))}
+    {filteredMembers
+      .filter((member) => !administrateurs.some((admin) => admin.id === member.id)) // Exclure les administrateurs des membres
+      .concat(administrateurs) // Ajouter les administrateurs après avoir filtré les membres
+      .map((user) => (
+        <GroupCard
+          key={user.id}
+          id={user.id}
+          numero={user.numero}
+          nom={user.nom}
+          prenom={user.prenom}
+          email={user.email}
+          photo={user.photo || "/default_avatar.png"}
+          statut={
+            administrateurs.some((admin) => admin.id === user.id)
+              ? "Administrateur"
+              : "Membre"
+          }
+          groupe={group?.nom || ""}
+          date_creation={group?.date_creation || ""}
+          onDelete={handleDelete}
+        >
+          {administrateurs.some((admin) => admin.id === user.id) && (
+            <span className="text-sm text-white bg-blue-500 px-2 py-1 rounded-full ml-2">
+              Admin
+            </span>
+          )}
+        </GroupCard>
+      ))}
   </div>
   ) : (
     <Typography variant="h6" className="text-gray-600">

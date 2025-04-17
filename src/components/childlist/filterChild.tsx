@@ -1,11 +1,12 @@
 import { useState } from "react";
 import { FaPlus } from "react-icons/fa";
 interface EnquetesPageProps {
-  onFilterByState: (etat: string | null) => void; // Accepte maintenant null
+  onFilterByState: (etat: string | null) => void;
   onFilterByDate: (startDate: string | null, endDate: string | null) => void;
+  totalEnquetes: number; 
 }
 
-const EnquetesPage: React.FC<EnquetesPageProps> = ({ onFilterByState, onFilterByDate }) => {
+const EnquetesPage: React.FC<EnquetesPageProps> = ({ onFilterByState, onFilterByDate,totalEnquetes }) => {
   const [showDatePicker, setShowDatePicker] = useState(false);
   const [showStatePicker, setShowStatePicker] = useState(false);
   const [startDate, setStartDate] = useState<string | null>(null);
@@ -21,7 +22,7 @@ const EnquetesPage: React.FC<EnquetesPageProps> = ({ onFilterByState, onFilterBy
       <div className="flex flex-wrap items-center justify-between mb-4 gap-y-4">
        
         <h1 className="text-2xl md:text-3xl font-bold text-gray-800">
-          816 ENQUÊTES
+        {totalEnquetes} ENQUÊTES
         </h1>
   
         {/* Boutons */}
