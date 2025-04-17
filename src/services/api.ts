@@ -27,7 +27,7 @@ api.interceptors.response.use(
   (error) => {
     if (error.response && (error.response.status === 401 || error.response.status === 403)) {
       localStorage.removeItem("token"); // Supprime le token invalide
-
+      localStorage.removeItem("userId");
       // Rediriger vers l'authentification Flutter
       const currentUrl = window.location.href;
       window.location.href = `${FLUTTER_LOGIN_URL}?redirect=${encodeURIComponent(currentUrl)}`;

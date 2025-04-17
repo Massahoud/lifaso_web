@@ -12,10 +12,11 @@ interface GroupCardProps {
   groupe: string;
   date_creation: string;
   children?: React.ReactNode; // Ajoutez cette ligne
+  onDelete: (id: string, statut: string) => void; // Nouvelle prop pour la suppression
 }
 
 const GroupCard: React.FC<GroupCardProps> = ({
-  
+  id,
   numero,
   nom,
   prenom,
@@ -24,8 +25,17 @@ const GroupCard: React.FC<GroupCardProps> = ({
   statut,
   groupe,
   date_creation,
-  
+  onDelete,
 }) => {
+  const handleDeleteClick = () => {
+    const confirmation = window.confirm(
+      `Êtes-vous sûr de vouloir supprimer ${nom} ${prenom} (${statut}) du groupe ?`
+    );
+    if (confirmation) {
+      onDelete(id, statut); // Appel de la fonction de suppression si confirmé
+    }
+  };
+
   return (
     <div className="w-full flex flex-wrap md:flex-nowrap items-center p-4 rounded-2xl shadow-lg bg-white min-h-[88px] gap-y-4 md:gap-x-6">
       <div className="w-full md:w-[15%] flex flex-col items-start md:items-center">
@@ -60,7 +70,7 @@ const GroupCard: React.FC<GroupCardProps> = ({
       <div className="w-full md:w-[5%] flex justify-end md:justify-center items-center">
         <FaTrash
           className="text-red-500 text-2xl cursor-pointer hover:text-red-700"
-          onClick={() => console.log(`Delete member: ${nom} ${prenom}`)}
+          onClick={handleDeleteClick}
         />
       </div>
     </div>

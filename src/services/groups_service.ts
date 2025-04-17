@@ -102,7 +102,7 @@ export const getUserById = async (id: string): Promise<User> => {
 
   try {
     const response = await api.get(`/users/${id}`);
-    return response.data; // Assurez-vous que l'API retourne un objet utilisateur
+    return response.data; 
   } catch (error: any) {
     console.error("Error fetching user:", error.response?.data || error.message);
     throw new Error(error.response?.data?.message || "Failed to fetch user");
@@ -140,5 +140,36 @@ export const getGroupById = async (id: string): Promise<Group> => {
   } catch (error: any) {
     console.error("Error fetching group:", error.response?.data || error.message);
     throw new Error(error.response?.data?.message || "Failed to fetch group");
+  }
+};
+
+
+// Fonction pour supprimer un membre d'un groupe
+export const removeMemberFromGroup = async (groupId: string, memberId: string): Promise<Group> => {
+  if (!groupId || !memberId) {
+    throw new Error("Invalid input: groupId and memberId are required");
+  }
+
+  try {
+    const response = await api.delete(`/groups/${groupId}/members/${memberId}`);
+    return response.data.group; // Assurez-vous que l'API retourne l'objet `group` mis à jour
+  } catch (error: any) {
+    console.error("Error removing member from group:", error.response?.data || error.message);
+    throw new Error(error.response?.data?.message || "Failed to remove member from group");
+  }
+};
+
+// Fonction pour supprimer un administrateur d'un groupe
+export const removeAdminFromGroup = async (groupId: string, adminId: string): Promise<Group> => {
+  if (!groupId || !adminId) {
+    throw new Error("Invalid input: groupId and adminId are required");
+  }
+
+  try {
+    const response = await api.delete(`/groups/${groupId}/admins/${adminId}`);
+    return response.data.group; // Assurez-vous que l'API retourne l'objet `group` mis à jour
+  } catch (error: any) {
+    console.error("Error removing admin from group:", error.response?.data || error.message);
+    throw new Error(error.response?.data?.message || "Failed to remove admin from group");
   }
 };
