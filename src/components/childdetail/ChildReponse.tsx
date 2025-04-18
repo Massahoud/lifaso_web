@@ -44,9 +44,15 @@ export const exportToPDF = (responses: ResponseItem[]) => {
 export const ResponsesCard: React.FC<ResponsesCardProps> = ({ responses }) => {
   const [, setUserStatus] = useState<string | null>(null);
 
-  useEffect(() => {
-    getUserRole().then(setUserStatus);
-  }, []);
+   useEffect(() => {
+     const fetchUserStatus = async () => {
+       const userInfo = await getUserRole();
+       if (userInfo) {
+         setUserStatus(userInfo.statut); // extrait uniquement le statut
+       }
+     };
+     fetchUserStatus();
+   }, []);
 
   return (
     <div className="p-4">

@@ -94,6 +94,48 @@ export const fetchGroupMembers = async (memberIds: string[]): Promise<User[]> =>
   }
 };
 
+
+//fonction de mise a jour d'un groupe ajout de membre et admin
+// Fonction pour mettre à jour un groupe
+export const updateGroup = async (
+  id: string,
+  nom: string,
+  description: string,
+  date_creation: string,
+  adminIds: string[],
+  memberIds: string[]
+): Promise<Group> => {
+  if (!id || !nom || !description || !date_creation) {
+    throw new Error("Invalid input: all fields are required");
+  }
+
+  if (!Array.isArray(adminIds) || !Array.isArray(memberIds)) {
+    throw new Error("Admins and Members must be arrays");
+  }
+
+  try {
+    const response = await api.put(`/groups/${id}`, {
+      nom,
+      description,
+      date_creation,
+      administrateurs: adminIds,
+      membres: memberIds,
+    });
+
+    if (response.status === 200) {
+      return response.data.group; // L'objet mis à jour
+    } else {
+      throw new Error(`Failed to update group: ${response.status}`);
+    }
+  } catch (error: any) {
+    console.error("Error updating group:", error.response?.data || error.message);
+    throw new Error(error.response?.data?.message || "Failed to update group");
+  }
+};
+
+
+
+
 // Fonction pour récupérer un utilisateur par ID
 export const getUserById = async (id: string): Promise<User> => {
   if (!id) {

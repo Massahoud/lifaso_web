@@ -45,10 +45,15 @@ const ChildDetail: React.FC<{ child: Child }> = ({ child }) => {
   const [isConfirmDialogOpen, setIsConfirmDialogOpen] = useState(false);
   const [pendingEtat, setPendingEtat] = useState("");
   useEffect(() => {
-   
-    getUserRole().then(setUserStatus);
+    const fetchUserStatus = async () => {
+      const userInfo = await getUserRole();
+      if (userInfo) {
+        setUserStatus(userInfo.statut); // extrait uniquement le statut
+      }
+    };
+    fetchUserStatus();
   }, []);
-
+  
   useEffect(() => {
     setChildData({
       id: child.id,

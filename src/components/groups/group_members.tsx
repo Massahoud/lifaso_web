@@ -40,7 +40,7 @@ const GroupMembersPage = () => {
   const [filteredMembers, setFilteredMembers] = useState<User[]>([]);
   const [successMessage, setSuccessMessage] = useState<string | null>(null); // État pour le message de succès
   const [isSnackbarOpen, setIsSnackbarOpen] = useState<boolean>(false); // État pour contrôler l'ouverture du Snackbar
-
+ 
   useEffect(() => {
     const filterUsers = () => {
       const lowercasedQuery = searchQuery.toLowerCase();
@@ -169,13 +169,14 @@ const GroupMembersPage = () => {
 
                 {/* Boutons */}
                 <div className="flex items-center gap-x-2 gap-y-0 flex-wrap relative">
-                  <button
-                    className="px-3 py-2 rounded-full bg-orange-500 text-white hover:bg-orange-600 focus:outline-none flex items-center cursor-pointer"
-                    onClick={() => (window.location.href = "/groups/create")}
-                  >
-                    <FaPlus className="mr-2" />
-                    Ajouter un membre
-                  </button>
+                <button
+  className="px-3 py-2 rounded-full bg-orange-500 text-white hover:bg-orange-600 focus:outline-none flex items-center cursor-pointer"
+  onClick={() => navigate(`/groups/update/${group.id}`)}
+>
+  <FaPlus className="mr-2" />
+  Ajouter un membre
+</button>
+
                 </div>
               </div>
             </div>

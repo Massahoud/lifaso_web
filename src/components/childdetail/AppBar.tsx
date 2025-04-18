@@ -32,9 +32,15 @@ const AppBar: React.FC<AppBarProps> = ({ child, responses }) => {
   
   const [userStatus, setUserStatus] = useState<string | null>(null);
   const [isMenuOpen, setIsMenuOpen] = useState(false);
-  useEffect(() => {
-    getUserRole().then(setUserStatus);
-  }, []);
+    useEffect(() => {
+      const fetchUserStatus = async () => {
+        const userInfo = await getUserRole();
+        if (userInfo) {
+          setUserStatus(userInfo.statut); // extrait uniquement le statut
+        }
+      };
+      fetchUserStatus();
+    }, []);
   const toggleMenu = () => {
     setIsMenuOpen((prev) => !prev);
   };
