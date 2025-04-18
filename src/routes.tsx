@@ -7,6 +7,7 @@ import ChildDetailPage from "./pages/PageChild";
 
 import GroupsListPage from "./pages/Pagegroups";
 import GroupMembersPage from "./components/groups/group_members";
+import UpdateGroupPage from "./pages/groups/update_groups";
 
 const TokenHandler = () => {
   const location = useLocation();
@@ -24,7 +25,7 @@ const AppRoutes = () => {
         <Route path="/" element={<EnterToken />} />
         <Route path="/child-list" element={<ChildList />} />
         <Route path="/child-detail/:id" element={<ChildDetailPage />} />
-        
+        <Route path="/groups/update/:groupeId" element={<UpdateGroupPage />} />
         <Route path="/" element={<Layout />}>
           <Route path="childs" element={<ChildList />} />
           <Route path="groups" element={<GroupsListPage/>} />

@@ -21,10 +21,15 @@ const UserCard: React.FC<{ child: Child }> = ({ child }) => {
     prenom_enqueteur: "",
   });
  const [userStatus, setUserStatus] = useState<string | null>(null);
-  useEffect(() => {
-    // Récupération du rôle utilisateur via la fonction utils
-    getUserRole().then(setUserStatus);
-  }, []);
+   useEffect(() => {
+     const fetchUserStatus = async () => {
+       const userInfo = await getUserRole();
+       if (userInfo) {
+         setUserStatus(userInfo.statut); // extrait uniquement le statut
+       }
+     };
+     fetchUserStatus();
+   }, []);
   useEffect(() => {
     setNote({
       id: child.id,

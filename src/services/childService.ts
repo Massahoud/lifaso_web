@@ -1,5 +1,6 @@
 import api from "./api";
 
+import { getUserRole } from "../services/role"; 
 
 export const fetchChildren = async () => {
   try {
@@ -33,14 +34,46 @@ export interface Child {
   contact_enfant: string;
 }
 
-export const updateChild = async (childId: string, data: Child) => {
+ // Assure-toi que le chemin est correct
+
+ export const updateChild = async (childId: string, data: any) => {
   try {
-    await api.put(`/surveys/${childId}`, data);
+    const user = await getUserRole();
+    if (!user) {
+      throw new Error("Impossible de récupérer les informations de l'utilisateur.");
+    }
+
+    // Format de date : "18 avril 2025"
+    const formattedDate = new Date().toLocaleDateString('fr-FR', {
+      day: 'numeric',
+      month: 'long',
+      year: 'numeric',
+    });
+
+    const modification = {
+      nom: user.nom,
+      prenom: user.prenom,
+      date: formattedDate,
+    };
+
+    // 🔥 Supprimer le champ `id` de l'objet `data`
+    const { id, ...rest } = data;
+
+    const updatedData = {
+      ...rest,
+      derniere_modification: Array.isArray(rest.derniere_modification)
+        ? [...rest.derniere_modification, modification]
+        : [modification],
+    };
+
+    await api.put(`/surveys/${childId}`, updatedData);
   } catch (error) {
     console.error("Erreur lors de la mise à jour :", error);
     throw error;
   }
 };
+
+
 
 
 export interface InvestigatorNote {

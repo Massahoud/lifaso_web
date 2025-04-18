@@ -14,6 +14,12 @@ interface ChildCardProps {
   nom_enqueteur: string;
   etat: string;
   photo_url: string;
+  derniere_modification?: Modification[];
+}
+interface Modification {
+  nom: string;
+  prenom: string;
+  date: string;
 }
 const getEtatColor = (etat: string) => {
   switch (etat.toLowerCase()) {
@@ -41,10 +47,15 @@ const ChildCard: React.FC<ChildCardProps> = ({
   age_enfant,
   lieuenquete,
   photo_url,
+  derniere_modification,
 }) => {
   
 
   let dateObj: Date | null = null;
+  
+  
+  
+
 
   if (date_heure_debut instanceof Timestamp) {
     dateObj = date_heure_debut.toDate();
@@ -75,6 +86,12 @@ const ChildCard: React.FC<ChildCardProps> = ({
     minute: "2-digit",
   });
 
+  let displayText = `${formattedDate} • ${nom_enqueteur}, ${prenom_enqueteur}`;
+
+  if (derniere_modification && derniere_modification.length > 0) {
+    const lastModif = derniere_modification[derniere_modification.length - 1];
+    displayText = `${lastModif.date} • ${lastModif.nom} ${lastModif.prenom}`;
+  }
  
 
   return (
@@ -120,7 +137,8 @@ const ChildCard: React.FC<ChildCardProps> = ({
       </div>
   
       <div className="w-full md:w-[30%] text-gray-600 font-semibold text-xs text-left md:text-center">
-        {formattedDate} • {nom_enqueteur}, {prenom_enqueteur}
+      {displayText}
+
       </div>
   
       <div className="w-full md:w-[5%] flex justify-end md:justify-center items-center">

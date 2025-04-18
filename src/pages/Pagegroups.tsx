@@ -12,7 +12,7 @@ import { FaPlus } from "react-icons/fa";
 import { fetchGroups, fetchGroupMembers } from "../services/groups_service";
 import CreateGroupPage from "../pages/groups/create_Groupe";
 import { useNavigate } from "react-router-dom";
-
+import { getUserRole } from "../services/role";
 import GroupeSeachbar from "../components/groups/group_seachbar";
 
 interface User {
@@ -34,10 +34,19 @@ const GroupsListPage = () => {
   const [groupMembers, setGroupMembers] = useState<Record<string, User[]>>({});
   const [isLoading, setIsLoading] = useState<boolean>(true);
   const [searchQuery, setSearchQuery] = useState<string>("");
+  const [userStatus, setUserStatus] = useState<string | null>(null);
   const [error, setError] = useState<string | null>(null);
    const [isModalOpen, setIsModalOpen] = useState(false);
   const navigate = useNavigate();
-
+   useEffect(() => {
+     const fetchUserStatus = async () => {
+       const userInfo = await getUserRole();
+       if (userInfo) {
+         setUserStatus(userInfo.statut); // extrait uniquement le statut
+       }
+     };
+     fetchUserStatus();
+   }, []);
   useEffect(() => {
     const fetchAllGroups = async () => {
       try {
@@ -96,13 +105,14 @@ const GroupsListPage = () => {
         
               {/* Boutons */}
               <div className="flex items-center gap-x-2 gap-y-0 flex-wrap relative">
-              
+              {userStatus !== "enqueteur" && (
                 <button
                   className="px-3 py-2 rounded-full bg-orange-500 text-white hover:bg-orange-600 focus:outline-none flex items-center cursor-pointer"
                   onClick={() => setIsModalOpen(true)}>
                    <FaPlus className="mr-2" />
                   Créer une groupe
                 </button>
+                    )}
               </div>
                    {isModalOpen && <CreateGroupPage onClose={() => setIsModalOpen(false)} />}
                

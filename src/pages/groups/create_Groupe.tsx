@@ -62,6 +62,9 @@ interface User {
         setDate("");
         setSelectedAdmins([]);
         setSelectedMembers([]);
+        setTimeout(() => {
+          onClose();
+        }, 3000); 
       } catch (err: any) {
         setError(`Erreur lors de la création du groupe: ${err.message}`);
       }
@@ -187,7 +190,7 @@ interface User {
                   <Typography variant="h6">Sélectionner des Administrateurs</Typography>
                   <Grid container spacing={2}>
                     {users
-                      .filter((user) => user.statut === "admin")
+                              .filter((user) => user.statut === "admin" || user.statut === "superadmin") 
                       .map((user) => (
                         <Grid item xs={12} sm={8} md={6} key={`admin-${user.id}`}>
                           <FormControlLabel

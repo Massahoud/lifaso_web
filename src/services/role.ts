@@ -1,17 +1,16 @@
 import api from "../services/api";
 
-
-
-// Fonction pour récupérer le rôle de l'utilisateur
-export const getUserRole = async (): Promise<string | null> => {
+export const getUserRole = async () => {
   const userId = localStorage.getItem("userId");
   if (!userId) return null;
 
   try {
     const response = await api.get(`/users/${userId}`);
-    return response.data.statut; // Retourne le statut de l'utilisateur (admin, enquêteur, etc.)
+    const { statut, nom, prenom } = response.data;
+
+    return { statut, nom, prenom };
   } catch (error) {
-    console.error("Erreur lors de la récupération du rôle utilisateur :", error);
+    console.error("Erreur lors de la récupération des infos utilisateur :", error);
     return null;
   }
 };
