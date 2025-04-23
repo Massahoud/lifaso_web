@@ -48,10 +48,7 @@ const ChildList = () => {
       }
     
       try {
-        // Vérifiez que l'ID utilisateur est valide
-        console.log("ID utilisateur récupéré :", userId);
-    
-        // Appeler fetchEnquetesByUserRole avec l'ID utilisateur
+
         const data = await fetchEnquetesByUserRole(userId);
         setChildren(data);
         setFilteredChildren(data);
@@ -149,19 +146,20 @@ const ChildList = () => {
         totalEnquetes={children.length}
       />
 
-      <div className="">
-        <table className="min-w-full">
-          <thead>
-            <tr className="border-gray-200 text-gray-600">
-              <th className="py-3 px-6 text-left">Enquête +</th>
-              <th className="py-3 px-12 text-left">Enfant</th>
-              <th className="py-3 px-6 text-left">Sexe / Âge</th>
-              <th className="py-3 px-15 text-left">État</th>
-              <th className="py-3 px-6 text-left">Dernière intervention</th>
-            </tr>
-          </thead>
-        </table>
-      </div>
+<div className="hidden md:block">
+  <table className="min-w-full">
+    <thead>
+      <tr className="border-gray-200 text-gray-600">
+        <th className="py-3 px-6 text-left">Enquête +</th>
+        <th className="py-3 px-12 text-left">Enfant</th>
+        <th className="py-3 px-6 text-left">Sexe / Âge</th>
+        <th className="py-3 px-15 text-left">État</th>
+        <th className="py-3 px-6 text-left">Dernière intervention</th>
+      </tr>
+    </thead>
+  </table>
+</div>
+
       <div ref={scrollContainerRef} className="flex-1 overflow-auto p-4">
         {loading ? (
           <div className="flex justify-center items-center h-32">

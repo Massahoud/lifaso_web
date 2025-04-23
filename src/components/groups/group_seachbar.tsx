@@ -56,9 +56,11 @@ const GroupeSeachbar: React.FC<{ onSearch: (query: string) => void }> = ({ onSea
   }, [userId]);
 
   return (
-    <div className="flex flex-wrap items-center justify-between px-4 md:px-8 py-4 md:py-6 shadow-md bg-white relative gap-y-4">
+    <div className="w-full flex justify-end px-4 md:px-8 py-4 md:py-6 shadow-md bg-white">
+    <div className="w-[90%] flex flex-col md:flex-row items-center justify-between gap-y-4">
+      
       {/* Barre de recherche */}
-      <div className="relative w-full md:w-[50%]">
+      <div className="relative w-[90%] md:w-1/2 self-end md:self-auto">
         <FaSearch className="absolute left-4 top-1/2 transform -translate-y-1/2 text-gray-400" />
         <Input
           type="text"
@@ -72,7 +74,7 @@ const GroupeSeachbar: React.FC<{ onSearch: (query: string) => void }> = ({ onSea
   
       {/* Profil utilisateur */}
       {currentUser && (
-        <div className="relative flex items-center space-x-4">
+        <div className=" hidden md:flex  relative flex items-center space-x-4">
           <div
             className="flex items-center space-x-2 cursor-pointer"
             onClick={() => setMenuOpen(!menuOpen)}
@@ -128,6 +130,7 @@ const GroupeSeachbar: React.FC<{ onSearch: (query: string) => void }> = ({ onSea
           )}
         </div>
       )}
+    </div>
     </div>
   );
 };

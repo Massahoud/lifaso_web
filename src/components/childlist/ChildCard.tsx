@@ -141,7 +141,7 @@ const ChildCard: React.FC<ChildCardProps> = ({
 
       </div>
   
-      <div className="w-full md:w-[5%] flex justify-end md:justify-center items-center">
+      <div className=" hidden md:flex w-full md:w-[5%] flex justify-end md:justify-center items-center">
         <FaChevronRight className="text-gray-500 text-2xl" />
       </div>
     </div>
