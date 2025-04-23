@@ -1,35 +1,51 @@
-import { useState } from "react";
+import { useState,useEffect } from "react";
+
 import { FaPlus } from "react-icons/fa";
 interface EnquetesPageProps {
   onFilterByState: (etat: string | null) => void;
   onFilterByDate: (startDate: string | null, endDate: string | null) => void;
-  totalEnquetes: number; 
+  totalEnquetes: number;
 }
 
-const EnquetesPage: React.FC<EnquetesPageProps> = ({ onFilterByState, onFilterByDate,totalEnquetes }) => {
+const EnquetesPage: React.FC<EnquetesPageProps> = ({ onFilterByState, onFilterByDate, totalEnquetes }) => {
   const [showDatePicker, setShowDatePicker] = useState(false);
   const [showStatePicker, setShowStatePicker] = useState(false);
   const [startDate, setStartDate] = useState<string | null>(null);
   const [endDate, setEndDate] = useState<string | null>(null);
-
+  const [token, setToken] = useState<string | null>(null);
   const handleStateSelection = (etat: string) => {
     onFilterByState(etat);
     setShowStatePicker(false);
   };
+   useEffect(() => {
+      // Récupération du token dans le localStorage
+      const storedToken = localStorage.getItem("token");
+      if (storedToken) {
+        setToken(storedToken);
+      }
+  
+    
+    }, []);
+  
+    // Fonction pour ajouter le token aux liens
+    const generateLink = (baseUrl: string) => {
+      return token ? `${baseUrl}?token=${token}` : baseUrl;
+    };
 
   return (
     <div className="p-6 relative">
       <div className="flex flex-wrap items-center justify-between mb-4 gap-y-4">
-       
+
         <h1 className="text-2xl md:text-3xl font-bold text-gray-800">
-        {totalEnquetes} ENQUÊTES
+          {totalEnquetes} ENQUÊTES
         </h1>
-  
+
         {/* Boutons */}
-        <div className="flex items-center gap-x-2 gap-y-0 flex-wrap relative">
+        <div className="flex flex-wrap md:flex-nowrap items-center justify-start gap-2 w-full md:w-auto">
+
           {/* Bouton Par période */}
           <button
-            className="px-3 py-2 rounded-full border border-gray-300 text-gray-600 hover:bg-gray-100 focus:outline-none cursor-pointer"
+            className="px-2 md:px-3 py-1.5 md:py-2 text-sm md:text-base rounded-full border border-gray-300 text-gray-600 hover:bg-gray-100 focus:outline-none cursor-pointer"
             onClick={() => {
               setShowDatePicker(!showDatePicker);
               setShowStatePicker(false);
@@ -37,7 +53,7 @@ const EnquetesPage: React.FC<EnquetesPageProps> = ({ onFilterByState, onFilterBy
           >
             Par période
           </button>
-  
+
           {/* Carte de sélection de période */}
           {showDatePicker && (
             <div className="absolute top-12 left-0 bg-white shadow-lg rounded-lg p-4 border flex flex-col space-y-2 w-full md:w-auto">
@@ -85,10 +101,11 @@ const EnquetesPage: React.FC<EnquetesPageProps> = ({ onFilterByState, onFilterBy
               </div>
             </div>
           )}
-  
+
           {/* Bouton Par État */}
+
           <button
-            className="px-3 py-2 rounded-full border border-gray-300 text-gray-600 hover:bg-gray-100 focus:outline-none cursor-pointer"
+            className="px-2 md:px-3 py-1.5 md:py-2 text-sm md:text-base rounded-full border border-gray-300 text-gray-600 hover:bg-gray-100 focus:outline-none cursor-pointer"
             onClick={() => {
               setShowStatePicker(!showStatePicker);
               setShowDatePicker(false);
@@ -96,7 +113,7 @@ const EnquetesPage: React.FC<EnquetesPageProps> = ({ onFilterByState, onFilterBy
           >
             Par État
           </button>
-  
+
           {/* Carte de sélection d'état */}
           {showStatePicker && (
             <div className="absolute top-12 left-0 bg-white shadow-lg rounded-lg p-4 border flex flex-col space-y-2 w-full md:w-40">
@@ -120,15 +137,15 @@ const EnquetesPage: React.FC<EnquetesPageProps> = ({ onFilterByState, onFilterBy
               </button>
             </div>
           )}
-  
+
           {/* Bouton Nouvelle enquête */}
           <button
-            className="px-3 py-2 rounded-full bg-orange-500 text-white hover:bg-orange-600 focus:outline-none flex items-center cursor-pointer"
+            className="px-2 md:px-3 py-1.5 md:py-2 text-sm md:text-base rounded-full bg-orange-500 text-white hover:bg-orange-600 focus:outline-none flex items-center cursor-pointer"
             onClick={() =>
-              (window.location.href = "https://v0.enquetesoleil.com/createSurvey")
+              (window.location.href  = generateLink("https://v0.enquetesoleil.com/createSurvey"))
             }
           >
-            <FaPlus className="mr-2" />
+            <FaPlus className="mr-1 md:mr-2" />
             Nouvelle enquête
           </button>
         </div>

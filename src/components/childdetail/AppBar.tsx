@@ -109,7 +109,7 @@ const AppBar: React.FC<AppBarProps> = ({ child, responses }) => {
          <div className="relative">
          <button
            onClick={toggleMenu}
-           className="flex items-center gap-2 bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700 transition cursor-pointer"
+           className=" hidden md:flex  flex items-center gap-2 bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700 transition cursor-pointer"
          >
            <FaFilePdf /> Exporter PDF
          </button>
@@ -138,7 +138,7 @@ const AppBar: React.FC<AppBarProps> = ({ child, responses }) => {
         {userStatus !== "enqueteur" && (
           <button
             onClick={handleDelete}
-            className="flex items-center gap-2 bg-red-600 text-white px-4 py-2 rounded-lg hover:bg-red-700 transition cursor-pointer"
+            className=" hidden md:flex  flex items-center gap-2 bg-red-600 text-white px-4 py-2 rounded-lg hover:bg-red-700 transition cursor-pointer"
           >
             <FaTrash /> Supprimer
           </button>

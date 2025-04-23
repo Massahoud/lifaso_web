@@ -50,22 +50,22 @@ const GroupsListPage = () => {
   useEffect(() => {
     const fetchAllGroups = async () => {
       try {
-        console.log("Fetching groups...");
+        
         const fetchedGroups = await fetchGroups();
-        console.log("Fetched groups:", fetchedGroups);
+      
 
         const membersMap: Record<string, User[]> = {};
 
         for (const group of fetchedGroups) {
-          console.log(`Fetching members for group: ${group.nom} (ID: ${group.id})`);
+          
           const members = await fetchGroupMembers(group.membres);
-          console.log(`Fetched members for group ${group.nom}:`, members);
+          
           membersMap[group.id] = members;
         }
 
         setGroups(fetchedGroups);
         setGroupMembers(membersMap);
-        console.log("Final members map:", membersMap);
+       
       } catch (err: any) {
         console.error("Error fetching groups or members:", err);
         setError(`Erreur lors de la récupération des groupes : ${err.message}`);
@@ -78,18 +78,18 @@ const GroupsListPage = () => {
   }, []);
 
   const handleGroupClick = (group: Group) => {
-    console.log("Group clicked:", group);
+    
     navigate(`/group_membres`, { state: { groupId: group.id } });
   };
   const handleSearch = (query: string) => {
-    console.log("Search query updated:", query);
+  
     setSearchQuery(query);
   };
 
   const filteredGroups = groups.filter((group) =>
     group.nom.toLowerCase().includes(searchQuery.toLowerCase())
   );
-  console.log("Filtered groups:", filteredGroups);
+ 
 
   return (
     <div className="h-full flex flex-col bg-gray-100">

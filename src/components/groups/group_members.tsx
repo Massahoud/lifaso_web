@@ -149,41 +149,45 @@ const GroupMembersPage = () => {
         <GroupMemberSeach onSearch={setSearchQuery} />
 
         {group && (
-          <>
-            <div className="p-6 relative">
-              <div className="flex flex-wrap items-center justify-between mb-4 gap-y-4">
-                {/* Bouton Retour */}
-                <button
-                  onClick={() => navigate(-1)}
-                  className="flex items-center justify-center w-12 h-12 bg-gray-200 rounded-full text-gray-600 hover:bg-gray-300 transition cursor-pointer"
-                  title="Retour"
-                  aria-label="Retour"
-                >
-                  <IoChevronBack size={24} />
-                </button>
-
-                {/* Titre avec le nombre de membres */}
-                <h1 className="text-2xl md:text-3xl font-bold text-gray-800">
-                  {group.nom} <span className="text-gray-500">({members.length} membres,{administrateurs.length} admin)</span>
-                </h1>
-
-                {/* Boutons */}
-                <div className="flex items-center gap-x-2 gap-y-0 flex-wrap relative">
-                <button
-  className="px-3 py-2 rounded-full bg-orange-500 text-white hover:bg-orange-600 focus:outline-none flex items-center cursor-pointer"
-  onClick={() => navigate(`/groups/update/${group.id}`)}
->
-  <FaPlus className="mr-2" />
-  Ajouter un membre
-</button>
-
-                </div>
-              </div>
-            </div>
-          </>
+         <>
+         <div className="p-4 md:p-6 relative">
+           <div className="flex flex-wrap items-center justify-between gap-y-4 mb-4">
+             {/* Bouton retour + Titre */}
+             <div className="flex items-center gap-3 flex-1 min-w-0">
+               <button
+                 onClick={() => navigate(-1)}
+                 className="flex items-center justify-center w-10 h-10 md:w-12 md:h-12 bg-gray-200 rounded-full text-gray-600 hover:bg-gray-300 transition cursor-pointer shrink-0"
+                 title="Retour"
+                 aria-label="Retour"
+               >
+                 <IoChevronBack size={20} className="md:size-6" />
+               </button>
+       
+               <h1 className="text-lg md:text-2xl font-bold text-gray-800 truncate">
+                 {group.nom}
+                 <span className="text-gray-500 text-sm md:text-base ml-2">
+                   ({members.length} membres, {administrateurs.length} admin)
+                 </span>
+               </h1>
+             </div>
+       
+             {/* Bouton d'action */}
+             <div className="flex items-center gap-2">
+               <button
+                 className="px-2 py-1 text-sm md:px-3 md:py-2 md:text-base rounded-full bg-orange-500 text-white hover:bg-orange-600 focus:outline-none flex items-center cursor-pointer"
+                 onClick={() => navigate(`/groups/update/${group.id}`)}
+               >
+                 <FaPlus className="mr-1 md:mr-2 text-xs md:text-base" />
+                 Ajouter un membre
+               </button>
+             </div>
+           </div>
+         </div>
+       </>
+       
         )}
          {/* Tableau */}
-      <div className="">
+      <div className=" hidden md:flex  ">
         <table className="min-w-full">
           <thead>
             <tr className="border-gray-200 text-gray-600">
