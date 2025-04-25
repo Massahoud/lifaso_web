@@ -4,7 +4,7 @@ import { useEffect, useState, useRef } from "react";
 import { useNavigate } from "react-router-dom";
 import api from "../../services/api";
 
-interface GroupMemberSeachProps {
+interface UsersSearchProps {
   onSearch: (query: string) => void;
 }
 
@@ -16,7 +16,7 @@ interface User {
   statut?: string; // Ajout de statut si nécessaire
 }
 
-const GroupMemberSeach: React.FC<GroupMemberSeachProps> = ({ onSearch }) => {
+const UsersSeach : React.FC<UsersSearchProps> = ({ onSearch }) => {
   const [query, setQuery] = useState("");
   const [currentUser, setCurrentUser] = useState<User | null>(null);
   const userId = localStorage.getItem("userId");
@@ -65,9 +65,9 @@ const GroupMemberSeach: React.FC<GroupMemberSeachProps> = ({ onSearch }) => {
         <FaSearch className="absolute left-4 top-1/2 transform -translate-y-1/2 text-gray-400" />
         <Input
           type="text"
-          placeholder="Rechercher un N° d’enquête, Nom, Prénom, ..."
+          placeholder="Rechercher un Numéro, Nom, Prénom, ..."
           value={query}
-          onChange={handleSearch}
+           onChange={handleSearch}
           className="w-full pl-12 pr-4 py-2 border border-gray-300 rounded-full shadow-sm focus:outline-none focus:ring-2 focus:ring-orange-400 placeholder:text-gray-400"
         />
       </div>
@@ -102,7 +102,7 @@ const GroupMemberSeach: React.FC<GroupMemberSeachProps> = ({ onSearch }) => {
             >
              <button
   className="flex items-center w-full px-4 py-2 text-gray-700 hover:bg-gray-100"
-  onClick={() => navigate(`/profile/${currentUser.id}`)}
+  onClick={() => navigate(`/users/profile/${currentUser.id}`)} // 🔥 Utilisation de l'ID dynamique
 >
   <FaUser className="mr-2" /> Mes informations
 </button>
@@ -136,4 +136,4 @@ const GroupMemberSeach: React.FC<GroupMemberSeachProps> = ({ onSearch }) => {
   );
 };
 
-export default GroupMemberSeach;
+export default UsersSeach;

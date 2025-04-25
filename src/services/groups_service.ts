@@ -93,6 +93,15 @@ export const fetchGroupMembers = async (memberIds: string[]): Promise<User[]> =>
     throw new Error(error.response?.data?.message || "Failed to fetch group members");
   }
 };
+// services/group_services.ts
+
+
+export const getGroupsByUserId = async (userId: string) => {
+  if (!userId) throw new Error("User ID est requis");
+
+  const response = await api.get(`/groups/user/${userId}`);
+  return response.data; // Ce sera un tableau de groupes
+};
 
 
 //fonction de mise a jour d'un groupe ajout de membre et admin
@@ -130,24 +139,6 @@ export const updateGroup = async (
   } catch (error: any) {
     console.error("Error updating group:", error.response?.data || error.message);
     throw new Error(error.response?.data?.message || "Failed to update group");
-  }
-};
-
-
-
-
-// Fonction pour récupérer un utilisateur par ID
-export const getUserById = async (id: string): Promise<User> => {
-  if (!id) {
-    throw new Error("Invalid id: id cannot be empty");
-  }
-
-  try {
-    const response = await api.get(`/users/${id}`);
-    return response.data; 
-  } catch (error: any) {
-    console.error("Error fetching user:", error.response?.data || error.message);
-    throw new Error(error.response?.data?.message || "Failed to fetch user");
   }
 };
 
