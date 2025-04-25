@@ -9,11 +9,11 @@ import {
   Snackbar,
 } from "@mui/material";
 import { FaPlus } from "react-icons/fa";
-import { fetchGroups, fetchGroupMembers } from "../services/groups_service";
-import CreateGroupPage from "../pages/groups/create_Groupe";
+import { fetchGroups, fetchGroupMembers } from "../../services/groups_service";
+import CreateGroupPage from "./create_Groupe";
 import { useNavigate } from "react-router-dom";
-import { getUserRole } from "../services/role";
-import GroupeSeachbar from "../components/groups/group_seachbar";
+import { getUserRole } from "../../services/role";
+import GroupeSeachbar from "../../components/groups/group_seachbar";
 
 interface User {
   id: string;
