@@ -10,7 +10,7 @@ const UsersFilter: React.FC<UsersPageProps> = ({onFilterByState, totalUsers }) =
   const [showStatePicker, setShowStatePicker] = useState(false);
   const navigate = useNavigate();
 
-  const [token, setToken] = useState<string | null>(null);
+  const [, setToken] = useState<string | null>(null);
   const handleStateSelection = (statut: string) => {
     onFilterByState(statut);
     setShowStatePicker(false);
@@ -25,11 +25,7 @@ const UsersFilter: React.FC<UsersPageProps> = ({onFilterByState, totalUsers }) =
     
     }, []);
   
-    // Fonction pour ajouter le token aux liens
-    const generateLink = (baseUrl: string) => {
-      return token ? `${baseUrl}?token=${token}` : baseUrl;
-    };
-
+   
   return (
     <div className="p-6 relative">
       <div className="flex flex-wrap items-center justify-between mb-4 gap-y-4">

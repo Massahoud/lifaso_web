@@ -1,20 +1,14 @@
 import { useState,useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { FaPlus } from "react-icons/fa";
-interface FormulairePageProps {
-  onFilterByState: (statut: string | null) => void;
-  totalUsers: number;
-}
+
 
 const FormulaireFilter= () => {
   const [showStatePicker, setShowStatePicker] = useState(false);
   const navigate = useNavigate();
 
-  const [token, setToken] = useState<string | null>(null);
-  const handleStateSelection = (statut: string) => {
+  const [, setToken] = useState<string | null>(null);
  
-    setShowStatePicker(false);
-  };
    useEffect(() => {
       // Récupération du token dans le localStorage
       const storedToken = localStorage.getItem("token");
@@ -26,9 +20,7 @@ const FormulaireFilter= () => {
     }, []);
   
     // Fonction pour ajouter le token aux liens
-    const generateLink = (baseUrl: string) => {
-      return token ? `${baseUrl}?token=${token}` : baseUrl;
-    };
+   
 
   return (
     <div className="p-6 relative">

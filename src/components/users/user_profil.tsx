@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { ArrowLeft, X, Camera } from "lucide-react";
+import { ArrowLeft, Camera } from "lucide-react";
 import { useNavigate, useParams } from "react-router-dom"; // 👈 useNavigate ajouté
 
 import { getUserById, updateUser, deleteUser } from "../../services/user_services";

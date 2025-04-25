@@ -14,7 +14,7 @@ const QuestionsPage = () => {
   >([]);
   const [searchQuery, setSearchQuery] = useState("");
   const [errorMessage, setErrorMessage] = useState("");
-  const [dialog, setDialog] = useState<{ title: string; content: string } | null>(null);
+  
   const [loading, setLoading] = useState(true);
 
   const navigate = useNavigate();
