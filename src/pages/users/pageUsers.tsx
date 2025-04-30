@@ -28,12 +28,11 @@ const PageUsers: React.FC = () => {
   
         const usersWithGroups = await Promise.all(
           result.map(async (user: UsercardProps) => {
-            try {
-              const groups = await getGroupsByUserId(user.id);
-              return { ...user, groupe: groups.map((g: any) => g.nom).join(", ") };
-            } catch (e) {
-              return { ...user, groupe: "Aucun groupe" };
-            }
+            const groups = await getGroupsByUserId(user.id);
+            const groupe = groups.length > 0 
+              ? groups.map((g: any) => g.nom).join(", ") 
+              : "Aucun groupe";
+            return { ...user, groupe };
           })
         );
   
@@ -47,6 +46,7 @@ const PageUsers: React.FC = () => {
   
     fetchUsers();
   }, []);
+  
   
 
   useEffect(() => {
@@ -90,21 +90,23 @@ const PageUsers: React.FC = () => {
       </div>
 
       <div className="flex-1 overflow-auto p-4">
-        {error && <p className="text-red-500 mb-4">{error}</p>}
+  {error ? (
+    <p className="text-red-500 mb-4 text-center">{error || "Une erreur est survenue."}</p> // Message d'erreur personnalisé
+  ) : loading ? (
+    <div className="flex justify-center items-center h-40">
+      <div className="w-8 h-8 border-4 border-orange-500 border-t-transparent rounded-full animate-spin"></div>
+    </div>
+  ) : filteredChildren.length === 0 ? (
+    <p className="text-gray-500 text-center">Aucun utilisateur trouvé.</p> // Message si aucun utilisateur
+  ) : (
+    <div className="grid grid-cols-1 gap-6 cursor-pointer">
+      {filteredChildren.map((user) => (
+        <UserCard key={user.id} user={user} onClick={() => setSelectedUserId(user.id)} />
+      ))}
+    </div>
+  )}
+</div>
 
-        {/* Spinner pendant le chargement */}
-        {loading ? (
-          <div className="flex justify-center items-center h-40">
-            <div className="w-8 h-8 border-4 border-orange-500 border-t-transparent rounded-full animate-spin"></div>
-          </div>
-        ) : (
-          <div className="grid grid-cols-1 gap-6 cursor-pointer">
-            {filteredChildren.map((user) => (
-              <UserCard key={user.id} user={user} onClick={() => setSelectedUserId(user.id)} />
-            ))}
-          </div>
-        )}
-      </div>
 
       {selectedUserId && (
         <UpdateUserDrawer userId={selectedUserId} onClose={() => setSelectedUserId(null)} />

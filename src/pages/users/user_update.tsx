@@ -15,7 +15,7 @@ const UpdateUserDrawer: React.FC<Props> = ({ userId, onClose }) => {
   const [image, setImage] = useState<string | ArrayBuffer | null>(null);
   const [selectedFile, setSelectedFile] = useState<File | null>(null); // Nouveau
   const [loading, setLoading] = useState<boolean>(true);
-
+  
   useEffect(() => {
     if (!userId) return;
   
@@ -137,6 +137,7 @@ const UpdateUserDrawer: React.FC<Props> = ({ userId, onClose }) => {
             <option value="admin">Admin</option>
             <option value="superadmin">Superadmin</option>
             <option value="enqueteur">Enquêteur</option>
+            <option value="visiteur">Visiteur</option>
           </select>
 
           <CustomTextField name="groupe" label="Groupe" value={user.groupe} onChange={handleInputChange} />

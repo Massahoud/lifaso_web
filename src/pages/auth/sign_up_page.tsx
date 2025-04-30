@@ -5,10 +5,12 @@ import CustomTextField from '../../components/ui/custom_textfield';
 import backgroundImg from '../../assets/noomdo.jpg';
 import logoImg from '../../assets/asdm.png';
 import { createUser } from '../../services/user_services';
+import CustomDialog from '../../components/ui/CustomDialog'; // Chemin à ajuster si besoin
 
 interface DecodedToken {
   email: string;
   statut: string;
+  organismeid: string;
 }
 
 const SignupWithInvitePage: React.FC = () => {
@@ -19,9 +21,11 @@ const SignupWithInvitePage: React.FC = () => {
   const [password, setPassword] = useState('');
   const [statut, setStatut] = useState('');
   const [email, setEmail] = useState('');
+  const [organismeid, setOrganismeid] = useState('');
   const [errorMessage, setErrorMessage] = useState('');
   const [hasError, setHasError] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
+  const [showSuccessDialog, setShowSuccessDialog] = useState(false);
 
   const navigate = useNavigate();
   const location = useLocation();
@@ -38,6 +42,8 @@ const SignupWithInvitePage: React.FC = () => {
         console.log("email", decoded.email);
         console.log("statut", decoded.statut);
         setStatut(decoded.statut || '');
+        setOrganismeid(decoded.organismeid || '');
+        console.log("organismeid", decoded.organismeid);
       } catch (err) {
         setErrorMessage('Token invalide ou expiré.');
         setHasError(true);
@@ -57,7 +63,7 @@ const SignupWithInvitePage: React.FC = () => {
   const handleSubmit = async () => {
     setHasError(false);
     setErrorMessage('');
-
+  
     if (nom && prenom && telephone.length >= 8 && password.length >= 6) {
       setIsLoading(true);
       try {
@@ -68,15 +74,21 @@ const SignupWithInvitePage: React.FC = () => {
           mot_de_passe: password,
           telephone,
           statut,
-          groupe: 'e',
+          organismeid,
         };
-
+  
         await createUser(newUser, image ?? undefined);
-
-        navigate('/login');
+  
+        // Afficher le dialogue de succès
+        setShowSuccessDialog(true);
       } catch (err: any) {
         setHasError(true);
-        setErrorMessage(err.message || 'Erreur lors de la création de l’utilisateur.');
+  
+        if (err.response && err.response.data && err.response.data.message) {
+          setErrorMessage(err.response.data.message);
+        } else {
+          setErrorMessage('Erreur lors de la création de l’utilisateur.');
+        }
       } finally {
         setIsLoading(false);
       }
@@ -85,6 +97,7 @@ const SignupWithInvitePage: React.FC = () => {
       setErrorMessage('Veuillez remplir tous les champs correctement.');
     }
   };
+  
 
   return (
     <div className="flex h-screen">
@@ -125,6 +138,16 @@ const SignupWithInvitePage: React.FC = () => {
           </button>
         </div>
       </div>
+      {showSuccessDialog && (
+  <CustomDialog
+    title="Inscription réussie"
+    content="Votre compte a été créé avec succès. Vous pouvez maintenant vous connecter."
+    buttonText="Aller à la connexion"
+    onClose={() => setShowSuccessDialog(false)}
+    onConfirm={() => navigate('/login')}
+  />
+)}
+
     </div>
   );
 };

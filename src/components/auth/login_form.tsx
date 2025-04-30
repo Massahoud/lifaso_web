@@ -1,7 +1,8 @@
 import React, { useEffect, useState } from 'react';
-import { useNavigate, useLocation } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 import AuthService from '../../services/auth_service';
 import CustomTextField from '../../components/ui/custom_textfield';
+import Cookies from 'js-cookie'; // ⬅️ Importation de js-cookie
 
 const LoginForm: React.FC = () => {
   const [email, setEmail] = useState('');
@@ -11,11 +12,11 @@ const LoginForm: React.FC = () => {
   const [errorMessage, setErrorMessage] = useState('');
 
   const navigate = useNavigate();
-  const location = useLocation();
+
 
   useEffect(() => {
-    const savedEmail = localStorage.getItem('savedEmail') || '';
-    const savedPassword = localStorage.getItem('savedPassword') || '';
+    const savedEmail = Cookies.get('savedEmail') || '';
+    const savedPassword = Cookies.get('savedPassword') || '';
     if (savedEmail && savedPassword) {
       setEmail(savedEmail);
       setMotDePasse(savedPassword);
@@ -23,25 +24,13 @@ const LoginForm: React.FC = () => {
     }
   }, []);
 
-  const getRedirectUrl = () => {
-    const params = new URLSearchParams(location.search);
-    const redirect = params.get('redirect');
-    if (redirect) {
-      try {
-        return decodeURIComponent(decodeURIComponent(redirect));
-      } catch (error) {
-        console.error('Erreur de décodage d’URL :', redirect);
-      }
-    }
-    return null;
-  };
+  
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setIsLoading(true);
     setErrorMessage('');
 
-    // validation simple
     if (!email || !motDePasse) {
       setErrorMessage('Veuillez remplir tous les champs.');
       setIsLoading(false);
@@ -62,33 +51,42 @@ const LoginForm: React.FC = () => {
       await AuthService.login(email, motDePasse);
 
       if (rememberMe) {
-        localStorage.setItem('savedEmail', email);
-        localStorage.setItem('savedPassword', motDePasse);
+        Cookies.set('savedEmail', email, { expires: 7 }); // ⬅️ expires en jours
+        Cookies.set('savedPassword', motDePasse, { expires: 7 });
       } else {
-        localStorage.removeItem('savedEmail');
-        localStorage.removeItem('savedPassword');
+        Cookies.remove('savedEmail');
+        Cookies.remove('savedPassword');
       }
 
-      const redirectUrl = getRedirectUrl();
-      if (redirectUrl) {
-        navigate(`/redirect?to=${encodeURIComponent(redirectUrl)}`);
-      } else {
-        navigate('/users');
-      }
+      console.log('Connexion réussie !');
+      navigate('/formulaire');
     } catch (error: any) {
       console.error('Erreur lors de la connexion:', error);
-      setErrorMessage(error.message || 'Une erreur est survenue');
+
+      if (error.response) {
+        const status = error.response.status;
+        const data = error.response.data;
+
+        if (status === 400 || status === 401) {
+          setErrorMessage('Email ou mot de passe incorrect.');
+        } else if (status === 429) {
+          setErrorMessage('Trop de tentatives. Veuillez réessayer plus tard.');
+        } else {
+          setErrorMessage(data.message || 'Une erreur est survenue.');
+        }
+      } else {
+        setErrorMessage('Erreur de connexion au serveur.');
+      }
     } finally {
       setIsLoading(false);
     }
   };
 
   return (
-    <form onSubmit={handleSubmit} className=" space-y-4">
+    <form onSubmit={handleSubmit} className="space-y-4">
       <CustomTextField
-       name="email"
+        name="email"
         label="Email"
-       
         value={email}
         onChange={(e) => setEmail(e.target.value)}
         placeholder="Entrez votre email"
@@ -96,7 +94,7 @@ const LoginForm: React.FC = () => {
       />
       <CustomTextField
         label="Mot de passe"
-        name='motdepasse'
+        name="motdepasse"
         type="password"
         value={motDePasse}
         onChange={(e) => setMotDePasse(e.target.value)}
@@ -110,6 +108,7 @@ const LoginForm: React.FC = () => {
         <label className="flex items-center gap-2 text-orange-500">
           <input
             type="checkbox"
+            className="form-checkbox h-5 w-5 text-orange-500 border-gray-300 rounded focus:ring-orange-500 checked:bg-orange-500"
             checked={rememberMe}
             onChange={(e) => setRememberMe(e.target.checked)}
           />

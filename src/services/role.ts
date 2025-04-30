@@ -1,7 +1,7 @@
 import api from "../services/api";
-
+import Cookies from "js-cookie"; 
 export const getUserRole = async () => {
-  const userId = localStorage.getItem("userId");
+  const userId = Cookies.get('userId'); // On lit le userId depuis les cookies
   if (!userId) return null;
 
   try {

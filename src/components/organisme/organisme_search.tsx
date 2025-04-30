@@ -4,32 +4,30 @@ import { useEffect, useState, useRef } from "react";
 import { useNavigate } from "react-router-dom";
 import api from "../../services/api";
 import Cookies from "js-cookie";
-interface FormulaireProps {
-  onSearch: (query: string) => void;
-}
 
 interface User {
   id: string;
   nom: string;
   prenom: string;
   photo: string;
-  statut?: string; 
+  statut?: string; // Ajout de statut si nécessaire
 }
 
-const FormulaireSeach : React.FC<FormulaireProps> = ({ onSearch }) => {
+const OrganismeSearchBar: React.FC<{ onSearch: (query: string) => void }> = ({ onSearch }) => {
   const [query, setQuery] = useState("");
+
+  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setQuery(e.target.value);
+    onSearch(e.target.value); // Appelle la fonction de recherche
+  };
+
   const [currentUser, setCurrentUser] = useState<User | null>(null);
-  
-  const userId = Cookies.get('userId'); // Utilisation de Cookies pour récupérer l'ID de l'utilisateur
+  const userId = Cookies.get("userId");
   const [menuOpen, setMenuOpen] = useState(false);
   const menuRef = useRef<HTMLDivElement | null>(null);
   const navigate = useNavigate();
   const [loading, setLoading] = useState(true);
-  const handleSearch = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setQuery(e.target.value);
-    onSearch(e.target.value);
-  };
-
+ 
   useEffect(() => {
     const handleClickOutside = (event: MouseEvent) => {
       if (menuRef.current && !menuRef.current.contains(event.target as Node)) {
@@ -44,11 +42,12 @@ const FormulaireSeach : React.FC<FormulaireProps> = ({ onSearch }) => {
 
   // Fonction de déconnexion
   const handleLogout = () => {
-    localStorage.removeItem("userId");
-    localStorage.removeItem("authToken"); // Supprime aussi le token
-   navigate("/login"); // Redirige vers la page de connexion
+    Cookies.remove("userId"); 
+    Cookies.remove("authToken"); 
+    navigate("/login");
   };
 
+ 
   useEffect(() => {
     if (!userId) return;
   
@@ -59,7 +58,7 @@ const FormulaireSeach : React.FC<FormulaireProps> = ({ onSearch }) => {
       .catch((error) => console.error("Erreur récupération user connecté :", error))
       .finally(() => setLoading(false)); // Quoiqu'il arrive, arrêter loading
   }, [userId]);
-  
+
   return (
     <div className="w-full flex justify-end px-4 md:px-8 py-4 md:py-6 shadow-md bg-white">
     <div className="w-[90%] flex flex-col md:flex-row items-center justify-between gap-y-4">
@@ -69,22 +68,21 @@ const FormulaireSeach : React.FC<FormulaireProps> = ({ onSearch }) => {
         <FaSearch className="absolute left-4 top-1/2 transform -translate-y-1/2 text-gray-400" />
         <Input
           type="text"
-          placeholder="Rechercher un Numéro, Nom, Prénom, ..."
+          placeholder="Rechercher un N° d’enquête, Nom, Prénom, ..."
           value={query}
-           onChange={handleSearch}
+        onChange={handleInputChange}
+         
           className="w-full pl-12 pr-4 py-2 border border-gray-300 rounded-full shadow-sm focus:outline-none focus:ring-2 focus:ring-orange-400 placeholder:text-gray-400"
         />
       </div>
-  
-      {/* Profil utilisateur */}
       <div className="hidden md:flex relative items-center space-x-4">
   {loading ? (
-  
+    // ✅ Pendant le chargement
     <div className="flex items-center">
       <div className="w-8 h-8 md:w-10 md:h-10 border-4 border-orange-400 border-t-transparent border-solid rounded-full animate-spin"></div>
     </div>
   ) : currentUser && (
- 
+    // ✅ Quand c'est chargé
     <div className="flex items-center space-x-2 cursor-pointer" onClick={() => setMenuOpen(!menuOpen)}>
       <img
         src={currentUser.photo}
@@ -138,9 +136,10 @@ const FormulaireSeach : React.FC<FormulaireProps> = ({ onSearch }) => {
   )}
 </div>
 
-    </div>
+      </div>
     </div>
   );
+  
 };
 
-export default FormulaireSeach;
+export default OrganismeSearchBar;

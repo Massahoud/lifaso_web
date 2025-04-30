@@ -12,13 +12,13 @@ import api from "../services/api";
 import { useEffect, useState } from "react";
 
 import imageName from "../assets/asdm.png";
-
+import Cookies from "js-cookie";
 interface User {
   statut?: string;
 }
 
 const Layout = () => {
-  const userId = localStorage.getItem("userId");
+  const userId = Cookies.get('userId'); 
   const [currentUser, setCurrentUser] = useState<User | null>(null);
   
   const [isNavOpen, setIsNavOpen] = useState(false);
@@ -80,18 +80,7 @@ const Layout = () => {
                 <FaClipboardList className="mr-2" /> Mes enquêtes
               </Link>
             </li>
-            <li>
-              <Link
-                to="/nuagedepoint"
-                className={`flex items-center ${
-                  isActive("/nuagedepoint")
-                    ? "text-orange-500"
-                    : "text-gray-700 hover:text-orange-500"
-                }`}
-              >
-                <FaChartLine className="mr-2" /> Nuage de point
-              </Link>
-            </li>
+           
             <li>
               <Link
                 to="/formulaire"
@@ -104,9 +93,21 @@ const Layout = () => {
                 <FaFileAlt className="mr-2" /> Formulaires
               </Link>
             </li>
-
+            <li>
+                  <Link
+                    to="/groups"
+                    className={`flex items-center ${
+                      isActive("/groups")
+                        ? "text-orange-500"
+                        : "text-gray-700 hover:text-orange-500"
+                    }`}
+                  >
+                    <FaUsersCog className="mr-2" /> Groupes d'utilisateurs
+                  </Link>
+                </li>
             {(currentUser?.statut === "admin" ||
-              currentUser?.statut === "superadmin") && (
+              currentUser?.statut === "superadmin" ||
+              currentUser?.statut === "visiteur") && (
               <>
                 <li>
                   <Link
@@ -120,16 +121,34 @@ const Layout = () => {
                     <FaUsers className="mr-2" /> Utilisateurs
                   </Link>
                 </li>
+               
+                <li>
+              <Link
+                to="/nuagedepoint"
+                className={`flex items-center ${
+                  isActive("/nuagedepoint")
+                    ? "text-orange-500"
+                    : "text-gray-700 hover:text-orange-500"
+                }`}
+              >
+                <FaChartLine className="mr-2" /> Nuage de point
+              </Link>
+            </li>
+              </>
+            )}
+             {(
+              currentUser?.statut === "superadmin") && (
+              <>
                 <li>
                   <Link
-                    to="/groups"
+                    to="/organismes"
                     className={`flex items-center ${
-                      isActive("/groups")
+                      isActive("/organismes")
                         ? "text-orange-500"
                         : "text-gray-700 hover:text-orange-500"
                     }`}
                   >
-                    <FaUsersCog className="mr-2" /> Groupes d'utilisateurs
+                    <FaUsers className="mr-2" /> Organisme
                   </Link>
                 </li>
               </>

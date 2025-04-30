@@ -1,5 +1,8 @@
 import React, { useState, useEffect } from "react";
 import { X } from "lucide-react";
+import { getAllOrganismes } from "../../services/organisme_services";
+import { MenuItem, Select, InputLabel, FormControl } from "@mui/material";
+
 import {
   TextField,
   Button,
@@ -32,22 +35,28 @@ interface User {
     const [isLoading, setIsLoading] = useState<boolean>(true);
     const [error, setError] = useState<string | null>(null);
     const [successMessage, setSuccessMessage] = useState<string | null>(null);
-  
+    const [organismes, setOrganismes] = useState<{ id: string; nom: string }[]>([]);
+    const [selectedOrganismeId, setSelectedOrganismeId] = useState<string>("");
+    
     useEffect(() => {
-      const fetchAllUsers = async () => {
+      const fetchAllData = async () => {
         try {
-          const fetchedUsers = await fetchUsers();
+          const [fetchedUsers, fetchedOrganismes] = await Promise.all([
+            fetchUsers(),
+            getAllOrganismes()
+          ]);
           setUsers(fetchedUsers);
+          setOrganismes(fetchedOrganismes);
         } catch (err: any) {
-          setError(`Erreur lors de la récupération des utilisateurs: ${err.message}`);
+          setError(`Erreur lors de la récupération des données: ${err.message}`);
         } finally {
           setIsLoading(false);
         }
       };
-  
-      fetchAllUsers();
+    
+      fetchAllData();
     }, []);
-  
+    
     const handleCreateGroup = async () => {
       if (!name || !description || !date || selectedAdmins.length === 0 || selectedMembers.length === 0) {
         setError("Veuillez remplir tous les champs et sélectionner au moins un administrateur et un membre.");
@@ -55,7 +64,7 @@ interface User {
       }
   
       try {
-        await createGroup(name, description, date, selectedAdmins, selectedMembers);
+        await createGroup(name, description, date, selectedAdmins, selectedMembers,selectedOrganismeId || undefined );
         setSuccessMessage("Groupe créé avec succès!");
         setName("");
         setDescription("");
@@ -183,6 +192,31 @@ interface User {
                       },
                     }}
                   />
+                  <FormControl fullWidth margin="normal">
+  <InputLabel id="organisme-select-label">Organisme (optionnel)</InputLabel>
+  <Select
+    labelId="organisme-select-label"
+    value={selectedOrganismeId}
+    onChange={(e) => setSelectedOrganismeId(e.target.value)}
+    displayEmpty
+    sx={{
+      borderRadius: "50px",
+      "& .MuiOutlinedInput-notchedOutline": { borderColor: "gray" },
+      "&:hover .MuiOutlinedInput-notchedOutline": { borderColor: "orange" },
+      "&.Mui-focused .MuiOutlinedInput-notchedOutline": { borderColor: "orange" },
+    }}
+  >
+    <MenuItem value="">
+      <em>Aucun</em>
+    </MenuItem>
+    {organismes.map((org) => (
+      <MenuItem key={org.id} value={org.id}>
+        {org.nom}
+      </MenuItem>
+    ))}
+  </Select>
+</FormControl>
+
                 </CardContent>
               </Card>
               <Card style={{ marginBottom: "16px" }}>

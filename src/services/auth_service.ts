@@ -1,8 +1,9 @@
-import api from './api'; // ou le bon chemin relatif vers ton fichier d’instance axios
+import api from './api'; // ton axios
+import Cookies from 'js-cookie'; // on importe js-cookie
+
 
 class AuthService {
-  
-    async login(email: string, motDePasse: string): Promise<void> {
+  async login(email: string, motDePasse: string): Promise<void> {
     try {
       const response = await api.post('/auth/login', {
         email,
@@ -15,13 +16,14 @@ class AuthService {
         throw new Error('Données de connexion invalides.');
       }
 
-      localStorage.setItem('token', token);
-      localStorage.setItem('userId', user_id);
-      localStorage.setItem('userRole', statut);
+      // On stocke dans les cookies au lieu de localStorage
+      Cookies.set('token', token, { expires: 1, secure: true, sameSite: 'Strict' });
+      Cookies.set('userId', user_id, { expires: 1, secure: true, sameSite: 'Strict' });
+      Cookies.set('userRole', statut, { expires: 1, secure: true, sameSite: 'Strict' });
 
-      const storedToken = localStorage.getItem('token');
+      const storedToken = Cookies.get('token');
       if (storedToken !== token) {
-        throw new Error("Échec de l'enregistrement du token.");
+        throw new Error("Échec de l'enregistrement du token dans le cookie.");
       }
     } catch (error: any) {
       const message =
@@ -32,18 +34,19 @@ class AuthService {
     }
   }
 
-  getUserRole(): string | null {
-    return localStorage.getItem('userRole');
+  getUserRole(): string | undefined {
+    return Cookies.get('userRole'); // on lit dans les cookies
   }
 
   logout(): void {
-    localStorage.removeItem('token');
-    localStorage.removeItem('userId');
-    localStorage.removeItem('userRole');
+    // On supprime les cookies
+    Cookies.remove('token');
+    Cookies.remove('userId');
+    Cookies.remove('userRole');
   }
 
   isAuthenticated(): boolean {
-    return !!localStorage.getItem('token');
+    return !!Cookies.get('token');
   }
 }
 

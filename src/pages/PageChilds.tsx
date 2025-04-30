@@ -5,7 +5,8 @@ import ChildCard from "../components/childlist/ChildCard";
 import Pagination from "../components/childlist/Pagination";
 import EnquetesPage from "../components/childlist/filterChild";
 import { fetchEnquetesByUserRole } from "../services/childService";
-
+import axios from "axios";
+import Cookies from "js-cookie";
 const ITEMS_PER_PAGE = 50;
 
 interface Child {
@@ -21,6 +22,7 @@ interface Child {
   nom_enqueteur: string;
   prenom_enqueteur: string;
   photo_url: string;
+  
 }
 
 const ChildList = () => {
@@ -31,6 +33,7 @@ const ChildList = () => {
   const [currentPage, setCurrentPage] = useState(1);
   const [loading, setLoading] = useState(true);
   const navigate = useNavigate();
+  const [errorMessage, setErrorMessage] = useState<string | null>(null);
   const [startDate, setStartDate] = useState<string | null>(null);
   const [endDate, setEndDate] = useState<string | null>(null);
   const scrollContainerRef = useRef<HTMLDivElement>(null);
@@ -38,9 +41,9 @@ const ChildList = () => {
   useEffect(() => {
     const loadChildren = async () => {
       setLoading(true);
+      setErrorMessage(null); // réinitialiser l'erreur
     
-      // Récupérer l'ID utilisateur depuis le localStorage
-      const userId = localStorage.getItem("userId");
+      const userId = Cookies.get('userId'); // Utilisation de Cookies pour récupérer l'ID de l'utilisateur
       if (!userId) {
         console.error("Aucun ID utilisateur trouvé dans le localStorage.");
         setLoading(false);
@@ -48,18 +51,38 @@ const ChildList = () => {
       }
     
       try {
-
-        const data = await fetchEnquetesByUserRole(userId);
-        setChildren(data);
-        setFilteredChildren(data);
-      } catch (error) {
+        const { data, error } = await fetchEnquetesByUserRole(userId);
+    
+        if (error) {
+          console.error(error);
+          setErrorMessage(error); // <<< AJOUTER CA
+          setChildren([]);
+          setFilteredChildren([]);
+        } else {
+          setChildren(data);
+          setFilteredChildren(data);
+        }
+      } catch (error: any) {
         console.error("Erreur lors de la récupération des enquêtes :", error);
+    
+        if (axios.isAxiosError(error)) {
+          if (error.response?.status === 404) {
+            setErrorMessage("Aucune enquête disponible pour vous.");
+          } else {
+            setErrorMessage("Une erreur est survenue.");
+          }
+        } else {
+          setErrorMessage("Une erreur est survenue.");
+        }
       } finally {
         setLoading(false);
       }
     };
+    
+
     loadChildren();
   }, []);
+
 
   useEffect(() => {
     let filtered = children;
@@ -160,11 +183,13 @@ const ChildList = () => {
   </table>
 </div>
 
-      <div ref={scrollContainerRef} className="flex-1 overflow-auto p-4">
+<div ref={scrollContainerRef} className="flex-1 overflow-auto p-4">
         {loading ? (
           <div className="flex justify-center items-center h-32">
             <div className="loader border-t-4 border-blue-500 rounded-full w-12 h-12 animate-spin"></div>
           </div>
+        ) : errorMessage ? ( 
+          <div className="text-center text-red-500 font-semibold">{errorMessage}</div>
         ) : (
           <div className="space-y-4 cursor-pointer">
             {paginatedChildren.map((child) => (

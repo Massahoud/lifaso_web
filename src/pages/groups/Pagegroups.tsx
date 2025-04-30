@@ -15,6 +15,8 @@ import { useNavigate } from "react-router-dom";
 import { getUserRole } from "../../services/role";
 import GroupeSeachbar from "../../components/groups/group_seachbar";
 
+import { getAllOrganismes } from "../../services/organisme_services";
+import { deleteGroup } from "../../services/groups_service";
 interface User {
   id: string;
   nom: string;
@@ -26,6 +28,7 @@ interface Group {
   id: string;
   nom: string;
   description: string;
+  organismeid?: string; // ID de l'organisme
   membres: string[]; // Liste des IDs des membres
 }
 
@@ -37,6 +40,9 @@ const GroupsListPage = () => {
   const [userStatus, setUserStatus] = useState<string | null>(null);
   const [error, setError] = useState<string | null>(null);
    const [isModalOpen, setIsModalOpen] = useState(false);
+   const [organismes, setOrganismes] = useState<{ id: string; nom: string }[]>([]);
+const [selectedOrganismeId, setSelectedOrganismeId] = useState<string | null>(null);
+
   const navigate = useNavigate();
    useEffect(() => {
      const fetchUserStatus = async () => {
@@ -47,6 +53,31 @@ const GroupsListPage = () => {
      };
      fetchUserStatus();
    }, []);
+   useEffect(() => {
+    const fetchAllOrganismes = async () => {
+      try {
+        const data = await getAllOrganismes();
+        setOrganismes(data);
+      } catch (err: any) {
+        setError(`Erreur lors du chargement des organismes : ${err.message}`);
+      }
+    };
+    fetchAllOrganismes();
+  }, []);
+  
+
+const handleDeleteGroup = async (groupId: string) => {
+  if (!window.confirm("Es-tu sûr de vouloir supprimer ce groupe ?")) return;
+
+  try {
+    await deleteGroup(groupId);
+    setGroups(prev => prev.filter(group => group.id !== groupId));
+  } catch (err: any) {
+    setError(`Erreur lors de la suppression du groupe : ${err.message}`);
+  }
+};
+
+  
   useEffect(() => {
     const fetchAllGroups = async () => {
       try {
@@ -86,9 +117,10 @@ const GroupsListPage = () => {
     setSearchQuery(query);
   };
 
-  const filteredGroups = groups.filter((group) =>
-    group.nom.toLowerCase().includes(searchQuery.toLowerCase())
-  );
+  const filteredGroups = groups
+  .filter(group => group.nom.toLowerCase().includes(searchQuery.toLowerCase()))
+  .filter(group => !selectedOrganismeId || group.organismeid === selectedOrganismeId);
+
  
 
   return (
@@ -102,7 +134,21 @@ const GroupsListPage = () => {
               <h1 className="text-2xl md:text-3xl font-bold text-gray-800">
                 {groups.length} groupes utilisateurs
               </h1>
-        
+
+              <div className="flex items-center ">
+  <label className="mr-2 font-semibold">Filtrer par organisme :</label>
+  <select
+    className="border border-gray-300 rounded-full p-2  text-black   "
+    value={selectedOrganismeId || ""}
+    onChange={(e) => setSelectedOrganismeId(e.target.value || null)}
+  >
+    <option value="" >Tous les organismes</option>
+    {organismes.map((org) => (
+      <option key={org.id} value={org.id}>{org.nom}</option>
+    ))}
+  </select>
+</div>
+
               {/* Boutons */}
               <div className="flex items-center gap-x-2 gap-y-0 flex-wrap relative">
               {userStatus !== "enqueteur" && (
@@ -113,6 +159,8 @@ const GroupsListPage = () => {
                   Créer une groupe
                 </button>
                     )}
+
+                   
               </div>
                    {isModalOpen && <CreateGroupPage onClose={() => setIsModalOpen(false)} />}
                
@@ -169,6 +217,19 @@ const GroupsListPage = () => {
                     <Typography variant="body2" color="textSecondary" align="center">
                       {group.description}
                     </Typography>
+                    <div className="flex justify-end">
+    {userStatus !== "enqueteur" && userStatus !== "admin" && (
+      <button
+        className="text-red-600 hover:text-red-800 text-sm"
+        onClick={(e) => {
+          e.stopPropagation();
+          handleDeleteGroup(group.id);
+        }}
+      >
+        Supprimer
+      </button>
+    )}
+  </div>
                   </CardContent>
                 </Card>
               </Grid>

@@ -12,17 +12,32 @@ export const fetchChildren = async () => {
   }
 };
 
+import axios from "axios"; // pour vérifier AxiosError
+
 export const fetchEnquetesByUserRole = async (userId: string) => {
   try {
     // Appeler l'API avec le userId
     const response = await api.get(`/enquete/user/${userId}`);
-    return response.data;
-  } catch (error) {
+    return { data: response.data, error: null };
+  } catch (error: any) {
     console.error("Erreur lors de la récupération des enquêtes par rôle :", error);
-    return [];
+
+    if (axios.isAxiosError(error)) {
+      if (error.response) {
+        if (error.response.status === 404) {
+          return { data: [], error: "Aucune enquête disponible pour vous." };
+        } else {
+          return { data: [], error: "Une erreur est survenue. Veuillez réessayer." };
+        }
+      } else {
+        return { data: [], error: "Pas de réponse du serveur. Vérifiez votre connexion." };
+      }
+    } else {
+      return { data: [], error: "Une erreur inconnue est survenue." };
+    }
   }
 };
-// services/childService.ts
+
 
 export interface Child {
   id: string;

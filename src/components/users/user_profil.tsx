@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { ArrowLeft, Camera } from "lucide-react";
-import { useNavigate, useParams } from "react-router-dom"; // 👈 useNavigate ajouté
+import { useNavigate, useParams } from "react-router-dom"; 
 
 import { getUserById, updateUser, deleteUser } from "../../services/user_services";
 import CustomTextField from "../../components/ui/custom_textfield";

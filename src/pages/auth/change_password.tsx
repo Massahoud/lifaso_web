@@ -6,7 +6,7 @@ import logoImg from '../../assets/asdm.png';
 
 const ResetPasswordForm: React.FC = () => {
   const [searchParams] = useSearchParams();
-  const token = searchParams.get('token'); // 🔸 Récupère le token de l'URL
+  const token = searchParams.get('token'); 
 
   const [password, setPassword] = useState('');
   const [confirmPassword, setConfirmPassword] = useState('');

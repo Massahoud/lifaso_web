@@ -1,6 +1,7 @@
 import { useEffect, useState, useRef } from "react";
 import api from "../../services/api"; // Import de l'instance axios avec le token
 import { Timestamp } from "firebase/firestore";
+import Cookies from "js-cookie";
 interface ChatBoxProps {
   enqueteId?: string;
 }
@@ -25,7 +26,7 @@ const ChatBox: React.FC<ChatBoxProps> = ({ enqueteId }) => {
   const [newMessage, setNewMessage] = useState("");
   const chatRef = useRef<HTMLDivElement>(null);
 
-  const userId = localStorage.getItem("userId"); // ID de l'utilisateur connecté
+  const userId = Cookies.get("userId");
   const [currentUser, setCurrentUser] = useState<User | null>(null);
   const formatDate = (date_heure_debut: any): string => {
     let dateObj: Date | null = null;

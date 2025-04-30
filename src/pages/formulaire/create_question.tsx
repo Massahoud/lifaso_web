@@ -4,6 +4,7 @@ import { createQuestion as createQuestionAPI, Question } from '../../services/qu
 import { createResponse, Response } from '../../services/réponse_service';
 import CustomTextField from '../../components/ui/custom_textfield';
 import { IoChevronBack } from "react-icons/io5";
+import CustomDialog from '../../components/ui/CustomDialog';
 interface ResponseField {
     reponse: string;
     education: string;
@@ -17,7 +18,8 @@ interface ResponseField {
 
 const CreateQuestionPage: React.FC = () => {
     const navigate = useNavigate();
-
+    const [showDialog, setShowDialog] = useState(false);
+    const [showDialog2, setShowDialog2] = useState(false);
     const [numero, setNumero] = useState('');
     const [question, setQuestion] = useState('');
     const [instruction, setInstruction] = useState('');
@@ -55,45 +57,45 @@ const CreateQuestionPage: React.FC = () => {
 
     const handleCreateQuestion = async () => {
         try {
-            const questionData: Omit<Question, 'id'> = {
-                numero: parseInt(numero),
-                question_text: question,
-                type: selectedType,
-                commentaire: instruction,
-            };
-
-            const newQuestion = await createQuestionAPI(questionData as Question);
-
-            if (!newQuestion?.id) {
-                throw new Error('ID de la question manquant');
+          const questionData: Omit<Question, 'id'> = {
+            numero:numero,
+            question_text: question,
+            type: selectedType,
+            commentaire: instruction,
+          };
+      
+          const newQuestion = await createQuestionAPI(questionData as Question);
+      
+          if (!newQuestion?.id) {
+            throw new Error('ID de la question manquant');
+          }
+      
+          for (const field of responseFields) {
+            if (field.reponse.trim()) {
+              const responseData: Response = {
+                question_id: newQuestion.id,
+                reponse_text: field.reponse,
+                education: field.education,
+                alimentation: field.alimentation,
+                pauvrete: field.pauvrete,
+                cadre_vie: field.cadreVie,
+                sante_physique: field.santePhysique,
+                violence: field.violence,
+                indice_sortir: field.indiceSortir,
+              };
+              await createResponse(responseData);
             }
-
-            for (const field of responseFields) {
-                if (field.reponse.trim()) {
-                    const responseData: Response = {
-                        question_id: newQuestion.id,
-                        reponse_text: field.reponse,
-                        education: field.education,
-                        alimentation: field.alimentation,
-                        pauvrete: field.pauvrete,
-                        cadre_vie: field.cadreVie,
-                        sante_physique: field.santePhysique,
-                        violence: field.violence,
-                        indice_sortir: field.indiceSortir,
-                    };
-                    await createResponse(responseData);
-                }
-            }
-
-            alert('Question et réponses créées avec succès');
-            navigate('/');
+          }
+      
+          // Au lieu de alert
+          setShowDialog(true);
         } catch (error) {
-            console.error('Erreur lors de la création:', error);
-            alert('Erreur : veuillez vous reconnecter');
-            navigate('/login');
+          console.error('Erreur lors de la création:', error);
+            setShowDialog2(true);
         }
-    };
-
+      };
+      
+     
     return (
         <div className="h-screen flex flex-col bg-gray-100 ">
   
@@ -225,8 +227,34 @@ const CreateQuestionPage: React.FC = () => {
             </div>
         </div>
         </div>
+        {showDialog && (
+        <CustomDialog
+          title="Succès"
+          content="Question et réponses créées avec succès"
+          buttonText="OK"
+          onClose={() => setShowDialog(false)}
+          onConfirm={() => {
+            setShowDialog(false);
+            navigate('/formulaire');
+          }}
+        />
+      )}
+        {showDialog2 && (
+        <CustomDialog
+          title="Erreur"
+          content="Erreur lors de la création de la question."
+          buttonText="OK"
+          onClose={() => setShowDialog2(false)}
+          onConfirm={() => {
+            setShowDialog2(false);
+            navigate('/formulaire');
+          }}
+        />
+        )}
         </div>
     );
+   
+      
 };
 
 export default CreateQuestionPage;

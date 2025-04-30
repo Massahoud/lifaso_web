@@ -1,24 +1,43 @@
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { Pencil } from "lucide-react";
-
+import jsPDF from "jspdf";
 import { fetchAllQuestions, Question } from "../../services/question_services";
 import { fetchResponsesByQuestionId, Response } from "../../services/réponse_service";
-
+import api from "../../services/api";
 import FormulaireSeach from "../../components/formulaire/formulaire_search";
 import FormulaireFilter from "../../components/formulaire/filtrer_formulaire";
+import Cookies from "js-cookie";
 
+interface User {
+  statut?: string;
+}
 const QuestionsPage = () => {
   const [questionsWithResponses, setQuestionsWithResponses] = useState<
     { question: Question; responses: Response[] | null }[]
   >([]);
   const [searchQuery, setSearchQuery] = useState("");
   const [errorMessage, setErrorMessage] = useState("");
-  
+   const [currentUser, setCurrentUser] = useState<User | null>(null);
   const [loading, setLoading] = useState(true);
 
   const navigate = useNavigate();
+  const userId = Cookies.get('userId');
+  useEffect(() => {
+   
+  
+    if (!userId) return;
 
+    api
+      .get(`/users/${userId}`)
+      .then((response) => {
+        setCurrentUser(response.data);
+      })
+      .catch((error) =>
+        console.error("Erreur récupération user connecté :", error)
+      );
+  }, [userId]);
+ 
   useEffect(() => {
     const loadQuestions = async () => {
       try {
@@ -44,19 +63,66 @@ const QuestionsPage = () => {
     loadQuestions();
   }, []);
 
- 
+  
+
+  const handleExportToPDF = () => {
+    const doc = new jsPDF();
+    const pageHeight = doc.internal.pageSize.height;
+    let y = 20;
+  
+    doc.setFontSize(16);
+    doc.text("Questions et réponses", 10, y);
+    y += 10;
+  
+    questionsWithResponses.forEach(({ question, responses }) => {
+      if (y > pageHeight - 30) {
+        doc.addPage();
+        y = 20;
+      }
+  
+      doc.setFontSize(13);
+      doc.text(`${question.numero}: ${question.question_text}`, 10, y);
+      y += 8;
+  
+      if (responses && responses.length > 0) {
+        responses.forEach((response) => {
+          if (y > pageHeight - 20) {
+            doc.addPage();
+            y = 20;
+          }
+          doc.setFontSize(11);
+          doc.text(`- ${response.reponse_text || "Réponse non fournie"}`, 15, y);
+          y += 6;
+        });
+      } else {
+        doc.setFontSize(11);
+        doc.text("- Aucune réponse", 15, y);
+        y += 6;
+      }
+  
+      y += 5; // espace entre les questions
+    });
+  
+    doc.save("questions_reponses.pdf");
+  };
+  
 
   const filteredQuestions = questionsWithResponses.filter(({ question }) => {
     const q = searchQuery.toLowerCase();
-    return question.numero || question.question_text.toLowerCase().includes(q);
+    return (
+      question.numero?.toString().toLowerCase().includes(q) || 
+      question.question_text.toLowerCase().includes(q)
+    );
   });
+  
 
   const handleSearch = (query: string) => setSearchQuery(query);
 
   return (
     <div className="h-screen flex flex-col bg-gray-100">
       <FormulaireSeach onSearch={handleSearch} />
-      <FormulaireFilter />
+      <FormulaireFilter onExport={handleExportToPDF} />
+
 
       <div className="p-4 ">
         <HeaderAndTabs />
@@ -78,6 +144,9 @@ const QuestionsPage = () => {
                     <p className="font-bold">
                       {question.numero}: {question.question_text}
                     </p>
+                    {(currentUser?.statut === "admin" ||
+              currentUser?.statut === "superadmin") && (
+              <>
                     <button
                       onClick={() =>
                         navigate(`/questions/update/${question.id}`,)
@@ -86,6 +155,8 @@ const QuestionsPage = () => {
                     >
                       <Pencil size={20} />
                     </button>
+                    </>
+            )}
                   </div>
                   <div className="mt-2 space-y-2">
                     {responses?.map((response) => (

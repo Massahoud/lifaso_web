@@ -1,5 +1,5 @@
 // services/responseService.ts
-import axios from "axios";
+import api from "./api"; // Remplacer axios par ton instance personnalisée
 
 export interface Response {
   id?: string;
@@ -13,66 +13,75 @@ export interface Response {
   violence: string;
   indice_sortir?: string;
 }
+
 export type ResponseType = Omit<Response, 'id'>;
-const API_BASE_URL = "https://soleilmainapi.vercel.app/api";
 
-const getAuthToken = (): string | null => {
-  return localStorage.getItem("token");
-};
-
+// Récupérer toutes les réponses pour une question donnée
 export const fetchResponsesByQuestionId = async (questionId: string): Promise<Response[]> => {
-  const token = getAuthToken();
-  const res = await axios.get(`${API_BASE_URL}/responses/question/${questionId}`, {
-    headers: { Authorization: `Bearer ${token}` },
-  });
-  return res.data;
+  try {
+    const res = await api.get(`/responses/question/${questionId}`);
+    return res.data;
+  } catch (error) {
+    throw new Error("Erreur lors de la récupération des réponses par question");
+  }
 };
 
-const getHeaders = () => {
-  const token = getAuthToken();
-  if (!token) throw new Error("Token non trouvé");
-  return {
-    Authorization: `Bearer ${token}`,
-    "Content-Type": "application/json",
-  };
-};
-
+// Récupérer toutes les réponses
 export const getAllResponses = async (): Promise<Response[]> => {
-  const res = await axios.get(`${API_BASE_URL}/responses`, {
-    headers: getHeaders(),
-  });
-  return res.data;
+  try {
+    const res = await api.get(`/responses`);
+    return res.data;
+  } catch (error) {
+    throw new Error("Erreur lors de la récupération de toutes les réponses");
+  }
 };
 
+// Récupérer une réponse par ID
 export const getResponseById = async (id: string): Promise<ResponseType> => {
-  const res = await axios.get(`${API_BASE_URL}/responses/${id}`, {
-    headers: getHeaders(),
-  });
-  return res.data;
+  try {
+    const res = await api.get(`/responses/${id}`);
+    return res.data;
+  } catch (error) {
+    throw new Error("Erreur lors de la récupération de la réponse");
+  }
 };
 
-
-
+// Créer une réponse
 export const createResponse = async (response: Response): Promise<Response> => {
-  const res = await axios.post(`${API_BASE_URL}/responses`, response, {
-    headers: getHeaders(),
-  });
+  try {
+    const res = await api.post(`/responses`, response, {
+      headers: {
+        "Content-Type": "application/json",
+      },
+    });
 
-  const data = res.data;
-  if (data?.reponse_text) return data.reponse_text;
-  throw new Error("Réponse invalide ou inattendue.");
+    const data = res.data;
+    if (data?.reponse_text) return data.reponse_text;
+    throw new Error("Réponse invalide ou inattendue.");
+  } catch (error) {
+    throw new Error("Erreur lors de la création de la réponse");
+  }
 };
 
+// Mettre à jour une réponse
 export const updateResponse = async (id: string, response: ResponseType): Promise<ResponseType> => {
-  const res = await axios.put(`${API_BASE_URL}/responses/${id}`, response, {
-    headers: getHeaders(),
-  });
-
-  return res.data.reponse_text;
+  try {
+    const res = await api.put(`/responses/${id}`, response, {
+      headers: {
+        "Content-Type": "application/json",
+      },
+    });
+    return res.data.reponse_text;
+  } catch (error) {
+    throw new Error("Erreur lors de la mise à jour de la réponse");
+  }
 };
 
+// Supprimer une réponse
 export const deleteResponse = async (id: string): Promise<void> => {
-  await axios.delete(`${API_BASE_URL}/responses/${id}`, {
-    headers: getHeaders(),
-  });
+  try {
+    await api.delete(`/responses/${id}`);
+  } catch (error) {
+    throw new Error("Erreur lors de la suppression de la réponse");
+  }
 };

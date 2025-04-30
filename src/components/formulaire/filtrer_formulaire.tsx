@@ -1,25 +1,15 @@
-import { useState,useEffect } from "react";
+
 import { useNavigate } from "react-router-dom";
 import { FaPlus } from "react-icons/fa";
+interface FormulaireFilterProps {
+  onExport: () => void;
+}
 
-
-const FormulaireFilter= () => {
-  const [showStatePicker, setShowStatePicker] = useState(false);
+const FormulaireFilter = ({ onExport }: FormulaireFilterProps) => {
+  
   const navigate = useNavigate();
 
-  const [, setToken] = useState<string | null>(null);
  
-   useEffect(() => {
-      // Récupération du token dans le localStorage
-      const storedToken = localStorage.getItem("token");
-      if (storedToken) {
-        setToken(storedToken);
-      }
-  
-    
-    }, []);
-  
-    // Fonction pour ajouter le token aux liens
    
 
   return (
@@ -40,9 +30,9 @@ const FormulaireFilter= () => {
 
           <button
             className="px-2 md:px-3 py-1.5 md:py-2 text-sm md:text-base rounded-full border border-gray-300 text-gray-600 hover:bg-gray-100 focus:outline-none cursor-pointer"
-            onClick={() => {
-              setShowStatePicker(!showStatePicker);
-            }}
+           
+              onClick={onExport}
+           
           >
             Exporter
           </button>

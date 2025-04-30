@@ -3,7 +3,7 @@ import { FaSearch, FaUser } from "react-icons/fa";
 import { useEffect, useState, useRef } from "react";
 import { useNavigate } from "react-router-dom";
 import api from "../../services/api";
-
+import Cookies from "js-cookie";
 interface GroupMemberSeachProps {
   onSearch: (query: string) => void;
 }
@@ -19,7 +19,7 @@ interface User {
 const GroupMemberSeach: React.FC<GroupMemberSeachProps> = ({ onSearch }) => {
   const [query, setQuery] = useState("");
   const [currentUser, setCurrentUser] = useState<User | null>(null);
-  const userId = localStorage.getItem("userId");
+  const userId = Cookies.get('userId'); 
   const [menuOpen, setMenuOpen] = useState(false);
   const menuRef = useRef<HTMLDivElement | null>(null);
   const navigate = useNavigate();

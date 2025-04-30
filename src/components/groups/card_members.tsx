@@ -1,5 +1,10 @@
 import {  FaTrash } from "react-icons/fa";
-
+import api from "../../services/api";
+import { useEffect, useState } from "react";
+import Cookies from "js-cookie";
+interface User {
+  statut?: string;
+}
 
 interface GroupCardProps {
   id: string;
@@ -35,7 +40,22 @@ const GroupCard: React.FC<GroupCardProps> = ({
       onDelete(id, statut); // Appel de la fonction de suppression si confirmé
     }
   };
+  const userId = Cookies.get('userId'); 
+  const [currentUser, setCurrentUser] = useState<User | null>(null);
+  useEffect(() => {
+   
+  
+    if (!userId) return;
 
+    api
+      .get(`/users/${userId}`)
+      .then((response) => {
+        setCurrentUser(response.data);
+      })
+      .catch((error) =>
+        console.error("Erreur récupération user connecté :", error)
+      );
+  }, [userId]);
   return (
     <div className="w-full flex flex-wrap md:flex-nowrap items-center p-4 rounded-2xl shadow-lg bg-white min-h-[88px] gap-y-4 md:gap-x-6">
       <div className="w-full md:w-[15%] flex flex-col items-start md:items-center">
@@ -66,13 +86,17 @@ const GroupCard: React.FC<GroupCardProps> = ({
       <div className="w-full md:w-[30%] text-gray-600 font-semibold text-xs text-left md:text-center">
         {groupe}
       </div>
-
+      {(currentUser?.statut === "admin" ||
+              currentUser?.statut === "superadmin" ) && (
+              <>
       <div className="w-full md:w-[5%] flex justify-end md:justify-center items-center">
         <FaTrash
           className="text-red-500 text-2xl cursor-pointer hover:text-red-700"
           onClick={handleDeleteClick}
         />
       </div>
+      </>
+            )}
     </div>
   );
 };
