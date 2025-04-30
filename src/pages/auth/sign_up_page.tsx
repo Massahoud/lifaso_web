@@ -36,14 +36,13 @@ const SignupWithInvitePage: React.FC = () => {
 
     if (token) {
       try {
-        localStorage.setItem('token', token);
+       
         const decoded = jwtDecode<DecodedToken>(token);
         setEmail(decoded.email || '');
-        console.log("email", decoded.email);
-        console.log("statut", decoded.statut);
+       
         setStatut(decoded.statut || '');
         setOrganismeid(decoded.organismeid || '');
-        console.log("organismeid", decoded.organismeid);
+       
       } catch (err) {
         setErrorMessage('Token invalide ou expiré.');
         setHasError(true);
@@ -144,7 +143,7 @@ const SignupWithInvitePage: React.FC = () => {
     content="Votre compte a été créé avec succès. Vous pouvez maintenant vous connecter."
     buttonText="Aller à la connexion"
     onClose={() => setShowSuccessDialog(false)}
-    onConfirm={() => navigate('/login')}
+    onConfirm={() => navigate('/')}
   />
 )}
 

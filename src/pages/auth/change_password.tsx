@@ -44,7 +44,7 @@ const ResetPasswordForm: React.FC = () => {
 
       if (response.status === 200) {
         setMessage('Mot de passe réinitialisé avec succès.');
-        setTimeout(() => navigate('/login'), 2000);
+        setTimeout(() => navigate('/'), 2000);
       } else {
         setMessage(`Erreur : ${data.message}`);
         setHasError(true);

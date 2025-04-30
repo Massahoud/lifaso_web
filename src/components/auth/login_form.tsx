@@ -59,7 +59,7 @@ const LoginForm: React.FC = () => {
       }
 
       
-      navigate('/child-list');
+      navigate('/childs');
     } catch (error: any) {
       console.error('Erreur lors de la connexion:', error);
 
