@@ -45,8 +45,9 @@ const UsersSeach : React.FC<UsersSearchProps> = ({ onSearch }) => {
    // Fonction de déconnexion
    const handleLogout = () => {
     Cookies.remove("userId"); // ✅ Supprimer userId du cookie
-    Cookies.remove("token"); // ✅ Supprimer authToken du cookie
-    navigate("/login");
+    Cookies.remove("token");
+    Cookies.remove("userRole");  // ✅ Supprimer authToken du cookie
+    navigate("/");
   };
 
   useEffect(() => {

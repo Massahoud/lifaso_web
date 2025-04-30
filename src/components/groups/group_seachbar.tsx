@@ -43,8 +43,9 @@ const GroupeSeachbar: React.FC<{ onSearch: (query: string) => void }> = ({ onSea
   // Fonction de déconnexion
   const handleLogout = () => {
     Cookies.remove("userId"); 
-    Cookies.remove("authToken"); 
-    navigate("/login");
+    Cookies.remove("token"); 
+    Cookies.remove("userRole"); 
+    navigate("/");
   };
 
  

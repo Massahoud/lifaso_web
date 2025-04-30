@@ -22,7 +22,7 @@ const PageToken = () => {
       const pathParts = location.pathname.split("/");
       const pointId = pathParts.length > 2 ? pathParts[2] : null;
 
-      console.log("pointId:", pointId);
+     
 
       if (!token) {
         throw new Error("Aucun paramètre 'token' trouvé dans l'URL");

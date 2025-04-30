@@ -43,9 +43,10 @@ const GroupMemberSeach: React.FC<GroupMemberSeachProps> = ({ onSearch }) => {
 
   // Fonction de déconnexion
   const handleLogout = () => {
-    localStorage.removeItem("userId");
-    localStorage.removeItem("authToken"); // Supprime aussi le token
-    window.location.href = "https://v0.enquetesoleil.com";
+    Cookies.remove("userId"); 
+    Cookies.remove("token"); 
+    Cookies.remove("userRole"); 
+    navigate("/");
   };
 
   useEffect(() => {

@@ -58,8 +58,8 @@ const LoginForm: React.FC = () => {
         Cookies.remove('savedPassword');
       }
 
-      console.log('Connexion réussie !');
-      navigate('/formulaire');
+      
+      navigate('/child-list');
     } catch (error: any) {
       console.error('Erreur lors de la connexion:', error);
 
