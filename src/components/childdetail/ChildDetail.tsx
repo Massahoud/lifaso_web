@@ -9,6 +9,11 @@ import { Dialog, DialogContent, DialogFooter, DialogHeader } from "../../../comp
 import { updateEtat } from "../../services/childService";
 
 const stateOptions = ["Nouveau", "En cours", "Clôturé"];
+interface Geolocalisation {
+  latitude: number;
+  longitude: number;
+}
+
 interface Child {
   id: string;
   nom_enfant: string;
@@ -23,13 +28,15 @@ interface Child {
   contactPhone?: string;
   photo_url?: string;
   contact_enfant: string;
+  geolocalisation: Geolocalisation; // correction ici
   etat: string;
   nomcontact_enfant: string;
 }
 
+
 const ChildDetail: React.FC<{ child: Child }> = ({ child }) => {
   const [childData, setChildData] = useState({
-    id:"",
+    id: "",
     nom_enfant: "",
     prenom_enfant: "",
     age_enfant: "",
@@ -37,6 +44,10 @@ const ChildDetail: React.FC<{ child: Child }> = ({ child }) => {
     etat: "",
     nomcontact_enfant: "",
     contact_enfant: "",
+    lieuenquete: "",
+    date_heure_debut: "",
+    geolocalisation: { latitude: 0, longitude: 0 },
+
   });
   const [userStatus, setUserStatus] = useState<string | null>(null);
   const [isModalOpen, setIsModalOpen] = useState(false);
@@ -53,7 +64,7 @@ const ChildDetail: React.FC<{ child: Child }> = ({ child }) => {
     };
     fetchUserStatus();
   }, []);
-  
+
   useEffect(() => {
     setChildData({
       id: child.id,
@@ -64,6 +75,10 @@ const ChildDetail: React.FC<{ child: Child }> = ({ child }) => {
       etat: child.etat,
       nomcontact_enfant: child.nomcontact_enfant,
       contact_enfant: child.contact_enfant,
+      lieuenquete: child.lieuenquete,
+      date_heure_debut: child.date_heure_debut,
+      geolocalisation: child.geolocalisation,
+
     });
   }, [child]);
 
@@ -123,10 +138,9 @@ const ChildDetail: React.FC<{ child: Child }> = ({ child }) => {
         />
         <div className="absolute top-2 right-2 flex items-center gap-1">
           <Badge className={
-            `text-white ${
-              selectedEtat === "Nouveau" ? "bg-yellow-500" :
-              selectedEtat === "En cours" ? "bg-orange-500" : 
-              "bg-green-500"
+            `text-white ${selectedEtat === "Nouveau" ? "bg-yellow-500" :
+              selectedEtat === "En cours" ? "bg-orange-500" :
+                "bg-green-500"
             }`
           }>
             {selectedEtat}
@@ -139,8 +153,8 @@ const ChildDetail: React.FC<{ child: Child }> = ({ child }) => {
               <ChevronDown className={`w-4 h-4 transition-transform ${isDropdownOpen ? "rotate-180" : ""}`} />
             </button>
           )}
-          </div>
-          {isDropdownOpen && (
+        </div>
+        {isDropdownOpen && (
           <div className="absolute top-10 right-2 w-40 bg-white rounded-lg shadow-lg z-50 border">
             {stateOptions.map((option) => (
               <div
@@ -159,13 +173,13 @@ const ChildDetail: React.FC<{ child: Child }> = ({ child }) => {
         <p className="text-gray-500 flex items-center">
           Réalisée le {formattedDate}
           {userStatus !== "enqueteur" && (
-          <button
-            className="ml-2 text-blue-500 hover:text-blue-700"
-            onClick={() => setIsModalOpen(true)}
-          >
-            <Pencil className="w-12 h-4 text-gray-600 cursor-pointer" />
-          </button>
-            )}
+            <button
+              className="ml-2 text-blue-500 hover:text-blue-700"
+              onClick={() => setIsModalOpen(true)}
+            >
+              <Pencil className="w-12 h-4 text-gray-600 cursor-pointer" />
+            </button>
+          )}
         </p>
         <p className="flex items-center mt-2">
           <Calendar className="w-5 h-4 mr-2" /> {child.age_enfant} ans
@@ -182,30 +196,46 @@ const ChildDetail: React.FC<{ child: Child }> = ({ child }) => {
           <p className="flex items-center text-blue-500 mt-1">
             <Phone className="w-4 h-4 mr-2" /> {child.contact_enfant || "N/A"}
           </p>
+          {child.geolocalisation ? (
+            <a
+              href={`https://www.google.com/maps/search/?api=1&query=${child.geolocalisation}`}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="flex items-center text-blue-500 mt-1 hover:underline"
+            >
+              <MapPin className="w-5 h-4 mr-2" /> Voir sur la carte
+            </a>
+          ) : (
+            <p className="flex items-center text-blue-500 mt-1">
+              <MapPin className="w-5 h-4 mr-2" /> N/A
+            </p>
+          )}
+
+
         </div>
       </Card>
-  {/* Dialogue de confirmation */}
-  <Dialog open={isConfirmDialogOpen} onOpenChange={setIsConfirmDialogOpen}>
+      {/* Dialogue de confirmation */}
+      <Dialog open={isConfirmDialogOpen} onOpenChange={setIsConfirmDialogOpen}>
         <DialogContent>
           <DialogHeader>Confirmation requise</DialogHeader>
           <p>
             Voulez-vous vraiment changer l'état de "{selectedEtat}" à "{pendingEtat}" ?
           </p>
           <DialogFooter className="mt-4">
-          <button
-  onClick={async () => {
-    try {
-      await updateEtat(child.id, { id: child.id, etat: pendingEtat });
-      setSelectedEtat(pendingEtat);
-      setIsConfirmDialogOpen(false);
-    } catch (error) {
-      console.error("Erreur de mise à jour de l'état :", error);
-    }
-  }}
-  className="px-4 py-2 bg-orange-500 text-white rounded-md hover:bg-orange-600"
->
-  Confirmer
-</button>
+            <button
+              onClick={async () => {
+                try {
+                  await updateEtat(child.id, { id: child.id, etat: pendingEtat });
+                  setSelectedEtat(pendingEtat);
+                  setIsConfirmDialogOpen(false);
+                } catch (error) {
+                  console.error("Erreur de mise à jour de l'état :", error);
+                }
+              }}
+              className="px-4 py-2 bg-orange-500 text-white rounded-md hover:bg-orange-600"
+            >
+              Confirmer
+            </button>
 
           </DialogFooter>
         </DialogContent>

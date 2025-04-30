@@ -1,5 +1,5 @@
 import { useState,useEffect } from "react";
-
+import Cookies from "js-cookie";
 import { FaPlus } from "react-icons/fa";
 interface EnquetesPageProps {
   onFilterByState: (etat: string | null) => void;
@@ -19,7 +19,7 @@ const EnquetesPage: React.FC<EnquetesPageProps> = ({ onFilterByState, onFilterBy
   };
    useEffect(() => {
       // Récupération du token dans le localStorage
-      const storedToken = localStorage.getItem("token");
+      const storedToken = Cookies.get("token");
       if (storedToken) {
         setToken(storedToken);
       }
@@ -56,7 +56,7 @@ const EnquetesPage: React.FC<EnquetesPageProps> = ({ onFilterByState, onFilterBy
 
           {/* Carte de sélection de période */}
           {showDatePicker && (
-            <div className="absolute top-12 left-0 bg-white shadow-lg rounded-lg p-4 border flex flex-col space-y-2 w-full md:w-auto">
+            <div className="absolute top-15 right-60 mt-2 bg-white shadow-lg rounded-lg p-4 border flex flex-col space-y-2 w-50 z-10">
               <div className="flex flex-wrap gap-2">
                 <div className="flex flex-col">
                   <label className="text-gray-500 text-sm">Du</label>
@@ -116,11 +116,11 @@ const EnquetesPage: React.FC<EnquetesPageProps> = ({ onFilterByState, onFilterBy
 
           {/* Carte de sélection d'état */}
           {showStatePicker && (
-            <div className="absolute top-12 left-0 bg-white shadow-lg rounded-lg p-4 border flex flex-col space-y-2 w-full md:w-40">
+             <div className="absolute top-15 right-35 mt-2 bg-white shadow-lg rounded-lg p-4 border flex flex-col space-y-2 w-40 z-10">
               {["Nouveau", "En cours", "Clôturé"].map((etat) => (
                 <button
                   key={etat}
-                  className="border rounded px-4 py-2 text-gray-500 hover:bg-gray-100"
+                  className="border rounded px-4 py-2 text-gray-500 hover:bg-orange-100"
                   onClick={() => handleStateSelection(etat)}
                 >
                   {etat}

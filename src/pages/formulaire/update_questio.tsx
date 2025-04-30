@@ -4,16 +4,19 @@ import { IoChevronBack } from "react-icons/io5";
 import {
   getQuestionById,
   updateQuestion as updateQuestionService,
-  Question
+  Question,
+  deleteQuestion
 } from '../../services/question_services';
 import {
   createResponse,
   deleteResponse,
   fetchResponsesByQuestionId,
   updateResponse,
-  Response
+  Response,
+ 
 } from '../../services/réponse_service';
 import CustomTextField from '../../components/ui/custom_textfield';
+import CustomDialog from '../../components/ui/CustomDialog';
 
 interface ResponseField {
   reponse: string;
@@ -40,7 +43,13 @@ const createEmptyResponseField = (): ResponseField => ({
 const UpdateQuestionPage = () => {
   const { questionId } = useParams();
   const navigate = useNavigate();
-console.log("➡️ ID de la question :", questionId);
+  
+  const [showDeleteDialog, setShowDeleteDialog] = useState(false);
+const [showUpdateDialog, setShowUpdateDialog] = useState(false);
+const [showDeleteResponseDialog, setShowDeleteResponseDialog] = useState(false);
+const [responseToDeleteIndex, setResponseToDeleteIndex] = useState<number | null>(null);
+
+  
   const [numero, setNumero] = useState('');
   const [questionText, setQuestionText] = useState('');
   const [instruction, setInstruction] = useState('');
@@ -55,11 +64,11 @@ console.log("➡️ ID de la question :", questionId);
   }, [questionId]);
 
   const loadQuestionData = async () => {
-    console.log("➡️ Chargement des données pour la question ID :", questionId);
+  
   
     try {
       const question = await getQuestionById(questionId!);
-      console.log("✅ Question récupérée :", question);
+      
   
       setNumero(question.numero?.toString() || '');
       setQuestionText(question.question_text || '');
@@ -67,7 +76,7 @@ console.log("➡️ ID de la question :", questionId);
       setSelectedType(question.type || 'text');
   
       const responses = await fetchResponsesByQuestionId(questionId!);
-      console.log("✅ Réponses récupérées :", responses);
+     
   
       setResponseIds(responses.map(r => r.id || ''));
       setResponseFields(
@@ -83,9 +92,8 @@ console.log("➡️ ID de la question :", questionId);
         }))
       );
   
-      console.log("📌 responseFields mis à jour :", responses.map(response => response.reponse_text));
     } catch (error: any) {
-      console.error("❌ Erreur lors du chargement de la question ou des réponses :", error);
+
       alert('Erreur de chargement : ' + (error.message || ''));
     }
   };
@@ -94,11 +102,19 @@ console.log("➡️ ID de la question :", questionId);
   const handleAddResponseField = () => {
     setResponseFields([...responseFields, createEmptyResponseField()]);
   };
-
-  const handleRemoveResponseField = async (index: number) => {
-    const confirmDelete = window.confirm("Voulez-vous vraiment supprimer cette réponse ?");
-    if (!confirmDelete) return;
-
+  const handleDeleteQuestion = () => {
+    setShowDeleteDialog(true);
+  };
+  const handleRemoveResponseField = (index: number) => {
+    setResponseToDeleteIndex(index);
+    setShowDeleteResponseDialog(true);
+  };
+  
+  const confirmDeleteResponseField = async () => {
+    if (responseToDeleteIndex === null) return;
+  
+    const index = responseToDeleteIndex;
+  
     if (responseIds[index]) {
       try {
         await deleteResponse(responseIds[index]);
@@ -111,57 +127,80 @@ console.log("➡️ ID de la question :", questionId);
         return;
       }
     }
-
+  
     const newFields = [...responseFields];
     newFields.splice(index, 1);
     setResponseFields(newFields);
+    setResponseToDeleteIndex(null);
   };
-
-  const handleUpdateQuestion = async () => {
+  
+  const confirmDeleteQuestion = async () => {
     try {
-      if (!numero || !questionText) {
-        alert("Le numéro et le texte de la question sont requis.");
-        return;
-      }
-
-      const updatedQuestion: Question = {
-        id: questionId!,
-        numero: parseInt(numero),
-        question_text: questionText,
-        type: selectedType,
-        commentaire: instruction,
-      };
-
-      await updateQuestionService(questionId!, updatedQuestion);
-
-      for (let i = 0; i < responseFields.length; i++) {
-        const r = responseFields[i];
-        const payload: Response = {
-          question_id: questionId!,
-          reponse_text: r.reponse,
-          education: r.education,
-          alimentation: r.alimentation,
-          pauvrete: r.pauvrete,
-          cadre_vie: r.cadreVie,
-          sante_physique: r.santePhysique,
-          violence: r.violence,
-          indice_sortir: r.indiceSortir,
-        };
-
-        if (responseIds[i]) {
-          await updateResponse(responseIds[i], payload);
-        } else {
-          await createResponse(payload);
+      for (const responseId of responseIds) {
+        if (responseId) {
+          await deleteResponse(responseId);
         }
       }
-
-      alert("Question et réponses mises à jour avec succès.");
+      await deleteQuestion(questionId!);
+      alert("Question et réponses supprimées avec succès.");
       navigate(-1);
     } catch (error: any) {
-      console.error("Erreur update question :", error);
-      alert("Erreur lors de la mise à jour : " + (error.message || ''));
+      console.error("Erreur suppression question :", error);
+      alert("Erreur lors de la suppression : " + (error.message || ''));
     }
   };
+  
+ // assure-toi que c’est bien importé
+
+ const handleUpdateQuestion = () => {
+  setShowUpdateDialog(true);
+};
+
+const confirmUpdateQuestion = async () => {
+  try {
+    if (!numero || !questionText) {
+      alert("Le numéro et le texte de la question sont requis.");
+      return;
+    }
+
+    const updatedQuestion: Question = {
+      id: questionId!,
+      numero: numero,
+      question_text: questionText,
+      type: selectedType,
+      commentaire: instruction,
+    };
+
+    await updateQuestionService(questionId!, updatedQuestion);
+
+    for (let i = 0; i < responseFields.length; i++) {
+      const r = responseFields[i];
+      const payload: Response = {
+        question_id: questionId!,
+        reponse_text: r.reponse,
+        education: r.education,
+        alimentation: r.alimentation,
+        pauvrete: r.pauvrete,
+        cadre_vie: r.cadreVie,
+        sante_physique: r.santePhysique,
+        violence: r.violence,
+        indice_sortir: r.indiceSortir,
+      };
+
+      if (responseIds[i]) {
+        await updateResponse(responseIds[i], payload);
+      } else {
+        await createResponse(payload);
+      }
+    }
+
+    alert("Question et réponses mises à jour avec succès.");
+    navigate(-1);
+  } catch (error: any) {
+    console.error("Erreur update question :", error);
+    alert("Erreur lors de la mise à jour : " + (error.message || ''));
+  }
+};
 
   const handleFieldChange = (index: number, field: keyof ResponseField, value: string) => {
     const updatedFields = [...responseFields];
@@ -186,7 +225,8 @@ console.log("➡️ ID de la question :", questionId);
                   <h2 className="text-2xl font-semibold ">Modifier une quetion</h2>
 
                   <button onClick={handleUpdateQuestion} className="px-4 py-2 bg-orange-500 text-white rounded-full">Enregistrer</button>
-                  <button disabled className="mr-4 px-4 py-2 bg-red-500 text-white rounded-full">Supprimer</button>
+                  <button onClick={handleDeleteQuestion} className="mr-4 px-4 py-2 bg-red-500 text-white rounded-full">Supprimer</button>
+
               </div>
 
               <div className="p-8 flex-1 overflow-auto flex justify-center ">
@@ -220,7 +260,8 @@ console.log("➡️ ID de la question :", questionId);
           <CustomTextField name={`violence-${index}`} label="Violence" value={response.violence} onChange={e => handleFieldChange(index, 'violence', e.target.value)} />
           <CustomTextField name={`indiceSortir-${index}`} label="Indice sortir" value={response.indiceSortir} onChange={e => handleFieldChange(index, 'indiceSortir', e.target.value)} />
           </div>
-          <button onClick={() => handleRemoveResponseField(index)} className="text-red-500 mt-2">Supprimer</button>
+          <button onClick={() => handleRemoveResponseField(index)} 
+          className="text-red-500 mt-2">Supprimer</button>
         </div>
       ))}
 
@@ -229,6 +270,45 @@ console.log("➡️ ID de la question :", questionId);
     </div>
     </div>
     </div>
+    {showDeleteDialog && (
+  <CustomDialog
+    title="Confirmation de suppression"
+    content="Êtes-vous sûr de vouloir supprimer cette question et ses réponses ?"
+    buttonText="Supprimer"
+    onClose={() => setShowDeleteDialog(false)}
+    onConfirm={() => {
+      setShowDeleteDialog(false);
+      confirmDeleteQuestion();
+    }}
+  />
+)}
+
+{showUpdateDialog && (
+  <CustomDialog
+    title="Confirmation de mise à jour"
+    content="Êtes-vous sûr de vouloir mettre à jour cette question ?"
+    buttonText="Mettre à jour"
+    onClose={() => setShowUpdateDialog(false)}
+    onConfirm={() => {
+      setShowUpdateDialog(false);
+      confirmUpdateQuestion();
+    }}
+  />
+)}
+
+{showDeleteResponseDialog && (
+  <CustomDialog
+    title="Confirmation de suppression de réponse"
+    content="Êtes-vous sûr de vouloir supprimer cette réponse ?"
+    buttonText="Supprimer"
+    onClose={() => setShowDeleteResponseDialog(false)}
+    onConfirm={() => {
+      setShowDeleteResponseDialog(false);
+      confirmDeleteResponseField();
+    }}
+  />
+)}
+
                 </div>
     
         

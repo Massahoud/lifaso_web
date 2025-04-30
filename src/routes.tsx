@@ -19,6 +19,8 @@ import LoginPage from "./pages/auth/login_page";
 import ResetPasswordPage from "./pages/auth/forgot_password";
 import ResetPasswordForm from "./pages/auth/change_password";
 import SignupWithInvitePage from "./pages/auth/sign_up_page";
+import OrganismesListPage from "./pages/organisme/pageorganisme";
+
 
 
 /*const TokenHandler = () => {
@@ -32,7 +34,7 @@ import SignupWithInvitePage from "./pages/auth/sign_up_page";
 const AppRoutes = () => {
   return (
     <Router>
-     
+   
       <Routes>
         <Route path="/" element={<LoginPage/>} />
         <Route path="/child-list" element={<ChildList />} />
@@ -43,6 +45,7 @@ const AppRoutes = () => {
         <Route path="/users/send_invitation" element={<PageUsers/>} />
         <Route path="/modifier_motdepasse" element={<ResetPasswordForm/>} />
         <Route path="/motdepasse_oublie" element={<ResetPasswordPage/>} />
+        
         <Route path="/users/profile/:id" element={<UserProfile />} />
         <Route path="/child-detail/:id" element={<ChildDetailPage />} />  
         <Route path="/groups/update/:groupeId" element={<UpdateGroupPage />} />
@@ -50,7 +53,7 @@ const AppRoutes = () => {
           <Route path="childs" element={<ChildList />} />
           <Route path="groups" element={<GroupsListPage/>} />
           <Route path="/formulaire" element={<QuestionsPage/>} />
-          
+          <Route path="/organismes" element={<OrganismesListPage/>} />
           <Route path="/users" element={<PageUsers />} />
           <Route path="/group_membres" element={<GroupMembersPage />} />
         </Route>

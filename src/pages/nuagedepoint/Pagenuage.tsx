@@ -8,7 +8,8 @@ import {
   Tooltip,
   ResponsiveContainer,
 } from "recharts";
-import axios from "axios";
+
+import api from "../../services/api";
 import { useNavigate } from "react-router-dom";
 
 import { IoChevronBack } from "react-icons/io5";
@@ -43,12 +44,9 @@ const ScatterPlotPage: React.FC = () => {
 
   const fetchData = async () => {
     try {
-      const token = localStorage.getItem("token");
-      if (!token) throw new Error("Token non trouvé");
+     
 
-      const res = await axios.get("https://soleilmainapi.vercel.app/api/datanuage", {
-        headers: { Authorization: `Bearer ${token}` },
-      });
+      const res = await api.get("/datanuage");
 
       const formatted = res.data
         .filter(

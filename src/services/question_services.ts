@@ -1,87 +1,76 @@
 // services/questionService.ts
-import axios from "axios";
-
-
+import api from "./api"; // Remplacer axios par ton instance personnalisée
 
 export interface Question {
   id: string;
-  numero: number;
+  numero: string;
   question_text: string;
-    type: string;
-    commentaire?: string;
+  type: string;
+  commentaire?: string;
 }
 
-const baseUrl = "https://soleilmainapi.vercel.app/api";
-
-export const getAuthToken = (): string | null => {
-  return localStorage.getItem("token");
-};
-
+// Récupérer toutes les questions
 export const fetchAllQuestions = async (): Promise<Question[]> => {
-  const token = getAuthToken();
-  const res = await axios.get(`${baseUrl}/questions`, {
-    headers: { Authorization: `Bearer ${token}` },
-  });
-  return res.data;
+  try {
+    const response = await api.get(`/questions`);
+    return response.data;
+  } catch (error) {
+    throw new Error("Erreur lors de la récupération des questions");
+  }
 };
 
+// Récupérer une question par ID
 export const getQuestionById = async (id: string): Promise<Question> => {
-  const token = getAuthToken();
-  if (!token) throw new Error("No auth token found");
-
-  const response = await axios.get(`${baseUrl}/questions/${id}`, {
-    headers: { Authorization: `Bearer ${token}` },
-  });
-
-  if (!response.data) {
-    throw new Error("Empty response");
+  try {
+    const response = await api.get(`/questions/${id}`);
+    if (!response.data) {
+      throw new Error("Réponse vide");
+    }
+    return response.data;
+  } catch (error) {
+    throw new Error("Erreur lors de la récupération de la question");
   }
-
-  return response.data;
 };
 
+// Créer une question
 export const createQuestion = async (question: Question): Promise<Question> => {
-  const token = getAuthToken();
-  if (!token) throw new Error("No auth token found");
-
-  const response = await axios.post(`${baseUrl}/questions`, question, {
-    headers: {
-      "Content-Type": "application/json",
-      Authorization: `Bearer ${token}`,
-    },
-  });
-
-  const res = response.data;
-  if (res.question) {
-    return res.question;
-  } else if (res.question_text) {
-    return res.question_text;
-  } else {
-    throw new Error("Unexpected API response");
+  try {
+    const response = await api.post(`/questions`, question, {
+      headers: {
+        "Content-Type": "application/json",
+      },
+    });
+    if (response.data?.question) {
+      return response.data.question;
+    } else if (response.data?.question_text) {
+      return response.data.question_text;
+    } else {
+      throw new Error("Réponse API inattendue");
+    }
+  } catch (error) {
+    throw new Error("Erreur lors de la création de la question");
   }
 };
 
+// Mettre à jour une question
 export const updateQuestion = async (id: string, question: Question): Promise<Question> => {
-  const token = getAuthToken();
-  if (!token) throw new Error("No auth token found");
-
-  const response = await axios.put(`${baseUrl}/questions/${id}`, question, {
-    headers: {
-      "Content-Type": "application/json",
-      Authorization: `Bearer ${token}`,
-    },
-  });
-
-  return response.data.question;
+  try {
+    const response = await api.put(`/questions/${id}`, question, {
+      headers: {
+        "Content-Type": "application/json",
+      },
+    });
+    return response.data.question;
+  } catch (error) {
+    throw new Error("Erreur lors de la mise à jour de la question");
+  }
 };
 
+// Supprimer une question
 export const deleteQuestion = async (id: string): Promise<void> => {
-  const token = getAuthToken();
-  if (!token) throw new Error("No auth token found");
-
-  await axios.delete(`${baseUrl}/questions/${id}`, {
-    headers: {
-      Authorization: `Bearer ${token}`,
-    },
-  });
+  try {
+    await api.delete(`/questions/${id}`);
+  } catch (error) {
+    throw new Error("Erreur lors de la suppression de la question");
+  }
 };

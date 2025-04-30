@@ -1,4 +1,4 @@
-import { useState,useEffect } from "react";
+import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { FaPlus } from "react-icons/fa";
 interface UsersPageProps {
@@ -10,20 +10,12 @@ const UsersFilter: React.FC<UsersPageProps> = ({onFilterByState, totalUsers }) =
   const [showStatePicker, setShowStatePicker] = useState(false);
   const navigate = useNavigate();
 
-  const [, setToken] = useState<string | null>(null);
+
   const handleStateSelection = (statut: string) => {
     onFilterByState(statut);
     setShowStatePicker(false);
   };
-   useEffect(() => {
-      // Récupération du token dans le localStorage
-      const storedToken = localStorage.getItem("token");
-      if (storedToken) {
-        setToken(storedToken);
-      }
   
-    
-    }, []);
   
    
   return (
@@ -53,27 +45,28 @@ const UsersFilter: React.FC<UsersPageProps> = ({onFilterByState, totalUsers }) =
 
           {/* Carte de sélection d'état */}
           {showStatePicker && (
-            <div className="absolute top-12 left-0 bg-white shadow-lg rounded-lg p-4 border flex flex-col space-y-2 w-full md:w-40">
-              {["admin", "super Admin", "enqueteur"].map((statut) => (
-                <button
-                  key={statut}
-                  className="border rounded px-4 py-2 text-gray-500 hover:bg-gray-100"
-                  onClick={() => handleStateSelection(statut)}
-                >
-                  {statut}
-                </button>
-              ))}
-              <button
-                className="text-gray-600 hover:text-black text-sm"
-                onClick={() => {
-                  setShowStatePicker(false);
-                  onFilterByState(null);
-                }}
-              >
-                Annuler
-              </button>
-            </div>
-          )}
+  <div className="absolute top-15 right-45 mt-2 bg-white shadow-lg rounded-lg p-4 border flex flex-col space-y-2 w-40 z-10">
+    {["admin", "super Admin", "enqueteur"].map((statut) => (
+      <button
+        key={statut}
+        className="border rounded px-4 py-2 text-gray-500 hover:bg-gray-100"
+        onClick={() => handleStateSelection(statut)}
+      >
+        {statut}
+      </button>
+    ))}
+    <button
+      className="text-gray-600 hover:text-black text-sm"
+      onClick={() => {
+        setShowStatePicker(false);
+        onFilterByState(null);
+      }}
+    >
+      Annuler
+    </button>
+  </div>
+)}
+
 
           {/* Bouton Nouvelle enquête */}
           <button

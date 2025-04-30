@@ -8,6 +8,7 @@ import GroupMemberSeach from "./search_members";
 import { useNavigate } from "react-router-dom";
 import { Snackbar, Alert } from "@mui/material"; // Import des composants Snackbar et Alert
 import { IoChevronBack } from "react-icons/io5";
+
 interface User {
   id: string;
   nom: string;

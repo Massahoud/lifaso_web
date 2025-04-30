@@ -9,6 +9,7 @@ interface Group {
   description: string;
   date_creation: string;
   administrateurs: string[];
+  organismeid?: string; // ID de l'organisme, optionnel
   membres: string[];
 }
 
@@ -32,29 +33,36 @@ export const fetchUsers = async (): Promise<User[]> => {
   }
 };
 
-// Fonction pour créer un groupe
 export const createGroup = async (
   nom: string,
   description: string,
   date_creation: string,
   adminIds: string[],
-  memberIds: string[]
+  memberIds: string[],
+  organismeid?: string // <- optionnel
 ): Promise<Group> => {
   if (!adminIds.length || !memberIds.length) {
     throw new Error("Invalid input: members or admins cannot be empty");
   }
 
   try {
-    const response = await api.post(`/groups`, {
+    // Construction dynamique du payload
+    const payload: any = {
       nom,
       description,
       date_creation,
       administrateurs: adminIds,
       membres: memberIds,
-    });
+    };
+
+    if (organismeid) {
+      payload.organismeid = organismeid;
+    }
+
+    const response = await api.post(`/groups`, payload);
 
     if (response.status === 201) {
-      return response.data.group; // Assurez-vous que l'API retourne un objet `group`
+      return response.data.group;
     } else {
       throw new Error(`Failed to create group: ${response.status} ${response.data}`);
     }
@@ -95,14 +103,12 @@ export const fetchGroupMembers = async (memberIds: string[]): Promise<User[]> =>
 };
 // services/group_services.ts
 
-
 export const getGroupsByUserId = async (userId: string) => {
   if (!userId) throw new Error("User ID est requis");
 
   const response = await api.get(`/groups/user/${userId}`);
-  return response.data; // Ce sera un tableau de groupes
+  return Array.isArray(response.data) ? response.data : []; // Toujours renvoyer un tableau
 };
-
 
 //fonction de mise a jour d'un groupe ajout de membre et admin
 // Fonction pour mettre à jour un groupe
@@ -112,7 +118,8 @@ export const updateGroup = async (
   description: string,
   date_creation: string,
   adminIds: string[],
-  memberIds: string[]
+  memberIds: string[],
+  organismeid?: string // <- paramètre optionnel
 ): Promise<Group> => {
   if (!id || !nom || !description || !date_creation) {
     throw new Error("Invalid input: all fields are required");
@@ -123,16 +130,23 @@ export const updateGroup = async (
   }
 
   try {
-    const response = await api.put(`/groups/${id}`, {
+    // Construction dynamique du payload
+    const payload: any = {
       nom,
       description,
       date_creation,
       administrateurs: adminIds,
       membres: memberIds,
-    });
+    };
+
+    if (organismeid) {
+      payload.organismeid = organismeid;
+    }
+
+    const response = await api.put(`/groups/${id}`, payload);
 
     if (response.status === 200) {
-      return response.data.group; // L'objet mis à jour
+      return response.data.group;
     } else {
       throw new Error(`Failed to update group: ${response.status}`);
     }
@@ -204,5 +218,18 @@ export const removeAdminFromGroup = async (groupId: string, adminId: string): Pr
   } catch (error: any) {
     console.error("Error removing admin from group:", error.response?.data || error.message);
     throw new Error(error.response?.data?.message || "Failed to remove admin from group");
+  }
+};
+// Fonction pour supprimer un groupe
+export const deleteGroup = async (groupId: string): Promise<void> => {
+  if (!groupId) {
+    throw new Error("Invalid groupId: groupId is required");
+  }
+
+  try {
+    await api.delete(`/groups/${groupId}`);
+  } catch (error: any) {
+    console.error("Error deleting group:", error.response?.data || error.message);
+    throw new Error(error.response?.data?.message || "Failed to delete group");
   }
 };

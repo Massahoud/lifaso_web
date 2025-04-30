@@ -42,7 +42,7 @@ const ResetPasswordPage: React.FC = () => {
 
   return (
     <div className="relative w-screen h-screen overflow-hidden">
-      {/* ✅ Background image */}
+      
       <img
         src={backgroundImg}
         alt="background"
@@ -50,7 +50,7 @@ const ResetPasswordPage: React.FC = () => {
       />
       <div className="absolute inset-0 " />
 
-      {/* ✅ Form */}
+    
       <div className="relative z-10 flex justify-center items-center h-full">
         <div className="bg-white rounded-2xl shadow-lg w-[450px] p-6 space-y-6">
           {/* Header with close button */}
