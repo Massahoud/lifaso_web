@@ -45,8 +45,9 @@ const FormulaireSeach : React.FC<FormulaireProps> = ({ onSearch }) => {
   // Fonction de déconnexion
   const handleLogout = () => {
     localStorage.removeItem("userId");
-    localStorage.removeItem("authToken"); // Supprime aussi le token
-   navigate("/login"); // Redirige vers la page de connexion
+    localStorage.removeItem("token");
+    Cookies.remove("userRole");  // Supprime aussi le token
+   navigate("/"); // Redirige vers la page de connexion
   };
 
   useEffect(() => {

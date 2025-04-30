@@ -46,7 +46,8 @@ const SearchBarWithProfile: React.FC<SearchBarWithProfileProps> = ({ onSearch })
   const handleLogout = () => {
     Cookies.remove("userId"); 
     Cookies.remove("token");
-    navigate("/login");
+    Cookies.remove("userRole"); 
+    navigate("/");
   };
 
   useEffect(() => {
