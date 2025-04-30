@@ -37,7 +37,7 @@ const AppRoutes = () => {
    
       <Routes>
         <Route path="/" element={<LoginPage/>} />
-        <Route path="/child-list" element={<ChildList />} />
+        
         <Route path="/nuagedepoint" element={<ScatterPlotPage />} />
         <Route path="/formulaire/create" element={<CreateQuestionPage />} />
         <Route path="/creer_compte" element={<SignupWithInvitePage />} />
