@@ -59,7 +59,7 @@ const LoginForm: React.FC = () => {
       }
 
       
-      navigate('/childs');
+      navigate('/formulaire'); // Redirection vers le formulaire après connexion réussie
     } catch (error: any) {
       console.error('Erreur lors de la connexion:', error);
 

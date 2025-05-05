@@ -9,22 +9,16 @@ class AuthService {
         email,
         mot_de_passe: motDePasse,
       });
+      console.log('Headers:', response.headers);
+console.log('Réponse de connexion:', response.data); // Ajout d'un log pour la réponse
+console.log('Cookies disponibles après connexion:', document.cookie); // Log des cookies accessibles
+      const {  user_id, statut } = response.data;
 
-      const { token, user_id, statut } = response.data;
-
-      if (!token || !user_id || !statut) {
+      if ( !user_id || !statut) {
         throw new Error('Données de connexion invalides.');
       }
 
-      // On stocke dans les cookies au lieu de localStorage
-      Cookies.set('token', token, { expires: 1, secure: true, sameSite: 'Strict' });
-      Cookies.set('userId', user_id, { expires: 1, secure: true, sameSite: 'Strict' });
-      Cookies.set('userRole', statut, { expires: 1, secure: true, sameSite: 'Strict' });
-
-      const storedToken = Cookies.get('token');
-      if (storedToken !== token) {
-        throw new Error("Échec de l'enregistrement du token dans le cookie.");
-      }
+    
     } catch (error: any) {
       const message =
         error.response?.data?.message ||
