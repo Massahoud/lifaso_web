@@ -1,14 +1,24 @@
 import axios from "axios";
-
+import Cookies from 'js-cookie'; // on importe js-cookie
 const API_URL = import.meta.env.VITE_API_URL;
 
 const api = axios.create({
   baseURL: API_URL,
-  withCredentials: true, // ⬅️ OBLIGATOIRE pour envoyer les cookies
 });
 
-// 🔹 Supprimer l'intercepteur pour ajouter le token JWT
-// Les cookies seront automatiquement envoyés grâce à `withCredentials: true`
+// 🔹 Intercepteur pour ajouter le token JWT à chaque requête
+api.interceptors.request.use(
+  (config) => {
+    const token = Cookies.get('token'); // ⬅️ On lit depuis les cookies au lieu de localStorage
+
+    if (token) {
+      config.headers.Authorization = `Bearer ${token}`;
+    }
+
+    return config;
+  },
+  (error) => Promise.reject(error)
+);
 
 api.interceptors.response.use(
   (response) => response,
