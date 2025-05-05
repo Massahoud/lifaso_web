@@ -37,8 +37,8 @@ const ChildList = () => {
   const [startDate, setStartDate] = useState<string | null>(null);
   const [endDate, setEndDate] = useState<string | null>(null);
   const scrollContainerRef = useRef<HTMLDivElement>(null);
-  const [enquetes, setEnquetes] = useState<Child[]>([]);
-  const [filteredEnquetes, setFilteredEnquetes] = useState<Child[]>([]);
+  const [, setEnquetes] = useState<Child[]>([]);
+  
   const [selectedGroup, setSelectedGroup] = useState<string | null>(null);
 
   const handleFilterByGroup = (groupId: string | null) => {

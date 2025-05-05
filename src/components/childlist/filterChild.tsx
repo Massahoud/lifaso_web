@@ -20,7 +20,7 @@ const EnquetesPage: React.FC<EnquetesPageProps> = ({ onFilterByState, onFilterBy
   const [endDate, setEndDate] = useState<string | null>(null);
   const [token, setToken] = useState<string | null>(null);
   const [groups, setGroups] = useState<Group[]>([]); // Liste des groupes
-  const [selectedGroup, setSelectedGroup] = useState<string | null>(null); // Groupe sélectionné
+  const [, setSelectedGroup] = useState<string | null>(null); // Groupe sélectionné
 
   const handleStateSelection = (etat: string) => {
    
