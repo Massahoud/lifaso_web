@@ -50,8 +50,8 @@ const AppRoutes = () => {
         <Route path="/child-detail/:id" element={<ChildDetailPage />} />  
         <Route path="/groups/update/:groupeId" element={<UpdateGroupPage />} />
         <Route path="/" element={<Layout />}>
-          <Route path="childs" element={<ChildList />} />
-          <Route path="groups" element={<GroupsListPage/>} />
+          <Route path="/childs" element={<ChildList />} />
+          <Route path="/groups" element={<GroupsListPage/>} />
           <Route path="/formulaire" element={<QuestionsPage/>} />
           <Route path="/organismes" element={<OrganismesListPage/>} />
           <Route path="/users" element={<PageUsers />} />
