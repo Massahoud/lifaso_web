@@ -1,22 +1,53 @@
 import { useState,useEffect } from "react";
 import Cookies from "js-cookie";
 import { FaPlus } from "react-icons/fa";
+import { fetchGroups } from "../../services/groups_service";
 interface EnquetesPageProps {
   onFilterByState: (etat: string | null) => void;
   onFilterByDate: (startDate: string | null, endDate: string | null) => void;
   totalEnquetes: number;
+  onFilterByGroup: (groupId: string | null) => void; // Ajoutez cette fonction pour filtrer par groupe
 }
-
-const EnquetesPage: React.FC<EnquetesPageProps> = ({ onFilterByState, onFilterByDate, totalEnquetes }) => {
+interface Group {
+  id: string;
+  nom: string;
+}
+const EnquetesPage: React.FC<EnquetesPageProps> = ({ onFilterByState, onFilterByDate,onFilterByGroup, totalEnquetes }) => {
   const [showDatePicker, setShowDatePicker] = useState(false);
   const [showStatePicker, setShowStatePicker] = useState(false);
+  const [showGroupPicker, setShowGroupPicker] = useState(false); // État pour afficher la liste des groupes
   const [startDate, setStartDate] = useState<string | null>(null);
   const [endDate, setEndDate] = useState<string | null>(null);
   const [token, setToken] = useState<string | null>(null);
+  const [groups, setGroups] = useState<Group[]>([]); // Liste des groupes
+  const [selectedGroup, setSelectedGroup] = useState<string | null>(null); // Groupe sélectionné
+
   const handleStateSelection = (etat: string) => {
+   
     onFilterByState(etat);
     setShowStatePicker(false);
   };
+  
+  
+  const handleGroupSelection = (groupId: string | null) => {
+    setSelectedGroup(groupId);
+    setShowGroupPicker(false);
+    onFilterByGroup(groupId); // Appliquer le filtre par groupe
+  };
+  useEffect(() => {
+    // Récupérer la liste des groupes
+    const fetchAllGroups = async () => {
+      try {
+        const fetchedGroups = await fetchGroups();
+        setGroups(fetchedGroups);
+      } catch (error) {
+        console.error("Erreur lors de la récupération des groupes :", error);
+      }
+    };
+
+    fetchAllGroups();
+  }, []);
+
    useEffect(() => {
       // Récupération du token dans le localStorage
       const storedToken = Cookies.get("token");
@@ -49,6 +80,7 @@ const EnquetesPage: React.FC<EnquetesPageProps> = ({ onFilterByState, onFilterBy
             onClick={() => {
               setShowDatePicker(!showDatePicker);
               setShowStatePicker(false);
+              setShowGroupPicker(false);
             }}
           >
             Par période
@@ -109,6 +141,7 @@ const EnquetesPage: React.FC<EnquetesPageProps> = ({ onFilterByState, onFilterBy
             onClick={() => {
               setShowStatePicker(!showStatePicker);
               setShowDatePicker(false);
+              setShowGroupPicker(false);
             }}
           >
             Par État
@@ -138,8 +171,40 @@ const EnquetesPage: React.FC<EnquetesPageProps> = ({ onFilterByState, onFilterBy
             </div>
           )}
 
-          {/* Bouton Nouvelle enquête */}
-          <button
+{/* Bouton Par Groupe */}
+<button
+            className="px-2 md:px-3 py-1.5 md:py-2 text-sm md:text-base rounded-full border border-gray-300 text-gray-600 hover:bg-gray-100 focus:outline-none cursor-pointer"
+            onClick={() => {
+              setShowGroupPicker(!showGroupPicker);
+              setShowDatePicker(false);
+              setShowStatePicker(false);
+            }}
+          >
+            Par Groupe
+          </button>
+
+          {/* Carte de sélection de groupe */}
+          {showGroupPicker && (
+            <div className="absolute top-15 right-35 mt-2 bg-white shadow-lg rounded-lg p-4 border flex flex-col space-y-2 w-40 z-10">
+              {groups.map((group) => (
+                <button
+                  key={group.id}
+                  className="border rounded px-4 py-2 text-gray-500 hover:bg-orange-100"
+                  onClick={() => handleGroupSelection(group.id)}
+                >
+                  {group.nom}
+                </button>
+              ))}
+              <button
+                className="text-gray-600 hover:text-black text-sm"
+                onClick={() => handleGroupSelection(null)}
+              >
+                Annuler
+              </button>
+            </div>
+          )}
+  {/* Bouton Nouvelle enquête */}
+  <button
             className="px-2 md:px-3 py-1.5 md:py-2 text-sm md:text-base rounded-full bg-orange-500 text-white hover:bg-orange-600 focus:outline-none flex items-center cursor-pointer"
             onClick={() =>
               (window.location.href  = generateLink("https://v0.enquetesoleil.com/createSurvey"))

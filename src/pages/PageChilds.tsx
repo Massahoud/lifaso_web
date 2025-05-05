@@ -22,7 +22,7 @@ interface Child {
   nom_enqueteur: string;
   prenom_enqueteur: string;
   photo_url: string;
-  
+  groupe: string;
 }
 
 const ChildList = () => {
@@ -37,34 +37,44 @@ const ChildList = () => {
   const [startDate, setStartDate] = useState<string | null>(null);
   const [endDate, setEndDate] = useState<string | null>(null);
   const scrollContainerRef = useRef<HTMLDivElement>(null);
+  const [enquetes, setEnquetes] = useState<Child[]>([]);
+  const [filteredEnquetes, setFilteredEnquetes] = useState<Child[]>([]);
+  const [selectedGroup, setSelectedGroup] = useState<string | null>(null);
 
+  const handleFilterByGroup = (groupId: string | null) => {
+    console.log("Groupe sélectionné :", groupId);
+    setSelectedGroup(groupId);
+  };
+  
   useEffect(() => {
     const loadChildren = async () => {
       setLoading(true);
-      setErrorMessage(null); // réinitialiser l'erreur
-    
-      const userId = Cookies.get('userId'); // Utilisation de Cookies pour récupérer l'ID de l'utilisateur
+      setErrorMessage(null);
+  
+      const userId = Cookies.get("userId");
       if (!userId) {
         console.error("Aucun ID utilisateur trouvé dans le localStorage.");
         setLoading(false);
         return;
       }
-    
+  
       try {
         const { data, error } = await fetchEnquetesByUserRole(userId);
-    
+  
         if (error) {
           console.error(error);
-          setErrorMessage(error); // <<< AJOUTER CA
+          setErrorMessage(error);
           setChildren([]);
           setFilteredChildren([]);
+          setEnquetes([]); // Set enquetes to an empty array in case of error
         } else {
           setChildren(data);
           setFilteredChildren(data);
+          setEnquetes(data); // Populate enquetes with the fetched data
         }
       } catch (error: any) {
         console.error("Erreur lors de la récupération des enquêtes :", error);
-    
+  
         if (axios.isAxiosError(error)) {
           if (error.response?.status === 404) {
             setErrorMessage("Aucune enquête disponible pour vous.");
@@ -78,22 +88,22 @@ const ChildList = () => {
         setLoading(false);
       }
     };
-    
-
+  
     loadChildren();
   }, []);
 
-
   useEffect(() => {
-    let filtered = children;
-
+    let filtered = [...children];
+  
+    if (selectedGroup) {
+      filtered = filtered.filter((child) => child.groupe === selectedGroup);
+    }
+  
     if (searchQuery) {
       const lowercasedQuery = searchQuery.toLowerCase();
       filtered = filtered.filter((child) => {
-        if (child.numero === searchQuery) {
-          return true;
-        }
-
+        if (child.numero === searchQuery) return true;
+  
         return (
           child.nom_enfant.toLowerCase().includes(lowercasedQuery) ||
           child.prenom_enfant.toLowerCase().includes(lowercasedQuery) ||
@@ -103,39 +113,33 @@ const ChildList = () => {
         );
       });
     }
-
+  
     if (selectedState) {
       filtered = filtered.filter((child) => child.etat === selectedState);
     }
-
+  
     if (startDate && endDate) {
       const start = new Date(startDate);
       const end = new Date(endDate);
-
+  
       filtered = filtered.filter((child) => {
         let childDate: Date | null = null;
-
         if (
           typeof child.date_heure_debut === "object" &&
-          "_seconds" in child.date_heure_debut &&
-          "_nanoseconds" in child.date_heure_debut
+          "_seconds" in child.date_heure_debut
         ) {
           childDate = new Date(child.date_heure_debut._seconds * 1000);
         } else {
           childDate = new Date(child.date_heure_debut);
         }
-
-        if (!childDate || isNaN(childDate.getTime())) {
-          console.error("Invalid date for child:", child);
-          return false;
-        }
-
-        return childDate >= start && childDate <= end;
+  
+        return childDate && childDate >= start && childDate <= end;
       });
     }
-
+  
     setFilteredChildren(filtered);
-  }, [searchQuery, children, selectedState, startDate, endDate]);
+  }, [children, selectedGroup, searchQuery, selectedState, startDate, endDate]);
+  
 
   const handleFilterByDate = (start: string | null, end: string | null) => {
     setStartDate(start);
@@ -166,6 +170,7 @@ const ChildList = () => {
       <EnquetesPage
         onFilterByState={setSelectedState}
         onFilterByDate={handleFilterByDate}
+        onFilterByGroup={handleFilterByGroup}
         totalEnquetes={children.length}
       />
 
