@@ -51,7 +51,7 @@ const LoginForm: React.FC = () => {
       await AuthService.login(email, motDePasse);
 
       if (rememberMe) {
-        Cookies.set('savedEmail', email, { expires: 7 }); // ⬅️ expires en jours
+        Cookies.set('savedEmail', email, { expires: 7 }); 
         Cookies.set('savedPassword', motDePasse, { expires: 7 });
       } else {
         Cookies.remove('savedEmail');
@@ -59,7 +59,7 @@ const LoginForm: React.FC = () => {
       }
 
       
-      navigate('/childs');
+      navigate('/formulaire'); // Redirection vers le formulaire après connexion réussie
     } catch (error: any) {
       console.error('Erreur lors de la connexion:', error);
 
