@@ -26,7 +26,11 @@ api.interceptors.response.use(
   (response) => response,
   (error) => {
     if (error.response && (error.response.status === 401 || error.response.status === 403)) {
-    
+      Cookies.remove('token');
+      Cookies.remove('userId');
+
+      // ✅ Redirection simple vers /login
+      window.location.href = '/';
     }
     return Promise.reject(error);
   }
