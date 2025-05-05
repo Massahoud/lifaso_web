@@ -9,8 +9,7 @@ const api = axios.create({
 // 🔹 Intercepteur pour ajouter le token JWT à chaque requête
 api.interceptors.request.use(
   (config) => {
-    const token = Cookies.get('token'); // ⬅️ On lit depuis les cookies au lieu de localStorage
-
+    const token = Cookies.get('token');
     if (token) {
       config.headers.Authorization = `Bearer ${token}`;
     }
