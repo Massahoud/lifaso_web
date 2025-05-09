@@ -40,16 +40,15 @@ import api from "./api";
      throw error;
    }
  };
- 
  export const fetchIndicators = async (id: string) => {
-   try {
-     const response = await api.get(`/choixreponse/indices/${id}`);
-     return response.data.map((item: { indice_sortir: string }) => item.indice_sortir);
-   } catch (error) {
-     console.error("Erreur lors de la récupération des indices :", error);
-     throw error;
-   }
- };
+  try {
+    const response = await api.get(`/choixreponse/indices/${id}`);
+    return response.data.map((item: { indice_sortir: string }) => item.indice_sortir);
+  } catch (error) {
+    console.error("Erreur lors de la récupération des indices :", error);
+    throw error;
+  }
+};
 
  export const deleteSurvey = async (id: string) => {
   try {

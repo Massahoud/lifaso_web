@@ -24,9 +24,9 @@ const MultipleChoiceQuestion: React.FC<MultipleChoiceQuestionProps> = ({
   };
 
   return (
-    <div className="flex flex-col space-y-2">
+    <div className="flex flex-col space-y-4">
       {/* Question Number and Text */}
-      <div className="text-base font-medium mb-2">
+      <div className="fontSize: '16px', fontWeight: 500">
         {questionNumber}. {question}
       </div>
 
@@ -34,7 +34,7 @@ const MultipleChoiceQuestion: React.FC<MultipleChoiceQuestionProps> = ({
       {options.map((option) => (
         <div
           key={option}
-          className="bg-gray-100 rounded-xl shadow-sm px-3 py-2"
+          className="bg-gray-100 rounded-sm shadow-sm px-3 py-2"
         >
           <label className="flex items-center space-x-2">
             <input
@@ -42,8 +42,9 @@ const MultipleChoiceQuestion: React.FC<MultipleChoiceQuestionProps> = ({
               checked={selectedOptions.includes(option)}
               onChange={() => toggleSelection(option)}
               className="accent-orange-500"
+              style={{ transform: 'scale(1.5)', marginRight: '8px' }} // Agrandir la checkbox
             />
-            <span className="text-base font-medium">{option}</span>
+            <span className="fontSize: '16px', fontWeight: 500">{option}</span>
           </label>
         </div>
       ))}

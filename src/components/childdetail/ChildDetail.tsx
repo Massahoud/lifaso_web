@@ -134,7 +134,7 @@ const ChildDetail: React.FC<{ child: Child }> = ({ child }) => {
         <img
           src={child.photo_url || "https://via.placeholder.com/150"}
           alt={child.nom_enfant}
-          className="w-300 h-150  rounded-xl"
+          className="w-300 h-135  rounded-xl"
         />
         <div className="absolute top-2 right-2 flex items-center gap-1">
           <Badge className={

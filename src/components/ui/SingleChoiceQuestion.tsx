@@ -21,17 +21,17 @@ const SingleChoiceQuestion: React.FC<SingleChoiceQuestionProps> = ({
   };
 
   return (
-    <div className="flex flex-col space-y-2">
+    <div className="flex flex-col space-y-4">
       {/* Question text */}
-      <div className="text-base font-medium mb-2">
+      <div className="fontSize: '16px', fontWeight: 500">
         {questionNumber}. {question}
       </div>
-
+    
       {/* Options with radio buttons */}
       {options.map((option) => (
         <div
           key={option}
-          className="bg-gray-100 rounded-xl shadow-sm px-3 py-2"
+          className="bg-gray-100 rounded-sm shadow-sm px-3 py-2"
         >
           <label className="flex items-center space-x-2 cursor-pointer">
             <input
@@ -41,8 +41,9 @@ const SingleChoiceQuestion: React.FC<SingleChoiceQuestionProps> = ({
               checked={selectedOption === option}
               onChange={() => handleChange(option)}
               className="accent-orange-500"
+              style={{ transform: 'scale(1.5)', marginRight: '8px' }} // Agrandir la checkbox
             />
-            <span className="text-base font-medium">{option}</span>
+            <span className="fontSize: '16px', fontWeight: 500">{option}</span>
           </label>
         </div>
       ))}

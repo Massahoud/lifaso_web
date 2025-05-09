@@ -69,7 +69,7 @@ const RadarChartComponent: React.FC<RadarChartProps> = ({ data }) => {
   };
 
   return (
-    <Card className="w-full max-w-lg p-2">
+    <Card className="w-full max-w-lg ">
       <CardContent className="flex flex-col items-center">
         {/* Graphique Radar */}
         <RadarChart cx={200} cy={130} outerRadius={100} width={400} height={240} data={data}>

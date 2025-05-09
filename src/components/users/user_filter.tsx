@@ -23,7 +23,7 @@ const UsersFilter: React.FC<UsersPageProps> = ({onFilterByState, totalUsers }) =
       <div className="flex flex-wrap items-center justify-between mb-4 gap-y-4">
 
         <h1 className="text-2xl md:text-3xl font-bold text-gray-800">
-        {totalUsers} utilisateurs
+        {totalUsers !== undefined ? `${totalUsers} utilisateurs` : "Chargement..."}
         </h1>
 
         {/* Boutons */}

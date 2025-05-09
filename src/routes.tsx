@@ -20,6 +20,9 @@ import ResetPasswordPage from "./pages/auth/forgot_password";
 import ResetPasswordForm from "./pages/auth/change_password";
 import SignupWithInvitePage from "./pages/auth/sign_up_page";
 import OrganismesListPage from "./pages/organisme/pageorganisme";
+import StartSurveyPage from "./pages/enquete/start_survey";
+import SurveyPage from "./pages/enquete/survey";
+import PageParametre from "./pages/parametre/PageParametre";
 
 
 
@@ -37,7 +40,8 @@ const AppRoutes = () => {
    
       <Routes>
         <Route path="/" element={<LoginPage/>} />
-        
+        <Route path="/start_survey" element={<StartSurveyPage/>} />
+        <Route path="/survey" element={<SurveyPage />} />
         <Route path="/nuagedepoint" element={<ScatterPlotPage />} />
         <Route path="/formulaire/create" element={<CreateQuestionPage />} />
         <Route path="/creer_compte" element={<SignupWithInvitePage />} />
@@ -55,6 +59,7 @@ const AppRoutes = () => {
           <Route path="/formulaire" element={<QuestionsPage/>} />
           <Route path="/organismes" element={<OrganismesListPage/>} />
           <Route path="/users" element={<PageUsers />} />
+          <Route path="/parametre" element={<PageParametre />} />
           <Route path="/group_membres" element={<GroupMembersPage />} />
         </Route>
       </Routes>

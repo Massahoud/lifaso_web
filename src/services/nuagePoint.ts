@@ -17,7 +17,7 @@ export const fetchAllData = async (): Promise<any[]> => {
   if (!token) throw new Error("Aucun token d'authentification trouvé");
 
   try {
-    const response = await api.get(`/api/datanuage`);
+    const response = await api.get(`/datanuage`);
     return response.data;
   } catch (error) {
     throw new Error("Erreur lors de la récupération des données");
@@ -30,7 +30,7 @@ export const fetchDataById = async (id: string): Promise<any> => {
   if (!token) throw new Error("Aucun token d'authentification trouvé");
 
   try {
-    const response = await api.get(`/api/datanuage/${id}`);
+    const response = await api.get(`/datanuage/${id}`);
     return response.data;
   } catch (error) {
     throw new Error("Erreur lors de la récupération de la donnée");

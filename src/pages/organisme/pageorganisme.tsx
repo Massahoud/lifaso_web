@@ -77,9 +77,11 @@ const OrganismesListPage = () => {
 
       <div className="p-6 relative">
         <div className="flex flex-wrap items-center justify-between mb-4 gap-y-4">
-          <h1 className="text-2xl md:text-3xl font-bold text-gray-800">
-            {organismes.length} organismes
-          </h1>
+        <h1 className="text-2xl md:text-3xl font-bold text-gray-800">
+    {isLoading
+      ? "Chargement des organismes..."
+      : `${organismes.length} organismes`}
+  </h1>
           {userStatus !== "enqueteur" && (
             <button
               className="px-3 py-2 rounded-full bg-orange-500 text-white hover:bg-orange-600 focus:outline-none flex items-center"
@@ -104,6 +106,9 @@ const OrganismesListPage = () => {
             </Typography>
           </div>
         ) : filteredOrganismes.length === 0 ? (
+          console.log("Organismes:", organismes.length),
+console.log("Filtrés:", filteredOrganismes.length),
+
           <Typography variant="h6" color="textSecondary">
             Aucun organisme disponible.
           </Typography>

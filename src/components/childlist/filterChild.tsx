@@ -1,5 +1,5 @@
 import { useState,useEffect } from "react";
-import Cookies from "js-cookie";
+
 import { FaPlus } from "react-icons/fa";
 import { fetchGroups } from "../../services/groups_service";
 interface EnquetesPageProps {
@@ -18,7 +18,7 @@ const EnquetesPage: React.FC<EnquetesPageProps> = ({ onFilterByState, onFilterBy
   const [showGroupPicker, setShowGroupPicker] = useState(false); // État pour afficher la liste des groupes
   const [startDate, setStartDate] = useState<string | null>(null);
   const [endDate, setEndDate] = useState<string | null>(null);
-  const [token, setToken] = useState<string | null>(null);
+ 
   const [groups, setGroups] = useState<Group[]>([]); // Liste des groupes
   const [, setSelectedGroup] = useState<string | null>(null); // Groupe sélectionné
 
@@ -48,28 +48,17 @@ const EnquetesPage: React.FC<EnquetesPageProps> = ({ onFilterByState, onFilterBy
     fetchAllGroups();
   }, []);
 
-   useEffect(() => {
-      // Récupération du token dans le localStorage
-      const storedToken = Cookies.get("token");
-      if (storedToken) {
-        setToken(storedToken);
-      }
+ 
   
     
-    }, []);
-  
-    // Fonction pour ajouter le token aux liens
-    const generateLink = (baseUrl: string) => {
-      return token ? `${baseUrl}?token=${token}` : baseUrl;
-    };
 
   return (
     <div className="p-6 relative">
       <div className="flex flex-wrap items-center justify-between mb-4 gap-y-4">
 
-        <h1 className="text-2xl md:text-3xl font-bold text-gray-800">
-          {totalEnquetes} ENQUÊTES
-        </h1>
+      <h1 className="text-2xl md:text-3xl font-bold text-gray-800">
+  {totalEnquetes !== undefined ? `${totalEnquetes} ENQUÊTES` : "Chargement..."}
+</h1>
 
         {/* Boutons */}
         <div className="flex flex-wrap md:flex-nowrap items-center justify-start gap-2 w-full md:w-auto">
@@ -207,7 +196,7 @@ const EnquetesPage: React.FC<EnquetesPageProps> = ({ onFilterByState, onFilterBy
   <button
             className="px-2 md:px-3 py-1.5 md:py-2 text-sm md:text-base rounded-full bg-orange-500 text-white hover:bg-orange-600 focus:outline-none flex items-center cursor-pointer"
             onClick={() =>
-              (window.location.href  = generateLink("https://v0.enquetesoleil.com/createSurvey"))
+             window.location.href = ("/start_survey")
             }
           >
             <FaPlus className="mr-1 md:mr-2" />

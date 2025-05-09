@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react";
 import { ArrowLeft, Camera } from "lucide-react";
 import { useNavigate, useParams } from "react-router-dom"; 
 
-import { getUserById, updateUser, deleteUser } from "../../services/user_services";
+import { getUserById, updateUser } from "../../services/user_services";
 import CustomTextField from "../../components/ui/custom_textfield";
 import { UsercardProps } from "../../components/users/users_card";
 import { getGroupsByUserId } from "../../services/groups_service";
@@ -56,11 +56,7 @@ const UserProfile: React.FC = () => {
         }
     };
 
-    const handleDelete = async () => {
-        if (user && confirm("Supprimer l'utilisateur ?")) {
-            await deleteUser(user.id);
-        }
-    };
+   
 
     if (!user) return null;
 
@@ -130,13 +126,7 @@ const UserProfile: React.FC = () => {
                         <button type="submit" className="w-full bg-orange-500 hover:bg-orange-600 text-white py-2 rounded-full">
                             Enregistrer
                         </button>
-                        <button
-                            type="button"
-                            onClick={handleDelete}
-                            className="w-full bg-red-500 hover:bg-red-600 text-white py-2 rounded-full"
-                        >
-                            Supprimer
-                        </button>
+                       
                     </div>
                 </form>
             </div>

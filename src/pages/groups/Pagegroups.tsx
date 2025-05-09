@@ -132,8 +132,10 @@ const handleDeleteGroup = async (groupId: string) => {
             <div className="flex flex-wrap items-center justify-between mb-4 gap-y-4">
               {/* Titre */}
               <h1 className="text-2xl md:text-3xl font-bold text-gray-800">
-                {groups.length} groupes utilisateurs
-              </h1>
+    {isLoading
+      ? "Chargement des groupes..."
+      : `${groups.length} groupes utilisateurs`}
+  </h1>
 
               <div className="flex items-center ">
   <label className="mr-2 font-semibold">Filtrer par organisme :</label>

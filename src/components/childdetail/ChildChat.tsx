@@ -147,7 +147,12 @@ const ChatBox: React.FC<ChatBoxProps> = ({ enqueteId }) => {
   };
 
   return (
-    <div className="bg-gray-100 rounded-lg p-5 flex flex-col h-58">
+    <div>
+    <div className="bg-gray-700 text-white rounded-t-2xl p-3 font-bold">
+              BOITE DE DIALOGUE
+           </div>
+    <div className="bg-gray-100 rounded-lg p-6 flex flex-col h-68 border border-gray-400 border-t-0 rounded-b-2xl">
+       
       <div ref={chatRef} className="flex-1 overflow-y-auto space-y-4 p-2">
         {messages.map((msg, index) => {
           const user = users[msg.userId];
@@ -206,6 +211,7 @@ const ChatBox: React.FC<ChatBoxProps> = ({ enqueteId }) => {
           Envoyer
         </button>
       </div>
+    </div>
     </div>
   );
 };

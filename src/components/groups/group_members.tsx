@@ -8,7 +8,10 @@ import GroupMemberSeach from "./search_members";
 import { useNavigate } from "react-router-dom";
 import { Snackbar, Alert } from "@mui/material"; // Import des composants Snackbar et Alert
 import { IoChevronBack } from "react-icons/io5";
-
+import * as XLSX from "xlsx"; // Import pour Excel
+import { saveAs } from "file-saver"; // Import pour sauvegarder le fichier
+import { fetchEnquetesByUserRole } from "../../services/childService"; // Import de la fonction
+import Cookies from "js-cookie";
 interface User {
   id: string;
   nom: string;
@@ -70,6 +73,49 @@ const GroupMembersPage = () => {
   
     filterUsers();
   }, [searchQuery, members, administrateurs]);
+
+  const handleExportEnquetes = async () => {
+    try {
+      // Récupérer l'ID de l'utilisateur depuis les cookies
+      const userId = Cookies.get("userId");
+
+      if (!userId) {
+        throw new Error("Impossible de récupérer l'ID de l'utilisateur.");
+      }
+
+      // Récupérer les enquêtes de l'utilisateur
+      const { data: enquetes, error } = await fetchEnquetesByUserRole(userId);
+      if (error) {
+        throw new Error(error);
+      }
+
+      // Filtrer les enquêtes appartenant au groupe actuel
+      const filteredEnquetes = enquetes.filter((enquete: any) => enquete.groupe === groupId);
+
+      // Préparer les données pour Excel
+      const excelData = filteredEnquetes.map((enquete: any) => ({
+        Nom: enquete.nom_enfant,
+        Prénom: enquete.prenom_enfant,
+        Numéro: enquete.contact_enfant,
+      }));
+
+      // Créer une feuille Excel
+      const worksheet = XLSX.utils.json_to_sheet(excelData);
+      const workbook = XLSX.utils.book_new();
+      XLSX.utils.book_append_sheet(workbook, worksheet, "Enquêtes");
+
+      // Générer un fichier Excel
+      const excelBuffer = XLSX.write(workbook, { bookType: "xlsx", type: "array" });
+      const blob = new Blob([excelBuffer], { type: "application/octet-stream" });
+
+      // Sauvegarder le fichier
+      saveAs(blob, `Enquetes_Groupe_${groupId}.xlsx`);
+    } catch (err: any) {
+      console.error("Erreur lors de l'exportation :", err.message);
+      setError(`Erreur : ${err.message}`);
+    }
+  };
+
 
   //fonction pour gerer la suppression d'un membre
   const handleDelete = async (id: string, statut: string) => {
@@ -181,6 +227,12 @@ const GroupMembersPage = () => {
                  <FaPlus className="mr-1 md:mr-2 text-xs md:text-base" />
                  Ajouter un membre
                </button>
+               <button
+          onClick={handleExportEnquetes}
+          className="px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-600"
+        >
+          Exporter les enquêtes
+        </button>
              </div>
            </div>
          </div>

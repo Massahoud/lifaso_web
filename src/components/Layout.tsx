@@ -7,6 +7,7 @@ import {
   FaUsersCog,
   FaBars,
   FaTimes,
+  FaCog
 } from "react-icons/fa";
 import api from "../services/api";
 import { useEffect, useState } from "react";
@@ -149,6 +150,18 @@ const Layout = () => {
                     }`}
                   >
                     <FaUsers className="mr-2" /> Organisme
+                  </Link>
+                </li>
+                <li>
+                  <Link
+                    to="/parametre"
+                    className={`flex items-center ${
+                      isActive("/parametre")
+                        ? "text-orange-500"
+                        : "text-gray-700 hover:text-orange-500"
+                    }`}
+                  >
+                    <FaCog className="mr-2" /> Paramètres
                   </Link>
                 </li>
               </>

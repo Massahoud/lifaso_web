@@ -2,7 +2,7 @@
 import api from "./api"; // Remplacer axios par ton instance personnalisée
 
 export interface Response {
-  id?: string;
+  id: string;
   question_id: string;
   reponse_text: string;
   alimentation: string;

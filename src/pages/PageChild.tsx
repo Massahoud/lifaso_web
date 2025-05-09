@@ -68,7 +68,7 @@ const ChildDetailPage = () => {
         transition={{ duration: 0.5 }}
         className="h-screen flex flex-col"
       >
-        <div className="bg-gray-200 h-16 w-full animate-pulse" />
+        <div className="bg-white-200 h-16 w-full animate-pulse" />
         {isLargeScreen ? (
         // Affichage pour les grands écrans
         <div className="grid grid-cols-12 gap-4 p-4 bg-gray-100 flex-grow overflow-auto">
@@ -134,40 +134,36 @@ const ChildDetailPage = () => {
             </div>
           </div>
 
-          {/* Section radar, indicateurs, avis */}
-          <div className="col-span-12 lg:col-span-4 flex flex-col gap-4">
-            <div className="bg-white rounded-2xl shadow-lg p-4">
-              {indices.length > 0 ? (
-                <RadarChartComponent data={indices} />
-              ) : (
-                <p>Aucune donnée pour le graphique.</p>
-              )}
-            </div>
-            <div className="bg-white rounded-2xl shadow-lg p-4">
-              <IndicatorsCard indicators={indicators} />
-            </div>
-            <div className="bg-white rounded-2xl shadow-lg p-4 h-2/5">
-              {child ? <UserCard child={child} /> : <p>Avis non disponible.</p>}
-            </div>
-          </div>
+        {/* Section radar, indicateurs, avis */}
+<div className="col-span-12 lg:col-span-4 flex flex-col gap-4">
+  <div className="bg-white rounded-2xl shadow-lg p-4 h-2/5">
+    {indices.length > 0 ? (
+      <RadarChartComponent data={indices} />
+    ) : (
+      <p>Aucune donnée pour le graphique.</p>
+    )}
+  </div>
+  <div className="bg-white rounded-2xl shadow-lg p-4 h-1/5">
+    <IndicatorsCard indicators={indicators} />
+  </div>
+  <div className="bg-white rounded-2xl shadow-lg p-4 h-2/5">
+    {child ? <UserCard child={child} /> : <p>Avis non disponible.</p>}
+  </div>
+</div>
 
-          {/* Section réponses et chat */}
-          <div className="col-span-12 lg:col-span-5 flex flex-col gap-4">
-            <div className="bg-white rounded-2xl shadow-lg p-4 h-3/5">
-              {responses.length > 0 ? (
-                <ResponsesCard responses={responses} />
-              ) : (
-                <p>Aucune réponse disponible.</p>
-              )}
-            </div>
-
-            <div className="bg-gray-700 text-white rounded-t-2xl p-3 font-bold">
-              BOITE DE DIALOGUE
-            </div>
-            <div className="border border-gray-400 border-t-0 rounded-b-2xl p-4">
-              <ChatBox enqueteId={id} />
-            </div>
-          </div>
+{/* Section réponses et chat */}
+<div className="col-span-12 lg:col-span-5 flex flex-col gap-4">
+  <div className="bg-white rounded-2xl shadow-lg p-8 h-3/5">
+    {responses.length > 0 ? (
+      <ResponsesCard responses={responses} />
+    ) : (
+      <p>Aucune réponse disponible.</p>
+    )}
+  </div>
+  <div className="bg-white rounded-2xl shadow-lg p-4 h-2/5">
+    <ChatBox enqueteId={id} />
+  </div>
+</div>
         </div>
       </div>
     </motion.div>
