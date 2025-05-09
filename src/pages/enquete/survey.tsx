@@ -37,7 +37,7 @@ const SurveyPage = () => {
   const [isDialogOpen, setIsDialogOpen] = useState(false); // État pour le dialogue
   const [avis, setAvis] = useState(''); // État pour stocker l'avis
   const surveyData = location.state?.survey; // Récupère les données transmises
-  const [image, setImage] = useState<File | null>(null); // État pour stocker l'image
+ 
   useEffect(() => {
     if (surveyData) {
       setTempSurvey(surveyData);
@@ -50,7 +50,7 @@ const SurveyPage = () => {
     { question: Question; responses: Response[] | null }[]
   >([]);
 
-  const [tempSurvey, setTempSurvey] = useState<{ id: number; avisEnqueteur?: string } | null>(null);
+  const [, setTempSurvey] = useState<{ id: number; avisEnqueteur?: string } | null>(null);
 
   useEffect(() => {
     const loadQuestions = async () => {

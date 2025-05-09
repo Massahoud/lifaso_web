@@ -6,6 +6,7 @@ import CustomTextField from '../../components/ui/custom_textfield';
 import { IoChevronBack } from "react-icons/io5";
 import CustomDialog from '../../components/ui/CustomDialog';
 interface ResponseField {
+    id?: string;
     reponse: string;
     education: string;
     alimentation: string;
@@ -73,6 +74,7 @@ const CreateQuestionPage: React.FC = () => {
           for (const field of responseFields) {
             if (field.reponse.trim()) {
               const responseData: Response = {
+                id: field.id || '',
                 question_id: newQuestion.id,
                 reponse_text: field.reponse,
                 education: field.education,
