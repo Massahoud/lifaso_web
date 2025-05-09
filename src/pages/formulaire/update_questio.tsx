@@ -176,6 +176,7 @@ const confirmUpdateQuestion = async () => {
     for (let i = 0; i < responseFields.length; i++) {
       const r = responseFields[i];
       const payload: Response = {
+       
         question_id: questionId!,
         reponse_text: r.reponse,
         education: r.education,

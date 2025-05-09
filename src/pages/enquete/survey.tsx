@@ -60,7 +60,9 @@ const SurveyPage = () => {
           fetchedQuestions.map(async (q) => {
             try {
               const r = await fetchResponsesByQuestionId(q.id); // Récupère les réponses pour chaque question
-              return { question: q, responses: r };
+              // Ensure all responses have a valid `id`
+              const validResponses = r.filter((response) => response.id !== undefined) as Response[];
+              return { question: q, responses: validResponses };
             } catch {
               return { question: q, responses: [] }; // Si une erreur survient, retourne une liste vide
             }
