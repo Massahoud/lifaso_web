@@ -121,8 +121,10 @@ const QuestionsPage = () => {
   return (
     <div className="h-screen flex flex-col bg-gray-100">
       <FormulaireSeach onSearch={handleSearch} />
-      <FormulaireFilter onExport={handleExportToPDF} />
-
+     <FormulaireFilter 
+  onExport={handleExportToPDF} 
+  totalQuestions={questionsWithResponses.length} 
+/>
 
       <div className="p-4 ">
         <HeaderAndTabs />
@@ -174,6 +176,9 @@ const QuestionsPage = () => {
   );
 };
 
+
+
+
 const HeaderAndTabs = () => {
   const categories = [
     "Alimentation",
@@ -184,21 +189,22 @@ const HeaderAndTabs = () => {
     "Violence",
     "Indices",
   ];
-
   return (
-    <>
-      <div className="flex justify-between items-center mb-2 ">
-        <h2 className="text-lg font-bold">Questions et réponses</h2>
-        <div className="flex space-x-2">
-          {categories.map((cat, i) => (
-            <span key={i} className="text-sm font-semibold text-center w-[100px]">
-              {cat}
-            </span>
-          ))}
-        </div>
+    <div className="flex items-start bg-gray-100 p-2 rounded">
+      <div className="w-[500px]">
+       
+          <p className="font-semibold">Question et reponse</p>
+       
+        
       </div>
-      <hr />
-    </>
+      <div className="flex-1 flex justify-around">
+        {categories.map((cat, i) => (
+          <div key={i} className="text-center w-1/7 text-sm font-medium">
+            {cat}
+          </div>
+        ))}
+      </div>
+    </div>
   );
 };
 

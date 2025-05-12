@@ -5,8 +5,11 @@ import {
 } from "@mui/material";
 import { X } from "lucide-react";
 import { fetchUsers, updateGroup, getGroupById } from "../../services/groups_service";
-import { useParams } from "react-router-dom";
 
+interface UpdateGroupPageProps {
+  groupeId: string; // ID du groupe passé en prop
+  onClose: () => void; // Fonction pour fermer le modal
+}
 interface User {
   id: string;
   nom: string;
@@ -15,8 +18,8 @@ interface User {
   statut: string;
 }
 
-const UpdateGroupPage = () => {
-    const { groupeId } = useParams();
+const UpdateGroupPage: React.FC<UpdateGroupPageProps> = ({ groupeId, onClose }) => {
+    
   const [name, setName] = useState("");
   const [description, setDescription] = useState("");
   const [date, setDate] = useState("");
@@ -26,13 +29,7 @@ const UpdateGroupPage = () => {
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const [successMessage, setSuccessMessage] = useState<string | null>(null);
-  const onClose = () => {
- 
-    window.history.back();
   
-    
-    // window.location.href = "/groupes";
-  };
   
   useEffect(() => {
     if (!groupeId) {
@@ -144,6 +141,20 @@ const UpdateGroupPage = () => {
                   onChange={(e) => setName(e.target.value)}
                   fullWidth
                   margin="normal"
+                   sx={{
+                      "& .MuiOutlinedInput-root": {
+                        borderRadius: "50px", 
+                        "& fieldset": {
+                          borderColor: "gray", 
+                        },
+                        "&:hover fieldset": {
+                          borderColor: "orange", 
+                        },
+                        "&.Mui-focused fieldset": {
+                          borderColor: "orange",
+                        },
+                      },
+                    }}
                 />
                 <TextField
                   label="Description du Groupe"
@@ -151,6 +162,20 @@ const UpdateGroupPage = () => {
                   onChange={(e) => setDescription(e.target.value)}
                   fullWidth
                   margin="normal"
+                   sx={{
+                      "& .MuiOutlinedInput-root": {
+                        borderRadius: "50px", 
+                        "& fieldset": {
+                          borderColor: "gray", 
+                        },
+                        "&:hover fieldset": {
+                          borderColor: "orange", 
+                        },
+                        "&.Mui-focused fieldset": {
+                          borderColor: "orange",
+                        },
+                      },
+                    }}
                 />
                 <TextField
                   label="Date de Création"
@@ -160,6 +185,20 @@ const UpdateGroupPage = () => {
                   fullWidth
                   margin="normal"
                   InputLabelProps={{ shrink: true }}
+                   sx={{
+                      "& .MuiOutlinedInput-root": {
+                        borderRadius: "50px", 
+                        "& fieldset": {
+                          borderColor: "gray", 
+                        },
+                        "&:hover fieldset": {
+                          borderColor: "orange", 
+                        },
+                        "&.Mui-focused fieldset": {
+                          borderColor: "orange",
+                        },
+                      },
+                    }}
                 />
               </CardContent>
             </Card>

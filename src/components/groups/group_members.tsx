@@ -12,6 +12,7 @@ import * as XLSX from "xlsx"; // Import pour Excel
 import { saveAs } from "file-saver"; // Import pour sauvegarder le fichier
 import { fetchEnquetesByUserRole } from "../../services/childService"; // Import de la fonction
 import Cookies from "js-cookie";
+import UpdateGroupPage from "../../pages/groups/update_groups";
 interface User {
   id: string;
   nom: string;
@@ -44,7 +45,15 @@ const GroupMembersPage = () => {
   const [filteredMembers, setFilteredMembers] = useState<User[]>([]);
   const [successMessage, setSuccessMessage] = useState<string | null>(null); // État pour le message de succès
   const [isSnackbarOpen, setIsSnackbarOpen] = useState<boolean>(false); // État pour contrôler l'ouverture du Snackbar
- 
+  const [isModalOpen, setIsModalOpen] = useState(false); // État pour contrôler l'ouverture du modal
+
+  const handleOpenModal = () => {
+    setIsModalOpen(true); // Ouvre le modal
+  };
+
+  const handleCloseModal = () => {
+    setIsModalOpen(false); // Ferme le modal
+  };
   useEffect(() => {
     const filterUsers = () => {
       const lowercasedQuery = searchQuery.toLowerCase();
@@ -221,15 +230,15 @@ const GroupMembersPage = () => {
              {/* Bouton d'action */}
              <div className="flex items-center gap-2">
                <button
-                 className="px-2 py-1 text-sm md:px-3 md:py-2 md:text-base rounded-full bg-orange-500 text-white hover:bg-orange-600 focus:outline-none flex items-center cursor-pointer"
-                 onClick={() => navigate(`/groups/update/${group.id}`)}
-               >
-                 <FaPlus className="mr-1 md:mr-2 text-xs md:text-base" />
-                 Ajouter un membre
-               </button>
+                  className="px-2 py-1 text-sm md:px-3 md:py-2 md:text-base rounded-full bg-orange-500 text-white hover:bg-orange-600 focus:outline-none flex items-center cursor-pointer"
+                  onClick={handleOpenModal} // Ouvre le modal
+                >
+                  <FaPlus className="mr-1 md:mr-2 text-xs md:text-base" />
+                  Ajouter un membre
+                </button>
                <button
           onClick={handleExportEnquetes}
-          className="px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-600"
+          className="px-4 py-2 bg-blue-500 text-white rounded-full hover:bg-blue-600"
         >
           Exporter les enquêtes
         </button>
@@ -239,15 +248,21 @@ const GroupMembersPage = () => {
        </>
        
         )}
+        {isModalOpen && group && (
+  <UpdateGroupPage
+    groupeId={group.id} // Passe l'ID du groupe
+    onClose={handleCloseModal} // Passe la fonction pour fermer le modal
+  />
+)}
          {/* Tableau */}
-      <div className=" hidden md:flex  ">
+      <div className="hidden md:block">
         <table className="min-w-full">
           <thead>
             <tr className="border-gray-200 text-gray-600">
-              <th className="py-3 px-25 text-left">id</th>
-              <th className="py-3 px-10 text-left">Utilisateurs</th>
-              <th className="py-3 px-20 text-left">Statut</th>
-              <th className="py-3 px-50 text-left">Groupes</th>
+              <th className="py-3 px-12 text-left">ID</th>
+              <th className="py-3 px-6 text-left">Utilisateurs</th>
+              <th className="py-3 px-6 text-left">Statut</th>
+              <th className="py-3 px-15 text-left">Groupes</th>
             </tr>
           </thead>
         </table>
@@ -277,7 +292,7 @@ const GroupMembersPage = () => {
           statut={
             administrateurs.some((admin) => admin.id === user.id)
               ? "Administrateur"
-              : "Membre"
+              : "Enqueteur"
           }
           groupe={group?.nom || ""}
           date_creation={group?.date_creation || ""}

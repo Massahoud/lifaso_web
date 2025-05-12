@@ -7,7 +7,7 @@ import ChildDetailPage from "./pages/PageChild";
 
 import GroupsListPage from "./pages/groups/Pagegroups";
 import GroupMembersPage from "./components/groups/group_members";
-import UpdateGroupPage from "./pages/groups/update_groups";
+
 import PageUsers from "./pages/users/pageUsers";
 
 import UserProfile from "./components/users/user_profil";
@@ -24,44 +24,37 @@ import StartSurveyPage from "./pages/enquete/start_survey";
 import SurveyPage from "./pages/enquete/survey";
 import PageParametre from "./pages/parametre/PageParametre";
 
-
-
-/*const TokenHandler = () => {
-  const location = useLocation();
-  const params = new URLSearchParams(location.search);
-  const token = params.get("token");
-
-  return token ? <PageToken /> : null;
-};*/
+import NotFoundPage from "./notFoundPage"; // Import du composant NotFoundPage
 
 const AppRoutes = () => {
   return (
     <Router>
-   
       <Routes>
-        <Route path="/" element={<LoginPage/>} />
-        <Route path="/start_survey" element={<StartSurveyPage/>} />
+        <Route path="/" element={<LoginPage />} />
+        <Route path="/start_survey" element={<StartSurveyPage />} />
         <Route path="/survey" element={<SurveyPage />} />
         <Route path="/nuagedepoint" element={<ScatterPlotPage />} />
         <Route path="/formulaire/create" element={<CreateQuestionPage />} />
         <Route path="/creer_compte" element={<SignupWithInvitePage />} />
-          <Route path="/questions/update/:questionId" element={<UpdateQuestionPage/>} />
-        <Route path="/users/send_invitation" element={<PageUsers/>} />
-        <Route path="/modifier_motdepasse" element={<ResetPasswordForm/>} />
-        <Route path="/motdepasse_oublie" element={<ResetPasswordPage/>} />
-        
+        <Route path="/questions/update/:questionId" element={<UpdateQuestionPage />} />
+        <Route path="/users/send_invitation" element={<PageUsers />} />
+        <Route path="/modifier_motdepasse" element={<ResetPasswordForm />} />
+        <Route path="/motdepasse_oublie" element={<ResetPasswordPage />} />
         <Route path="/users/profile/:id" element={<UserProfile />} />
-        <Route path="/child-detail/:id" element={<ChildDetailPage />} />  
-        <Route path="/groups/update/:groupeId" element={<UpdateGroupPage />} />
+        <Route path="/child-detail/:id" element={<ChildDetailPage />} />
+
         <Route path="/" element={<Layout />}>
           <Route path="/childs" element={<ChildList />} />
-          <Route path="/groups" element={<GroupsListPage/>} />
-          <Route path="/formulaire" element={<QuestionsPage/>} />
-          <Route path="/organismes" element={<OrganismesListPage/>} />
+          <Route path="/groups" element={<GroupsListPage />} />
+          <Route path="/formulaire" element={<QuestionsPage />} />
+          <Route path="/organismes" element={<OrganismesListPage />} />
           <Route path="/users" element={<PageUsers />} />
           <Route path="/parametre" element={<PageParametre />} />
           <Route path="/group_membres" element={<GroupMembersPage />} />
         </Route>
+
+        {/* Route pour les pages non trouvées */}
+        <Route path="*" element={<NotFoundPage />} />
       </Routes>
     </Router>
   );

@@ -178,9 +178,9 @@ const ChildList = () => {
   <table className="min-w-full">
     <thead>
       <tr className="border-gray-200 text-gray-600">
-        <th className="py-3 px-6 text-left">Enquête +</th>
+        <th className="py-3 px-6 text-left">Numero/date</th>
         <th className="py-3 px-12 text-left">Enfant</th>
-        <th className="py-3 px-6 text-left">Sexe / Âge</th>
+        <th className="py-3 px-6 text-left">Sexe/Âge</th>
         <th className="py-3 px-15 text-left">État</th>
         <th className="py-3 px-6 text-left">Dernière intervention</th>
       </tr>
