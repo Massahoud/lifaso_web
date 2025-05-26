@@ -1,0 +1,134 @@
+/* CaracteristiquesEtAvantages.css */
+
+.caracteristiques-wrapper {
+  background-color: #ffffff;
+  padding: 2rem;
+  font-family: 'Roboto', sans-serif;
+  color: #000;
+}
+
+.section-title {
+  text-align: center;
+  font-size: 2rem;
+  font-weight: bold;
+  color: #015D4E;
+  position: relative;
+  margin-bottom: 2rem;
+}
+
+.section-title::after {
+  content: '';
+  display: block;
+  height: 2px;
+  background-color: #015D4E;
+  width: 100px;
+  margin: 0.5rem auto 0;
+}
+
+.social-icons {
+  display: flex;
+  justify-content: center;
+  gap: 3rem;
+  padding: 2rem 0;
+}
+
+.icon {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  transition: color 0.3s ease;
+}
+
+.icon p {
+  margin-top: 0.5rem;
+}
+
+.icon.tiktok:hover {
+  color: #69C9D0;
+}
+.icon.facebook:hover {
+  color: #3b5998;
+}
+.icon.instagram:hover {
+  color: #E1306C;
+}
+.icon.youtube:hover {
+  color: #FF0000;
+}
+
+.features-section {
+  background-color: #015D4E;
+  color: white;
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 2rem;
+  padding: 3rem 1rem;
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+@media (min-width: 768px) {
+  .features-section {
+    grid-template-columns: repeat(3, 1fr);
+  }
+}
+
+.image-container {
+  display: flex;
+  justify-content: center;
+}
+
+.feature-image {
+  max-width: 250px;
+  border-radius: 0.5rem;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
+}
+
+.caracteristiques h3,
+.avantages h3 {
+  font-size: 1.25rem;
+  font-weight: bold;
+  margin-bottom: 1rem;
+}
+
+.feature-item {
+  display: flex;
+  align-items: flex-start;
+  gap: 0.75rem;
+  margin-bottom: 1.5rem;
+}
+
+.feature-title {
+  font-weight: bold;
+}
+
+.feature-desc {
+  font-size: 0.875rem;
+  opacity: 0.9;
+}
+
+.icon-yellow {
+  color: #facc15;
+}
+.icon-green {
+  color: #86efac;
+}
+.icon-orange {
+  color: #f97316;
+}
+
+.avantages {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+.avantage-item {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+}
+
+.icon-lime {
+  color: #a3e635;
+}

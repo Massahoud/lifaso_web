@@ -1,0 +1,22 @@
+@keyframes flip-phone {
+  0% {
+    transform: rotateY(0deg);
+  }
+  100% {
+    transform: rotateY(360deg);
+  }
+}
+
+.animate-flip-phone {
+  animation: flip-phone 10s linear infinite;
+  transform-style: preserve-3d;
+  position: relative;
+}
+
+.backface-hidden {
+  backface-visibility: hidden;
+}
+
+.rotateY-180 {
+  transform: rotateY(180deg);
+}
