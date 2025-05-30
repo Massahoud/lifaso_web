@@ -6,22 +6,22 @@ const testimonials = [
   {
     name: 'Jaque Yameogo',
     text: 'Simple et efficace ! Je l’utilise tous les jours',
-    image: '/avatar1.png',
+    image: '/user.png',
   },
   {
     name: 'Jean Kientega',
     text: 'J’aime beaucoup surtout la partie qu’on peut suivre en temps réel',
-    image: '/avatar2.png',
+    image: '/user.png',
   },
   {
     name: 'Jaque Yameogo',
     text: 'Simple et efficace ! Je l’utilise tous les jours',
-    image: '/avatar1.png',
+    image: '/user.png',
   },
   {
     name: 'Jaque Yameogo',
     text: 'Simple et efficace ! Je l’utilise tous les jours',
-    image: '/avatar1.png',
+    image: '/user.png',
   },
 ];
 
@@ -49,7 +49,7 @@ const TestimonialsSection = () => {
               <img
                 src={testimonial.image}
                 alt={testimonial.name}
-                className="w-16 h-16 rounded-full"
+                className="w-25 h-25 rounded-full"
               />
             </div>
             <div className="flex justify-center text-teal-800 text-xl mb-2">

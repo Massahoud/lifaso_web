@@ -12,6 +12,7 @@ import Footer from "./footer";
 
 import { useState } from "react";
 import { FaBars } from "react-icons/fa"; // icône hamburger
+import DevenirLivreur from "./DevenirLivreur";
 
 
 
@@ -30,8 +31,9 @@ useEffect(() => {
 
   return (
     <div className="font-sans">
+      
       {/* Hero Section */}
-      <div className="relative bg-[#015D4E] text-white overflow-visible rounded-[3rem] mx-4 lg:mx-10 pb-32 mt-2">
+      <div className="relative bg-[#015D4E] text-white overflow-visible rounded-[3rem] mx-4 lg:mx-10 pb-52 mt-2">
         {/* Navbar */}
       <nav className="px-4 py-4 max-w-7xl mx-auto">
   <div className="flex flex-col lg:flex-row items-center justify-between">
@@ -66,55 +68,61 @@ useEffect(() => {
 
 
         {/* Content */}
-      <div className="relative z-10 flex flex-col-reverse lg:flex-row items-center justify-between max-w-7xl mx-auto px-8 lg:px-20 pt-10">
+      <div className="relative z-10 flex flex-col lg:flex-row items-center justify-between max-w-7xl mx-auto px-8 lg:px-20 pt-10">
   {/* Left Content */}
- <div className="max-w-xl space-y-8 lg:space-y-20 text-center lg:text-left">
-  <h2 className="text-2xl sm:text-3xl md:text-4xl font-bold leading-snug" data-aos="fade-up">
-    Simple et moins cher.<br />La livraison qu’il vous faut.
-  </h2>
+  <div className="order-1 lg:order-none max-w-xl space-y-8 lg:space-y-20 text-center lg:text-left">
+    <h2 className="text-2xl sm:text-3xl md:text-4xl font-bold leading-snug" data-aos="fade-up">
+      Simple et moins cher.<br />La livraison qu’il vous faut.
+    </h2>
 
+    <p className="text-white/90" data-aos="fade-up" data-aos-delay="200">
+      Envoyez (presque) tout, partout en au Burkina<br />
+      C’est pratique et simple à utiliser.<br />
+      Bienvenue sur Lifaso !
+    </p>
 
-<p className="text-white/90" data-aos="fade-up" data-aos-delay="200">
-  Envoyez (presque) tout, partout en au Burkina<br />
-  C’est pratique et simple à utiliser.<br />
-  Bienvenue sur Lifaso !
-</p>
-
-<div className="flex flex-col sm:flex-row gap-4 justify-center sm:justify-start items-center">
-
-          <Button variant="outline" className="bg-white text-black flex flex-col items-center gap-2 p-2 rounded-md h-20">
-            Télécharger sur App Store
-            <img src="/apple.png" alt="App Store" className="w-30 h-25" />
-          </Button>
-          <Button variant="outline" className="bg-white text-black flex flex-col items-center gap-2 p-2 rounded-md h-20">
-            Télécharger sur Google Play
-            <img src="/google.png" alt="Google Play" className="w-30 h-25" />
-          </Button>
-        </div>
-  </div>
-
-
-
-
-
-          {/* Phone mockup */}
-       <div className=" hidden lg:block relative w-96 h-96">
-
-  <div className="w-34 md:w-80  animate-flip-phone pt-3 right-4">
-   <div className="block lg:hidden w-full mt-10 px-10">
-  <img src="/livraison.png" alt="Mobile livraison" className="mx-auto w-3/4 max-w-xs rounded-xl shadow-md" />
+   <div className="flex flex-row flex-wrap gap-4 justify-center items-center sm:justify-start">
+  <Button
+    variant="outline"
+    className="bg-white text-black flex flex-col items-center gap-1 p-2 rounded-md
+               h-16 w-32 text-xs
+               sm:h-20 sm:w-40 sm:text-base
+               lg:h-24 lg:w-62 lg:text-lg"
+  >
+    Télécharger sur App Store
+    <img src="/apple.png" alt="App Store" className="w-6 h-6 sm:w-8 sm:h-8 lg:w-30 lg:h-30" />
+  </Button>
+  <Button
+    variant="outline"
+    className="bg-white text-black flex flex-col items-center gap-1 p-2 rounded-md
+               h-16 w-32 text-xs
+               sm:h-20 sm:w-40 sm:text-base
+               lg:h-24 lg:w-62 lg:text-lg"
+  >
+    Télécharger sur Google Play
+    <img src="/google.png" alt="Google Play" className="w-6 h-6 sm:w-8 sm:h-8 lg:w-30 lg:h-30" />
+  </Button>
 </div>
 
-    <img
-      src="/map.png"
-      alt="Face arrière"
-      className="w-full h-auto rounded-xl shadow-xl backface-hidden rotateY-180 absolute"
-    />
+  </div>
+
+  {/* Phone mockup */}
+  <div className="order-2 lg:order-none relative w-80 h-96 mt-10 lg:mt-0">
+    <div className="w-full animate-flip-phone pt-3 right-4">
+      <img
+        src="/livraison.png"
+        alt="Face avant"
+        className="w-full h-auto rounded-xl shadow-xl backface-hidden absolute"
+      />
+      <img
+        src="/map.png"
+        alt="Face arrière"
+        className="w-full h-auto rounded-xl shadow-xl backface-hidden rotateY-180 absolute"
+      />
+    </div>
   </div>
 </div>
 
-
-        </div>
       </div>
 
       {/* Fonctionnement Section */}
@@ -166,7 +174,7 @@ useEffect(() => {
     </div>
   </div>
 </section>
-
+<DevenirLivreur />
 < CaracteristiquesEtAvantages />
 <TestimonialsSection />
 <DownloadSection/>
