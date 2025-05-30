@@ -12,7 +12,7 @@ import Footer from "./footer";
 
 import { useState } from "react";
 import { FaBars } from "react-icons/fa"; // icône hamburger
-import DevenirLivreur from "./DevenirLivreur";
+import DevenirLivreur from "./livreur";
 
 
 
