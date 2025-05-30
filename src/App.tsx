@@ -17,6 +17,7 @@ import DevenirLivreur from "./DevenirLivreur";
 
 
 
+
 export default function LifasoLandingPage() {
   const [isMobileMenuOpen, setMobileMenuOpen] = useState(false);
 useEffect(() => {
