@@ -47,13 +47,13 @@ const DownloadSection = () => {
         </div>
 
         {/* Colonne droite : image téléphone */}
-     <div className="flex-[1]" data-aos="fade-up" data-aos-delay="300">
-          <img
-            src="/livraison.png"
-            alt="Aperçu de l’application"
-            className="w-72 sm:w-86 rounded-xl shadow-xl"
-          />
-        </div>
+  <div className="flex-[1] flex justify-center mx-auto" data-aos="fade-up" data-aos-delay="300">
+  <img
+    src="/livraison.png"
+    alt="Aperçu de l’application"
+    className="w-72 sm:w-86 rounded-xl shadow-xl"
+  />
+</div>
       </div>
     </div>
   );

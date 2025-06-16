@@ -90,19 +90,20 @@ useEffect(() => {
         </div>
       </div>
 
-      {/* Colonne droite : image */}
+     
+        
       <div
         data-aos="fade-left"
-        className="flex-1 flex items-center justify-center min-h-[18rem] md:min-h-[32rem] w-full max-w-full"
+        className="hidden md:flex flex-1 items-center justify-center min-h-[18rem] md:min-h-[32rem] w-full max-w-full"
       >
         <img
           src={steps[selected].img}
           alt={steps[selected].title}
-          className="w-48 h-48 sm:w-72 sm:h-72 md:w-96 md:h-96 object-contain rounded-xl shadow-lg transition-all duration-500"
+          className="w-48 h-48 sm:w-72 sm:h-72 md:w-96 md:h-96 object-contain  transition-all duration-500"
         />
       </div>
     </div>
     </div>
   );
-// ...existing code...
+
 }
